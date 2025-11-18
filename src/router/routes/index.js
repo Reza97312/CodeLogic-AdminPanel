@@ -7,11 +7,17 @@ import VerticalLayout from "@src/layouts/VerticalLayout";
 import HorizontalLayout from "@src/layouts/HorizontalLayout";
 import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper";
 
+import BlogList from "../../pages/ManageBlogs/BlogList";
+import BlogDetail from '../../pages/ManageBlogs/BlogDetail'
+import BlogEdit from '../../pages/ManageBlogs/BlogEdit'
+
 // ** Route Components
 import PublicRoute from "@components/routes/PublicRoute";
 
 // ** Utils
 import { isObjEmpty } from "@utils";
+
+
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -43,7 +49,7 @@ const Routes = [
   {
     path: "/home",
     element: <Home />,
-  },
+  }, 
   {
     path: "/sample",
     element: <Sample />,
@@ -51,6 +57,18 @@ const Routes = [
   {
     path: "/second-page",
     element: <SecondPage />,
+  },
+  {
+    path: '/blogs',
+    element: <BlogList/>
+  },
+  {
+    path: 'blogs/detail/:id',
+    element: <BlogDetail/>
+  },
+  {
+    path: 'blogs/edit',
+    element: <BlogEdit/>
   },
   {
     path: "/login",

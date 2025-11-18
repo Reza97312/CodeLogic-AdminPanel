@@ -68,7 +68,7 @@ const BlogList = () => {
       return (
         <Col key={item.title} md='6'>
           <Card>
-            <Link to={`/pages/blog/detail/${item.id}`}>
+            <Link to={`/blogs/detail/${item.id}`}>
               <CardImg className='img-fluid' src={item.img} alt={item.title} top />
             </Link>
             <CardBody>

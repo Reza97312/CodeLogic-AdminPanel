@@ -6,50 +6,59 @@ import {
   CardText,
   CardLink,
 } from "reactstrap";
+// ** React Imports
+import { useContext } from "react";
+
+// ** Reactstrap Imports
+import { Row, Col } from "reactstrap";
+
+// ** Context
+import { ThemeColors } from "@src/utility/context/ThemeColors";
+
+// ** Demo Components
+import CompanyTable from "../views/home/CompanyTable.js";
+import Earnings from "@src/views/ui-elements/cards/analytics/Earnings";
+import CardMedal from "@src/views/ui-elements/cards/advance/CardMedal";
+import CardMeetup from "@src/views/ui-elements/cards/advance/CardMeetup";
+import StatsCard from "@src/views/ui-elements/cards/statistics/StatsCard";
+import GoalOverview from "@src/views/ui-elements/cards/analytics/GoalOverview";
+import RevenueReport from "@src/views/ui-elements/cards/analytics/RevenueReport";
+import OrdersBarChart from "@src/views/ui-elements/cards/statistics/OrdersBarChart";
+import CardTransactions from "@src/views/ui-elements/cards/advance/CardTransactions";
+import ProfitLineChart from "@src/views/ui-elements/cards/statistics/ProfitLineChart";
+import CardBrowserStates from "@src/views/ui-elements/cards/advance/CardBrowserState";
+
+// ** Styles
+import "@styles/react/libs/charts/apex-charts.scss";
+import "@styles/base/pages/dashboard-ecommerce.scss";
+import "@styles/react/libs/charts/apex-charts.scss";
+import "@styles/react/libs/flatpickr/flatpickr.scss";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 const Home = () => {
-  return (
-    <div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Kick start your project 🚀</CardTitle>
-        </CardHeader>
-        <CardBody>
-          <CardText>All the best for your new project.</CardText>
-          <CardText>
-            Please make sure to read our{" "}
-            <CardLink
-              href="https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/documentation/"
-              target="_blank"
-            >
-              Template Documentation
-            </CardLink>{" "}
-            to understand where to go from here and how to use our template.
-          </CardText>
-        </CardBody>
-      </Card>
+  // ** Context
+  const { colors } = useContext(ThemeColors);
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Want to integrate JWT? 🔒</CardTitle>
-        </CardHeader>
-        <CardBody>
-          <CardText>
-            We carefully crafted JWT flow so you can implement JWT with ease and
-            with minimum efforts.
-          </CardText>
-          <CardText>
-            Please read our{" "}
-            <CardLink
-              href="https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/documentation/docs/development/auth"
-              target="_blank"
-            >
-              JWT Documentation
-            </CardLink>{" "}
-            to get more out of JWT authentication.
-          </CardText>
-        </CardBody>
-      </Card>
+  // ** vars
+  const trackBgColor = "#e9ecef";
+  return (
+    <div id="dashboard-ecommerce">
+      <Row className="match-height">
+        <Col xl="4" md="6" xs="12">
+          <CardMedal />
+        </Col>
+        <Col xl="8" md="6" xs="12">
+          <StatsCard cols={{ xl: "3", sm: "6" }} />
+        </Col>
+      </Row>
+
+      <Row className="match-height">
+        <Col lg="4" md="6" xs="12">
+          <GoalOverview success={colors.success.main} />
+        </Col>
+      </Row>
     </div>
   );
 };

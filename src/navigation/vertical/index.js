@@ -25,6 +25,12 @@ export default [
         icon: <Circle size={12} />,
         navLink: "/apps/invoice/list",
       },
+      {
+        id: "manageBlogs",
+        title: "Blogs",
+        icon: <Circle size={12} />,
+        navLink: "/apps/manage/blogs",
+      },
     ],
   },
 ];

@@ -35,7 +35,7 @@ export default [
             title: 'List',
             permissions: ['admin', 'editor'],
             navLink: '/pages/blog/list'
-          },
+          }, 
           {
             id: 'blogDetail',
             title: 'Detail',

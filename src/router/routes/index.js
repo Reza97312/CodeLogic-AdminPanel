@@ -59,16 +59,24 @@ const Routes = [
     element: <SecondPage />,
   },
   {
-    path: '/blogs',
-    element: <BlogList/>
+    path: '/pages/blog/list',
+    element: <BlogList />
   },
   {
-    path: 'blogs/detail/:id',
-    element: <BlogDetail/>
+    path: '/pages/blog/detail/:id',
+    element: <BlogDetail />
   },
   {
-    path: 'blogs/edit',
-    element: <BlogEdit/>
+    path: '/pages/blog/detail',
+    element: <Navigate to='/pages/blog/detail/1' />
+  },
+  {
+    path: '/pages/blog/edit/:id',
+    element: <BlogEdit />
+  },
+  {
+    path: '/pages/blog/edit',
+    element: <Navigate to='/pages/blog/edit/1' />
   },
   {
     path: "/login",

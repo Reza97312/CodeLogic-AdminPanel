@@ -1,4 +1,4 @@
-import { Mail, Home, User } from "react-feather";
+import { Mail, Home, User, Circle } from "react-feather";
 
 export default [
   {
@@ -12,6 +12,25 @@ export default [
     title: "Second Page",
     icon: <Mail size={20} />,
     navLink: "/second-page",
+  },
+  {
+    id: 'news',
+    title: 'مدیریت اخبار',
+    icon: <Circle size={12} />,
+    children: [
+      {
+        id: 'newsList',
+        title: 'لیست اخبار',
+        permissions: ['admin', 'editor'],
+        navLink: '/news-management'
+      }, 
+      {
+        id: 'createBlog',
+        title: 'ساخت خبر',
+        permissions: ['admin', 'editor'],
+        navLink: '/news/create'
+      }
+    ]
   },
   {
     id: "userManagement",

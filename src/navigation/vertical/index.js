@@ -15,20 +15,20 @@ export default [
   },
   {
     id: 'news',
-    title: 'اخبار',
+    title: 'مدیریت اخبار',
     icon: <Circle size={12} />,
     children: [
       {
         id: 'newsList',
         title: 'لیست اخبار',
         permissions: ['admin', 'editor'],
-        navLink: '/pages/news/list'
+        navLink: '/news-management'
       }, 
       {
         id: 'createBlog',
         title: 'ساخت خبر',
         permissions: ['admin', 'editor'],
-        navLink: '/pages/news/create'
+        navLink: '/news/create'
       }
     ]
   },

@@ -14,42 +14,22 @@ export default [
     navLink: "/second-page",
   },
   {
-    id: "smaplePage",
-    title: "Sample Page",
-    icon: <Airplay size={20} />,
-    navLink: "/sample",
+    id: 'news',
+    title: 'اخبار',
+    icon: <Circle size={12} />,
     children: [
       {
-        id: "invoiceList",
-        title: "List",
-        icon: <Circle size={12} />,
-        navLink: "/apps/invoice/list",
-      },
+        id: 'blogList',
+        title: 'لیست اخبار',
+        permissions: ['admin', 'editor'],
+        navLink: '/pages/news/list'
+      }, 
       {
-        id: 'blog',
-        title: 'Blog',
-        icon: <Circle size={12} />,
-        children: [
-          {
-            id: 'blogList',
-            title: 'List',
-            permissions: ['admin', 'editor'],
-            navLink: '/pages/blog/list'
-          }, 
-          {
-            id: 'blogDetail',
-            title: 'Detail',
-            permissions: ['admin', 'editor'],
-            navLink: '/pages/blog/detail'
-          },
-          {
-            id: 'blogEdit',
-            title: 'Edit',
-            permissions: ['admin', 'editor'],
-            navLink: '/pages/blog/edit'
-          }
-        ]
-      },
-    ],
+        id: 'createBlog',
+        title: 'ساخت خبر',
+        permissions: ['admin', 'editor'],
+        navLink: '/pages/news/create'
+      }
+    ]
   },
 ];

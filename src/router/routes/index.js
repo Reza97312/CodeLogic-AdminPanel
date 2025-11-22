@@ -7,9 +7,9 @@ import VerticalLayout from "@src/layouts/VerticalLayout";
 import HorizontalLayout from "@src/layouts/HorizontalLayout";
 import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper";
 
-import BlogList from "../../pages/ManageBlogs/BlogList";
-import BlogDetail from '../../pages/ManageBlogs/BlogDetail'
-import BlogEdit from '../../pages/ManageBlogs/BlogEdit'
+import NewsList from "../../pages/ManageNews/NewsList";
+import NewsDetail from '../../pages/ManageNews/NewsDetail'
+import NewsEdit from '../../pages/ManageNews/NewsEdit'
 
 // ** Route Components
 import PublicRoute from "@components/routes/PublicRoute";
@@ -51,32 +51,28 @@ const Routes = [
     element: <Home />,
   }, 
   {
-    path: "/sample",
-    element: <Sample />,
-  },
-  {
     path: "/second-page",
     element: <SecondPage />,
   },
   {
-    path: '/pages/blog/list',
-    element: <BlogList />
+    path: '/pages/news/list',
+    element: <NewsList/>
   },
   {
-    path: '/pages/blog/detail/:id',
-    element: <BlogDetail />
+    path: '/pages/news/detail/:id',
+    element: <NewsDetail/>
   },
   {
-    path: '/pages/blog/detail',
-    element: <Navigate to='/pages/blog/detail/1' />
+    path: '/pages/news/detail',
+    element: <Navigate to='/pages/news/detail/1' />
   },
   {
-    path: '/pages/blog/edit/:id',
-    element: <BlogEdit />
+    path: '/pages/news/edit/:id',
+    element: <NewsEdit/>
   },
   {
-    path: '/pages/blog/edit',
-    element: <Navigate to='/pages/blog/edit/1' />
+    path: '/pages/news/edit',
+    element: <Navigate to='/pages/news/edit/1' />
   },
   {
     path: "/login",

@@ -13,7 +13,7 @@ import Avatar from '@components/avatar'
 // ** Reactstrap Imports
 import { InputGroup, Input, InputGroupText } from 'reactstrap'
 
-const BlogSidebar = () => {
+const NewsSidebar = () => {
   // ** States
   const [data, setData] = useState(null)
 
@@ -108,4 +108,4 @@ const BlogSidebar = () => {
   )
 }
 
-export default BlogSidebar
+export default NewsSidebar

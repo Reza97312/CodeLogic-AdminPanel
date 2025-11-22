@@ -20,7 +20,7 @@ import {
 import { kFormatter } from '@utils'
 
 // ** Custom Components
-import Sidebar from '../BlogSidebar'
+import Sidebar from '../NewsSidebar'
 import Avatar from '@components/avatar'
 import Breadcrumbs from '@components/breadcrumbs'
 
@@ -50,7 +50,7 @@ import '@styles/base/pages/page-blog.scss'
 // ** Images
 import cmtImg from '@src/assets/images/portrait/small/avatar-s-6.jpg'
 
-const BlogDetails = () => {
+const NewsDetail = () => {
   // ** States
   const [data, setData] = useState(null)
 
@@ -257,4 +257,4 @@ const BlogDetails = () => {
   )
 }
 
-export default BlogDetails
+export default NewsDetail

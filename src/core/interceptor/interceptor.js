@@ -1,5 +1,5 @@
 import axios from "axios";
-import {getItem,removeItem,setItem,} from "../../utils/helper/storage.services";
+import {getItem,removeItem,setItem,} from "../../utility/helper/storage.services";
 import { toast } from "react-toastify";
 
 const baseURL = "https://sepehracademy.liara.run";

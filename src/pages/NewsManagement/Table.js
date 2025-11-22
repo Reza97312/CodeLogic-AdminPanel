@@ -1,4 +1,5 @@
-
+import { useQuery } from "react-query";
+import getNews from '../../core/services/api/get/getNews'
 
 
 
@@ -201,7 +202,7 @@ const CustomHeader = ({
   );
 };
 
-const UsersList = () => {
+const NewsList = () => {
   // ** Store Vars
   const dispatch = useDispatch();
   const store = useSelector((state) => state.users);
@@ -430,7 +431,7 @@ const UsersList = () => {
 
   const { data: newsData, isLoading } = useQuery({
     queryKey: ["GETNEWS"],
-    queryFn: () => GetAllCourses(),
+    queryFn: () => getNews(),
   });
 
 
@@ -667,4 +668,4 @@ const UsersList = () => {
   );
 };
 
-export default UsersList;
+export default NewsList;

@@ -1,4 +1,4 @@
-import { Mail, Home, Airplay, Circle } from "react-feather";
+import { Mail, Home, Airplay, Circle  } from "react-feather";
 
 export default [
   {
@@ -27,4 +27,5 @@ export default [
       },
     ],
   },
+
 ];

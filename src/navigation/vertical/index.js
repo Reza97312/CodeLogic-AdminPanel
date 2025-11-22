@@ -1,4 +1,4 @@
-import { Mail, Home, Airplay, Circle } from "react-feather";
+import { Mail, Home, Airplay, Circle, User } from "react-feather";
 
 export default [
   {
@@ -19,7 +19,7 @@ export default [
     icon: <Circle size={12} />,
     children: [
       {
-        id: 'blogList',
+        id: 'newsList',
         title: 'لیست اخبار',
         permissions: ['admin', 'editor'],
         navLink: '/pages/news/list'
@@ -31,5 +31,11 @@ export default [
         navLink: '/pages/news/create'
       }
     ]
+  },
+  {
+    id: "userManagement",
+    title: "مدیریت کاربران",
+    icon: <User size={20} />,
+    navLink: "/user-management",
   },
 ];

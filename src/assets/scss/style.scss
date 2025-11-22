@@ -9,3 +9,30 @@ NOTE:
 ------
 PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
 WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+* {
+  font-family: Estedad;
+}
+
+@font-face {
+  font-family: "Estedad";
+  src: url("../Fonts/Estedad-Regular.woff2") format("woff2");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Estedad";
+  src: url("../Fonts/Estedad-Medium.woff2") format("woff2");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Estedad";
+  src: url("../Fonts/Estedad-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+}
+@font-face {
+  font-family: "Estedad";
+  src: url("../Fonts/Estedad-Bold.woff2") format("woff2");
+  font-weight: 700;
+}
+.bs-stepper-content {
+  min-height: 49vh;
+}

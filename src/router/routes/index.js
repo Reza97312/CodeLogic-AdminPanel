@@ -17,8 +17,6 @@ import PublicRoute from "@components/routes/PublicRoute";
 // ** Utils
 import { isObjEmpty } from "@utils";
 
-
-
 const getLayout = {
   blank: <BlankLayout />,
   vertical: <VerticalLayout />,
@@ -38,6 +36,10 @@ const Register = lazy(() => import("../../pages/Register"));
 const ForgotPassword = lazy(() => import("../../pages/ForgotPassword"));
 const Error = lazy(() => import("../../pages/Error"));
 const Sample = lazy(() => import("../../pages/Sample"));
+const UserManagement = lazy(() =>
+  import("../../pages/UserManagement/UserManagement")
+);
+const EditUser = lazy(() => import("../../pages/EditUser/EditUser"));
 
 // ** Merge Routes
 const Routes = [
@@ -47,32 +49,40 @@ const Routes = [
     element: <Navigate replace to={DefaultRoute} />,
   },
   {
+    path: "/edituser/:id",
+    element: <EditUser />,
+  },
+  {
+    path: "/user-management",
+    element: <UserManagement />,
+  },
+  {
     path: "/home",
     element: <Home />,
-  }, 
+  },
   {
     path: "/second-page",
     element: <SecondPage />,
   },
   {
-    path: '/pages/news/list',
+    path: '/news/list',
     element: <NewsList/>
   },
   {
-    path: '/pages/news/detail/:id',
+    path: '/news/detail/:id',
     element: <NewsDetail/>
   },
   {
-    path: '/pages/news/detail',
-    element: <Navigate to='/pages/news/detail/1' />
+    path: '/news/detail',
+    element: <Navigate to='/news/detail/1' />
   },
   {
-    path: '/pages/news/edit/:id',
+    path: '/news/edit/:id',
     element: <NewsEdit/>
   },
   {
-    path: '/pages/news/edit',
-    element: <Navigate to='/pages/news/edit/1' />
+    path: '/news/edit',
+    element: <Navigate to='/news/edit/1' />
   },
   {
     path: "/login",

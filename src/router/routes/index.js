@@ -8,16 +8,14 @@ import HorizontalLayout from "@src/layouts/HorizontalLayout";
 import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper";
 
 import BlogList from "../../pages/ManageBlogs/BlogList";
-import BlogDetail from '../../pages/ManageBlogs/BlogDetail'
-import BlogEdit from '../../pages/ManageBlogs/BlogEdit'
+import BlogDetail from "../../pages/ManageBlogs/BlogDetail";
+import BlogEdit from "../../pages/ManageBlogs/BlogEdit";
 
 // ** Route Components
 import PublicRoute from "@components/routes/PublicRoute";
 
 // ** Utils
 import { isObjEmpty } from "@utils";
-
-
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -38,6 +36,10 @@ const Register = lazy(() => import("../../pages/Register"));
 const ForgotPassword = lazy(() => import("../../pages/ForgotPassword"));
 const Error = lazy(() => import("../../pages/Error"));
 const Sample = lazy(() => import("../../pages/Sample"));
+const UserManagement = lazy(() =>
+  import("../../pages/UserManagement/UserManagement")
+);
+const EditUser = lazy(() => import("../../pages/EditUser/EditUser"));
 
 // ** Merge Routes
 const Routes = [
@@ -47,9 +49,17 @@ const Routes = [
     element: <Navigate replace to={DefaultRoute} />,
   },
   {
+    path: "/edituser/:id",
+    element: <EditUser />,
+  },
+  {
+    path: "/user-management",
+    element: <UserManagement />,
+  },
+  {
     path: "/home",
     element: <Home />,
-  }, 
+  },
   {
     path: "/sample",
     element: <Sample />,
@@ -59,24 +69,16 @@ const Routes = [
     element: <SecondPage />,
   },
   {
-    path: '/pages/blog/list',
-    element: <BlogList />
+    path: "/blogs",
+    element: <BlogList />,
   },
   {
-    path: '/pages/blog/detail/:id',
-    element: <BlogDetail />
+    path: "blogs/detail/:id",
+    element: <BlogDetail />,
   },
   {
-    path: '/pages/blog/detail',
-    element: <Navigate to='/pages/blog/detail/1' />
-  },
-  {
-    path: '/pages/blog/edit/:id',
-    element: <BlogEdit />
-  },
-  {
-    path: '/pages/blog/edit',
-    element: <Navigate to='/pages/blog/edit/1' />
+    path: "blogs/edit",
+    element: <BlogEdit />,
   },
   {
     path: "/login",

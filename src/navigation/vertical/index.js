@@ -1,4 +1,4 @@
-import { Mail, Home, Airplay, Circle } from "react-feather";
+import { Mail, Home, Airplay, Circle, User } from "react-feather";
 
 export default [
   {
@@ -25,31 +25,38 @@ export default [
         icon: <Circle size={12} />,
         navLink: "/apps/invoice/list",
       },
+
       {
-        id: 'blog',
-        title: 'Blog',
+        id: "blog",
+        title: "Blog",
         icon: <Circle size={12} />,
         children: [
           {
-            id: 'blogList',
-            title: 'List',
-            permissions: ['admin', 'editor'],
-            navLink: '/pages/blog/list'
-          }, 
-          {
-            id: 'blogDetail',
-            title: 'Detail',
-            permissions: ['admin', 'editor'],
-            navLink: '/pages/blog/detail'
+            id: "blogList",
+            title: "List",
+            permissions: ["admin", "editor"],
+            navLink: "/pages/blog/list",
           },
           {
-            id: 'blogEdit',
-            title: 'Edit',
-            permissions: ['admin', 'editor'],
-            navLink: '/pages/blog/edit'
-          }
-        ]
+            id: "blogDetail",
+            title: "Detail",
+            permissions: ["admin", "editor"],
+            navLink: "/pages/blog/detail",
+          },
+          {
+            id: "blogEdit",
+            title: "Edit",
+            permissions: ["admin", "editor"],
+            navLink: "/pages/blog/edit",
+          },
+        ],
       },
     ],
+  },
+  {
+    id: "userManagement",
+    title: "مدیریت کاربران",
+    icon: <User size={20} />,
+    navLink: "/user-management",
   },
 ];

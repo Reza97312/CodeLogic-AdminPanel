@@ -8,10 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import ReactPaginate from "react-paginate";
 import DataTable from "react-data-table-component";
-import { ChevronDown, Share, Printer, FileText, File, Grid, Copy, } from "react-feather";
+import {ChevronDown} from "react-feather";
 import { selectThemeColors } from "@utils";
-import { Row, Col, Card, Input, Label, Button, CardBody, CardTitle, CardHeader, DropdownMenu, DropdownItem, DropdownToggle,
-UncontrolledDropdown, Modal, ModalHeader, ModalBody, ModalFooter,} from "reactstrap";
+import {Card, Input, Label, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
 import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import CustomHeader from './CustomHeader/CustomHeader'

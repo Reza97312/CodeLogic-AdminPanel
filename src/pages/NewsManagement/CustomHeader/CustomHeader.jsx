@@ -1,6 +1,7 @@
-import {Row, Col, Input, Button, DropdownMenu, DropdownItem, DropdownToggle,
-UncontrolledDropdown} from "reactstrap";
+import { useCallback } from "react";
+import {Row, Col, Input, Button, DropdownMenu, DropdownItem, DropdownToggle, UncontrolledDropdown} from "reactstrap";
 import {Share, Printer, FileText, File, Grid, Copy} from "react-feather";
+import debounce from "debounce";
 
 
 
@@ -102,7 +103,7 @@ const CustomHeader = ({store,toggleSidebar,handlePerPage,rowsPerPage,handleFilte
               className="ms-50 w-100"
               type="text"
               value={searchTerm}
-              onChange={(e) => {handleFilter(e.target.value); handleChange()}}
+              onChange={(e) => {handleFilter(e.target.value); handleChange(e)}}
               placeholder="نام کاربر..."
             />
           </button>

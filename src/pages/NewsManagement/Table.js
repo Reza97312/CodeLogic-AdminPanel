@@ -1,40 +1,15 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import getNews from '../../core/services/api/get/getNews'
-
-
-
-// ** React Imports
 import { Fragment, useState, useEffect } from "react";
-
-// ** Invoice List Sidebar
 import Sidebar from "./Sidebar";
-
-// ** Table Columns
 import { columns } from "./columns";
-
-// ** Store & Actions
 import { getAllData, getData } from "./store";
 import { useDispatch, useSelector } from "react-redux";
-
-// ** Third Party Components
 import Select from "react-select";
-
 import ReactPaginate from "react-paginate";
 import DataTable from "react-data-table-component";
-import {
-  ChevronDown,
-  Share,
-  Printer,
-  FileText,
-  File,
-  Grid,
-  Copy,
-} from "react-feather";
-
-// ** Utils
+import { ChevronDown, Share, Printer, FileText, File, Grid, Copy, } from "react-feather";
 import { selectThemeColors } from "@utils";
-
-// ** Reactstrap Imports
 import {
   Row,
   Col,
@@ -55,11 +30,9 @@ import {
   ModalFooter,
 } from "reactstrap";
 
-// ** Styles
 import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 
-// ** Table Header
 const CustomHeader = ({
   store,
   toggleSidebar,
@@ -426,7 +399,7 @@ const NewsList = () => {
 
 
 
-
+  const [searchQuery, setSearchQuery] = useState()
 
 
   const { data: newsData, isLoading } = useQuery({
@@ -527,38 +500,34 @@ const NewsList = () => {
       </Card> */}
 
       {
-        newsData.map((item, index) => {
-          return (
-            <Card item={item} key={index} className="overflow-hidden">
-              <div className="react-dataTable">
-                <DataTable
-                  noHeader
-                  subHeader
-                  sortServer
-                  pagination
-                  responsive
-                  paginationServer
-                  columns={tableColumns}
-                  onSort={handleSort}
-                  sortIcon={<ChevronDown />}
-                  className="react-dataTable"
-                  paginationComponent={CustomPagination}
-                  data={dataToRender()}
-                  subHeaderComponent={
-                    <CustomHeader
-                      store={store}
-                      searchTerm={searchTerm}
-                      rowsPerPage={rowsPerPage}
-                      handleFilter={handleFilter}
-                      handlePerPage={handlePerPage}
-                      toggleSidebar={toggleSidebar}
-                    />
-                  }
-                />
-              </div>
-            </Card>
-          )
-        })
+        <Card className="overflow-hidden">
+          <div className="react-dataTable">
+            <DataTable
+            noHeader
+            subHeader
+            sortServer
+            pagination
+            responsive
+            paginationServer
+            columns={tableColumns}
+            onSort={handleSort}
+            sortIcon={<ChevronDown />}
+            className="react-dataTable"
+            paginationComponent={CustomPagination}
+            data={newsData?.news || []}
+            subHeaderComponent={
+              <CustomHeader
+                store={store}
+                searchTerm={searchTerm}
+                rowsPerPage={rowsPerPage}
+                handleFilter={handleFilter}
+                handlePerPage={handlePerPage}
+                toggleSidebar={toggleSidebar}
+              />
+            }
+            />
+          </div>
+        </Card>   
       }
 
       <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />

@@ -110,7 +110,7 @@ const CustomHeader = ({
           xl="6"
           className="d-flex align-items-sm-center justify-content-xl-end justify-content-start flex-xl-nowrap flex-wrap flex-sm-row flex-column pe-xl-1 p-0 mt-xl-0 mt-1"
         >
-          <div className="d-flex align-items-center mb-sm-0 mb-1 me-1  ">
+          <button onClick={onSearch()} className="d-flex align-items-center mb-sm-0 mb-1 me-1  ">
             <label
               style={{ fontSize: "17px" }}
               className="mb-0 text-nowrap"
@@ -126,7 +126,7 @@ const CustomHeader = ({
               onChange={(e) => handleFilter(e.target.value)}
               placeholder="نام کاربر..."
             />
-          </div>
+          </button>
 
           <div className="d-flex align-items-center table-header-actions">
             <UncontrolledDropdown className="me-1">
@@ -176,6 +176,25 @@ const CustomHeader = ({
 };
 
 const NewsList = () => {
+
+
+
+  const [searchQuery, setSearchQuery] = useState()
+  const onSearch = (searchTerm) => {
+    setSearchQuery(searchTerm)
+  }
+
+
+  const { data: newsData, isLoading } = useQuery({
+    queryKey: ["GETNEWS"],
+    queryFn: () => getNews({Query: searchQuery}),
+  });
+
+
+
+
+
+
   // ** Store Vars
   const dispatch = useDispatch();
   const store = useSelector((state) => state.users);
@@ -399,13 +418,7 @@ const NewsList = () => {
 
 
 
-  const [searchQuery, setSearchQuery] = useState()
-
-
-  const { data: newsData, isLoading } = useQuery({
-    queryKey: ["GETNEWS"],
-    queryFn: () => getNews(),
-  });
+ 
 
 
 

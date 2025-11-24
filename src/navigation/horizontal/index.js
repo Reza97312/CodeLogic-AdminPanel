@@ -22,13 +22,13 @@ export default [
         id: 'newsList',
         title: 'لیست اخبار',
         permissions: ['admin', 'editor'],
-        navLink: '/news-management'
+        navLink: '/news-list'
       }, 
       {
         id: 'createBlog',
         title: 'ساخت خبر',
         permissions: ['admin', 'editor'],
-        navLink: '/news/create'
+        navLink: '/create-news'
       }
     ]
   },

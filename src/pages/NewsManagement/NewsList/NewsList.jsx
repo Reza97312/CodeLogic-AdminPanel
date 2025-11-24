@@ -11,7 +11,7 @@ import {
   Layers,
 } from "react-feather";
 
-const NewsManagement = () => {
+const NewsList = () => {
   return (
     <div className="app-user-list">
       <Row>
@@ -21,4 +21,4 @@ const NewsManagement = () => {
   );
 };
 
-export default NewsManagement;
+export default NewsList;

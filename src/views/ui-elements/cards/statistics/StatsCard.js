@@ -26,53 +26,56 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { useQuery } from "@tanstack/react-query";
+import { GetDashboardReport } from "../../../../core/services/api/get/GetDashboradReport";
+import { ShortingNumbers } from "../../../../utility/helper/Number";
 
-const StatsCard = ({ cols }) => {
+const StatsCard = ({ cols, item }) => {
   const data = [
     {
-      title: "230k",
+      title: item.allReserve,
       subtitle: "تعداد رزرو ها",
       color: "light-primary",
       icon: <TrendingUp size={24} />,
     },
     {
-      title: "8.549k",
+      title: Math.round((item.reserveNotAcceptPercent / 100) * item.allReserve),
       subtitle: "رزرو های تایید نشده",
       color: "light-danger",
       icon: <Delete size={24} />,
     },
     {
-      title: "1.423k",
+      title: item.allUser + item.inCompeletUserCount,
       subtitle: "تعداد کاربرها",
       color: "light-info",
       icon: <UserCheck size={24} />,
     },
     {
-      title: "$9745",
+      title: Math.round((item.interActiveUserPercent / 100) * item.allReserve),
       subtitle: "کاربر های غیر فعال",
       color: "light-danger",
       icon: <UserX size={24} />,
     },
     {
-      title: "230k",
-      subtitle: "تعداد مدرسین",
+      title: Math.round((item.activeUserPercent / 100) * item.allReserve),
+      subtitle: "کاربرهای فعال",
       color: "light-secondary",
       icon: <UserPlus size={24} />,
     },
     {
-      title: "8.549k",
+      title: item.allReserveAccept,
       subtitle: "رزرو های تایید شده",
       color: "light-primary",
       icon: <Trello size={24} />,
     },
     {
-      title: "1.423k",
+      title: item.allUser,
       subtitle: "پروفایل تکمیل شده",
       color: "light-primary",
       icon: <Flag size={24} />,
     },
     {
-      title: "$9745",
+      title: ShortingNumbers(item.allPaymentCost),
       subtitle: "پرداختی ها",
       color: "light-success",
       icon: <DollarSign size={24} />,
@@ -106,10 +109,7 @@ const StatsCard = ({ cols }) => {
   return (
     <Card className="card-statistics">
       <CardHeader>
-        <CardTitle tag="h4">Statistics</CardTitle>
-        <CardText className="card-text font-small-2 me-25 mb-0">
-          Updated 1 month ago
-        </CardText>
+        <CardTitle tag="h4">گزارشات</CardTitle>
       </CardHeader>
       <CardBody className="statistics-body">
         <Row className="g-3">{renderData()}</Row>

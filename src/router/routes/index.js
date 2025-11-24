@@ -7,7 +7,8 @@ import VerticalLayout from "@src/layouts/VerticalLayout";
 import HorizontalLayout from "@src/layouts/HorizontalLayout";
 import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper";
 
-import NewsManagement from "../../pages/NewsManagement/NewsManagement";
+import NewsList from "../../pages/NewsManagement/NewsList/NewsList";
+import CreateNews from '../../pages/NewsManagement/CreateNews/CreateNews'
 
 // ** Route Components
 import PublicRoute from "@components/routes/PublicRoute";
@@ -63,8 +64,12 @@ const Routes = [
     element: <SecondPage />,
   },
   {
-    path: '/news-management',
-    element: <NewsManagement/>
+    path: '/news-list',
+    element: <NewsList/>
+  },
+  {
+    path: '/create-news',
+    element: <CreateNews/>
   },
   {
     path: "/login",

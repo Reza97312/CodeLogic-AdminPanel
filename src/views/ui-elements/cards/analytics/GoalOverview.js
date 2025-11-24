@@ -19,7 +19,7 @@ import {
 
 const GoalOverview = (props) => {
   // ** State
-  const [data, setData] = useState(20);
+  const data = props.percent;
 
   const options = {
       chart: {
@@ -82,13 +82,12 @@ const GoalOverview = (props) => {
         },
       },
     },
-    series = [83];
+    series = [data];
 
   return data !== null ? (
     <Card>
       <CardHeader>
-        <CardTitle tag="h4">درصد تکمیل پروفایل کاربران</CardTitle>
-        <HelpCircle size={18} className="text-muted cursor-pointer" />
+        <CardTitle tag="h1">{props.title}</CardTitle>
       </CardHeader>
       <CardBody className="p-0">
         <Chart
@@ -100,14 +99,12 @@ const GoalOverview = (props) => {
       </CardBody>
       <Row className="border-top text-center mx-0">
         <Col xs="6" className="border-end py-1">
-          <CardText className="text-muted mb-0">تعداد کل کاربران</CardText>
-          <h3 className="fw-bolder mb-0">666</h3>
+          <CardText className="text-muted mb-0">{props.rightTitle}</CardText>
+          <h3 className="fw-bolder mb-0">{props.all}</h3>
         </Col>
         <Col xs="6" className="py-1">
-          <CardText className="text-muted mb-0">
-            تعداد کاربران فیلتر شده
-          </CardText>
-          <h3 className="fw-bolder mb-0">155</h3>
+          <CardText className="text-muted mb-0">{props.leftTitle}</CardText>
+          <h3 className="fw-bolder mb-0">{props.opposite}</h3>
         </Col>
       </Row>
     </Card>

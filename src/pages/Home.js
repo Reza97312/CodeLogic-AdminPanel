@@ -28,6 +28,7 @@ import CardTransactions from "@src/views/ui-elements/cards/advance/CardTransacti
 import ProfitLineChart from "@src/views/ui-elements/cards/statistics/ProfitLineChart";
 import CardBrowserStates from "@src/views/ui-elements/cards/advance/CardBrowserState";
 import { useQuery } from "@tanstack/react-query";
+import loading from "../assets/images/A/loading.gif";
 // ** Styles
 import "@styles/react/libs/charts/apex-charts.scss";
 import "@styles/base/pages/dashboard-ecommerce.scss";
@@ -49,7 +50,7 @@ const Home = () => {
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50cyI6W3sicGhvbmUiOiIwOTAzMDU1ODAxNCIsImlkIjo0MywiaXNVc2UiOnRydWV9XSwiaWF0IjoxNzYzODAyNzIyLCJleHAiOjE3NjM4Mzg3MjJ9.s6zukitGl7ja_KCGcE4JFkZ_BPEPAmFkaFEQJQiNhtQ"
     );
   }, []);
-  const { data: profileInfo = {} } = useQuery({
+  const { data: profileInfo = {}, isPending: ProfileInfo } = useQuery({
     queryKey: ["PROFILEINFO"],
     queryFn: () => GetProfileInfo(),
   });
@@ -73,10 +74,18 @@ const Home = () => {
     <div id="dashboard-ecommerce">
       <Row className="match-height">
         <Col xl="4" md="6" xs="12">
-          <CardMedal item={profileInfo} />
+          {ProfileInfo ? (
+            <img className="mx-auto" src={loading} />
+          ) : (
+            <CardMedal item={profileInfo} />
+          )}
         </Col>
         <Col xl="8" md="6" xs="12">
-          <StatsCard item={statsData} cols={{ xl: "3", sm: "6" }} />
+          {isPending ? (
+            <img className="mx-auto" src={loading} />
+          ) : (
+            <StatsCard item={statsData} cols={{ xl: "3", sm: "6" }} />
+          )}
         </Col>
       </Row>
 

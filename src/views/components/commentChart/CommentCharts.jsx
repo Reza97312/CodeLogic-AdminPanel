@@ -11,6 +11,7 @@ import {
 } from "chart.js";
 import { useQuery } from "@tanstack/react-query";
 import { GetDashboardTechReport } from "../../../core/services/api/get/GetDashboardTechReport";
+import loading from "../../../assets/images/A/loading.gif";
 
 ChartJS.register(
   RadialLinearScale,
@@ -91,7 +92,11 @@ const CommentCharts = () => {
 
   return (
     <div style={{ height: 350, width: "100%" }}>
-      <Radar data={chartData} options={options} />
+      {isPending ? (
+        <img className="mx-auto" src={loading} />
+      ) : (
+        <Radar data={chartData} options={options} />
+      )}
     </div>
   );
 };

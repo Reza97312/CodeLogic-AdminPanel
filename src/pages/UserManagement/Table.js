@@ -529,7 +529,7 @@ const UsersList = () => {
         isOpen={openModal}
         toggle={() => setOpenModal(false)}
         className="modal-dialog-centered"
-        style={{ maxWidth: "600px" }}
+        style={{ maxWidth: "450px" }}
       >
         <ModalBody>
           <p

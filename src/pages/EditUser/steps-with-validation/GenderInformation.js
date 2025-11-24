@@ -19,24 +19,20 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Form, Label, Input, Row, Col, Button, FormFeedback } from "reactstrap";
 
 const defaultValues = {
-  email: "",
-  username: "",
-  password: "",
-  confirmPassword: "",
   birthday: "",
+  gender: "",
+  linkdin: "",
+  telegram: "",
 };
 
 const birthdayPlaceholder = "تاریخ تولد خود را وارد کنید...";
 
 const GenderInformation = ({ stepper }) => {
   const SignupSchema = yup.object().shape({
-    username: yup.string().required(),
-    email: yup.string().email().required(),
-    password: yup.string().required(),
-    confirmPassword: yup
-      .string()
-      .required()
-      .oneOf([yup.ref(`password`), null], "Passwords must match"),
+    birthday: yup.string().required(),
+    gender: yup.string().required(),
+    linkdin: yup.string().required(),
+    telegram: yup.string().required(),
   });
 
   // ** Hooks
@@ -68,25 +64,34 @@ const GenderInformation = ({ stepper }) => {
               تاریخ تولد
             </Label>
 
-            <Controller
-              control={control}
-              name="birthday"
-              render={({ field }) => (
-                <DatePicker
-                  calendar={persian}
-                  locale={persian_fa}
-                  containerClassName="w-100 "
-                  inputClass="form-control w-100 cursor-pointer"
-                  value={field.value || ""}
-                  onChange={(date) => {
-                    field.onChange(date?.toDate?.()?.toISOString() || "");
-                  }}
-                  placeholder={birthdayPlaceholder}
-                />
-              )}
-            />
-            {errors.username && (
-              <FormFeedback>{errors.username.message}</FormFeedback>
+            <div className={errors.birthday ? "is-invalid" : ""}>
+              <Controller
+                control={control}
+                id="birthday"
+                name="birthday"
+                render={({ field }) => (
+                  <DatePicker
+                    calendar={persian}
+                    locale={persian_fa}
+                    {...field}
+                    containerClassName="w-100"
+                    inputClass={`form-control w-100 cursor-pointer ${
+                      errors.birthday ? "is-invalid" : ""
+                    }`}
+                    value={field.value ? new DateObject(field.value) : ""}
+                    onChange={(date) => {
+                      field.onChange(date ? date.toDate().toISOString() : null);
+                    }}
+                    placeholder={birthdayPlaceholder}
+                  />
+                )}
+              />
+            </div>
+
+            {errors.birthday && (
+              <FormFeedback className="d-block">
+                تاریخ تولد خود را وارد کنید
+              </FormFeedback>
             )}
           </Col>
 
@@ -106,51 +111,51 @@ const GenderInformation = ({ stepper }) => {
               )}
             />
             {errors.gender && (
-              <FormFeedback>{errors.gender.message}</FormFeedback>
+              <FormFeedback>جنسیت خود را انتخاب کنید</FormFeedback>
             )}
           </Col>
         </Row>
         <Row>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="password">
+            <Label className="form-label" for="linkdin">
               لینک پروفایل لینکدین
             </Label>
             <Controller
-              id="password"
-              name="password"
+              id="linkdin"
+              name="linkdin"
               control={control}
               render={({ field }) => (
                 <Input
-                  type="password"
+                  type="text"
                   placeholder="لینک خود را وارد کنید..."
-                  invalid={errors.password && true}
+                  invalid={errors.linkdin && true}
                   {...field}
                 />
               )}
             />
-            {errors.password && (
-              <FormFeedback>{errors.password.message}</FormFeedback>
+            {errors.linkdin && (
+              <FormFeedback>آدرس لینکدین خود را وارد کنید</FormFeedback>
             )}
           </div>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="confirmPassword">
+            <Label className="form-label" for="telegram">
               لینک تلگرام
             </Label>
             <Controller
               control={control}
-              id="confirmPassword"
-              name="confirmPassword"
+              id="telegram"
+              name="telegram"
               render={({ field }) => (
                 <Input
-                  type="password"
+                  type="text"
                   placeholder="لینک خود را انتخاب کنید..."
-                  invalid={errors.confirmPassword && true}
+                  invalid={errors.telegram && true}
                   {...field}
                 />
               )}
             />
-            {errors.confirmPassword && (
-              <FormFeedback>{errors.confirmPassword.message}</FormFeedback>
+            {errors.telegram && (
+              <FormFeedback>آدرس تلگرام خود را وارد کنید</FormFeedback>
             )}
           </div>
         </Row>

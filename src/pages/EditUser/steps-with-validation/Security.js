@@ -16,19 +16,16 @@ import { Form, Label, Input, Row, Col, Button, FormFeedback } from "reactstrap";
 const defaultValues = {
   email: "",
   username: "",
-  password: "",
-  confirmPassword: "",
+  phonenumber: "",
+  emailrecovery: "",
 };
 
 const Security = ({ stepper }) => {
   const SignupSchema = yup.object().shape({
     username: yup.string().required(),
+    phonenumber: yup.string().required(),
     email: yup.string().email().required(),
-    password: yup.string().required(),
-    confirmPassword: yup
-      .string()
-      .required()
-      .oneOf([yup.ref(`password`), null], "Passwords must match"),
+    emailrecovery: yup.string().email().required(),
   });
 
   // ** Hooks
@@ -72,7 +69,7 @@ const Security = ({ stepper }) => {
               )}
             />
             {errors.username && (
-              <FormFeedback>{errors.username.message}</FormFeedback>
+              <FormFeedback>نام کاربری خود را وارد کنید</FormFeedback>
             )}
           </Col>
           <Col md="6" className="mb-5">
@@ -93,51 +90,51 @@ const Security = ({ stepper }) => {
               )}
             />
             {errors.email && (
-              <FormFeedback>{errors.email.message}</FormFeedback>
+              <FormFeedback>ایمیل خود را وارد کنید</FormFeedback>
             )}
           </Col>
         </Row>
         <Row>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="password">
+            <Label className="form-label" for="phonenumber">
               شماره تلفن
             </Label>
             <Controller
-              id="password"
-              name="password"
+              id="phonenumber"
+              name="phonenumber"
               control={control}
               render={({ field }) => (
                 <Input
-                  type="password"
+                  type="text"
                   placeholder="شماره تلفن خود را وارد کنید..."
-                  invalid={errors.password && true}
+                  invalid={errors.phonenumber && true}
                   {...field}
                 />
               )}
             />
-            {errors.password && (
-              <FormFeedback>{errors.password.message}</FormFeedback>
+            {errors.phonenumber && (
+              <FormFeedback>شماره تلفن خود را وارد کنید</FormFeedback>
             )}
           </div>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="confirmPassword">
+            <Label className="form-label" for="emailrecovery">
               بازگردانی ایمیل
             </Label>
             <Controller
               control={control}
-              id="confirmPassword"
-              name="confirmPassword"
+              id="emailrecovery"
+              name="emailrecovery"
               render={({ field }) => (
                 <Input
-                  type="password"
+                  type="email"
                   placeholder="user@email.com"
-                  invalid={errors.confirmPassword && true}
+                  invalid={errors.emailrecovery && true}
                   {...field}
                 />
               )}
             />
-            {errors.confirmPassword && (
-              <FormFeedback>{errors.confirmPassword.message}</FormFeedback>
+            {errors.emailrecovery && (
+              <FormFeedback>ایمیل خود را وارد کنید</FormFeedback>
             )}
           </div>
         </Row>

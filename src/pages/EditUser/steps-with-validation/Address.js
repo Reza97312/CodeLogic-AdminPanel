@@ -14,21 +14,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Form, Label, Input, Row, Col, Button, FormFeedback } from "reactstrap";
 
 const defaultValues = {
-  email: "",
-  username: "",
-  password: "",
-  confirmPassword: "",
+  adress: "",
+  about: "",
+  width: "",
+  height: "",
 };
 
 const Address = ({ stepper }) => {
   const SignupSchema = yup.object().shape({
-    username: yup.string().required(),
-    email: yup.string().email().required(),
-    password: yup.string().required(),
-    confirmPassword: yup
-      .string()
-      .required()
-      .oneOf([yup.ref(`password`), null], "Passwords must match"),
+    adress: yup.string().required(),
+    about: yup.string().required(),
+    width: yup.string().required(),
+    height: yup.string().required(),
   });
 
   // ** Hooks
@@ -56,88 +53,92 @@ const Address = ({ stepper }) => {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Row>
           <Col md="6" className="mb-4">
-            <Label className="form-label" for="username">
+            <Label className="form-label" for="adress">
               آدرس
             </Label>
             <Controller
-              id="username"
-              name="username"
+              id="adress"
+              name="adress"
               control={control}
               render={({ field }) => (
                 <Input
                   placeholder="آدرس خود را وارد کنید..."
-                  invalid={errors.username && true}
+                  invalid={errors.adress && true}
                   {...field}
                 />
               )}
             />
-            {errors.username && (
-              <FormFeedback>{errors.username.message}</FormFeedback>
+            {errors.adress && (
+              <FormFeedback>آدرس خود را وارد کنید</FormFeedback>
             )}
           </Col>
           <Col md="6" className="mb-5">
-            <Label className="form-label" for={`email`}>
+            <Label className="form-label" for={`about`}>
               درباره کاربر
             </Label>
             <Controller
               control={control}
-              id="email"
-              name="email"
+              id="about"
+              name="about"
               render={({ field }) => (
                 <Input
-                  type="email"
+                  type="text"
                   placeholder="اطلاعات خود را وارد کنید..."
-                  invalid={errors.email && true}
+                  invalid={errors.about && true}
                   {...field}
                 />
               )}
             />
-            {errors.email && (
-              <FormFeedback>{errors.email.message}</FormFeedback>
+            {errors.about && (
+              <FormFeedback>اطلاعات خود را وارد کنید</FormFeedback>
             )}
           </Col>
         </Row>
         <Row>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="password">
+            <Label className="form-label" for="width">
               عرض جغرافیایی
             </Label>
             <Controller
-              id="password"
-              name="password"
+              id="width"
+              name="width"
               control={control}
               render={({ field }) => (
                 <Input
-                  type="password"
+                  type="text"
                   placeholder="عرض جغرافیایی خود را وارد کنید..."
-                  invalid={errors.password && true}
+                  invalid={errors.width && true}
                   {...field}
                 />
               )}
             />
-            {errors.password && (
-              <FormFeedback>{errors.password.message}</FormFeedback>
+            {errors.width && (
+              <FormFeedback>
+                عرض جغرافیایی محل سکونت خود را وارد کنید
+              </FormFeedback>
             )}
           </div>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="confirmPassword">
+            <Label className="form-label" for="height">
               طول جغرافیایی
             </Label>
             <Controller
               control={control}
-              id="confirmPassword"
-              name="confirmPassword"
+              id="height"
+              name="height"
               render={({ field }) => (
                 <Input
-                  type="password"
+                  type="text"
                   placeholder="طول جغرافیایی خود را انتخاب کنید..."
-                  invalid={errors.confirmPassword && true}
+                  invalid={errors.height && true}
                   {...field}
                 />
               )}
             />
-            {errors.confirmPassword && (
-              <FormFeedback>{errors.confirmPassword.message}</FormFeedback>
+            {errors.height && (
+              <FormFeedback>
+                طول جغرافیایی محل سکونت خود را وارد کنید
+              </FormFeedback>
             )}
           </div>
         </Row>

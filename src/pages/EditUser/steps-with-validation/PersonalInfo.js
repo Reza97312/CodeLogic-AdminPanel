@@ -14,21 +14,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Form, Label, Input, Row, Col, Button, FormFeedback } from "reactstrap";
 
 const defaultValues = {
-  email: "",
-  username: "",
-  password: "",
-  confirmPassword: "",
+  name: "",
+  lastname: "",
+  nationalcode: "",
+  profile: "",
 };
 
 const PersonalInfo = ({ stepper }) => {
   const SignupSchema = yup.object().shape({
-    username: yup.string().required(),
-    email: yup.string().email().required(),
-    password: yup.string().required(),
-    confirmPassword: yup
-      .string()
-      .required()
-      .oneOf([yup.ref(`password`), null], "Passwords must match"),
+    name: yup.string().required(),
+    lastname: yup.string().required(),
+    nationalcode: yup.string().required(),
+    profile: yup.string().required(),
   });
 
   // ** Hooks
@@ -56,88 +53,86 @@ const PersonalInfo = ({ stepper }) => {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Row>
           <Col md="6" className="mb-4">
-            <Label className="form-label" for="username">
+            <Label className="form-label" for="name">
               نام
             </Label>
             <Controller
-              id="username"
-              name="username"
+              id="name"
+              name="name"
               control={control}
               render={({ field }) => (
                 <Input
                   placeholder="نام خود را وارد کنید..."
-                  invalid={errors.username && true}
+                  invalid={errors.name && true}
                   {...field}
                 />
               )}
             />
-            {errors.username && (
-              <FormFeedback>{errors.username.message}</FormFeedback>
-            )}
+            {errors.name && <FormFeedback>نام خود را وارد کنید</FormFeedback>}
           </Col>
           <Col md="6" className="mb-5">
-            <Label className="form-label" for={`email`}>
+            <Label className="form-label" for={`lastname`}>
               نام خانوادگی
             </Label>
             <Controller
               control={control}
-              id="email"
-              name="email"
+              id="lastname"
+              name="lastname"
               render={({ field }) => (
                 <Input
-                  type="email"
+                  type="text"
                   placeholder="نام خانوادگی خود را وارد کنید..."
-                  invalid={errors.email && true}
+                  invalid={errors.lastname && true}
                   {...field}
                 />
               )}
             />
-            {errors.email && (
-              <FormFeedback>{errors.email.message}</FormFeedback>
+            {errors.lastname && (
+              <FormFeedback>نام خانوادگی خود را وارد کنید</FormFeedback>
             )}
           </Col>
         </Row>
         <Row>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="password">
+            <Label className="form-label" for="nationalcode">
               کد ملی
             </Label>
             <Controller
-              id="password"
-              name="password"
+              id="nationalcode"
+              name="nationalcode"
               control={control}
               render={({ field }) => (
                 <Input
-                  type="password"
+                  type="text"
                   placeholder="کد ملی خود را وارد کنید..."
-                  invalid={errors.password && true}
+                  invalid={errors.nationalcode && true}
                   {...field}
                 />
               )}
             />
-            {errors.password && (
-              <FormFeedback>{errors.password.message}</FormFeedback>
+            {errors.nationalcode && (
+              <FormFeedback>کد ملی خود را وارد کنید</FormFeedback>
             )}
           </div>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="confirmPassword">
+            <Label className="form-label" for="profile">
               عکس پروفایل
             </Label>
             <Controller
               control={control}
-              id="confirmPassword"
-              name="confirmPassword"
+              id="profile"
+              name="profile"
               render={({ field }) => (
                 <Input
                   type="file"
                   placeholder="عکس خود را انتخاب کنید..."
-                  invalid={errors.confirmPassword && true}
+                  invalid={errors.profile && true}
                   {...field}
                 />
               )}
             />
-            {errors.confirmPassword && (
-              <FormFeedback>{errors.confirmPassword.message}</FormFeedback>
+            {errors.profile && (
+              <FormFeedback>عکس پروفایل خود را انتخاب کنید</FormFeedback>
             )}
           </div>
         </Row>

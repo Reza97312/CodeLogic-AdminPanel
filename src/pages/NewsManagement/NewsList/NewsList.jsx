@@ -1,15 +1,5 @@
 import { Row, Col } from "reactstrap";
 import Table from "./Table";
-import StatsHorizontal from "@components/widgets/stats/StatsHorizontal";
-import {
-  User,
-  UserPlus,
-  UserCheck,
-  UserX,
-  Book,
-  Globe,
-  Layers,
-} from "react-feather";
 
 const NewsList = () => {
   return (

@@ -7,6 +7,8 @@ import VerticalLayout from "@src/layouts/VerticalLayout";
 import HorizontalLayout from "@src/layouts/HorizontalLayout";
 import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper";
 
+import NewsManagement from "../../pages/NewsManagement/NewsManagement";
+
 // ** Route Components
 import PublicRoute from "@components/routes/PublicRoute";
 
@@ -32,6 +34,10 @@ const Register = lazy(() => import("../../pages/Register"));
 const ForgotPassword = lazy(() => import("../../pages/ForgotPassword"));
 const Error = lazy(() => import("../../pages/Error"));
 const Sample = lazy(() => import("../../pages/Sample"));
+const UserManagement = lazy(() =>
+  import("../../pages/UserManagement/UserManagement")
+);
+const EditUser = lazy(() => import("../../pages/EditUser/EditUser"));
 
 // ** Merge Routes
 const Routes = [
@@ -41,16 +47,24 @@ const Routes = [
     element: <Navigate replace to={DefaultRoute} />,
   },
   {
+    path: "/edituser/:id",
+    element: <EditUser />,
+  },
+  {
+    path: "/user-management",
+    element: <UserManagement />,
+  },
+  {
     path: "/home",
     element: <Home />,
   },
   {
-    path: "/sample",
-    element: <Sample />,
-  },
-  {
     path: "/second-page",
     element: <SecondPage />,
+  },
+  {
+    path: '/news-management',
+    element: <NewsManagement/>
   },
   {
     path: "/login",

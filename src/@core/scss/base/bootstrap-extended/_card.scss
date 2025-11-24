@@ -33,7 +33,7 @@
     bottom: 0;
     overflow: auto;
   }
-  .card-body[class*='border-bottom-'] {
+  .card-body[class*="border-bottom-"] {
     border-bottom-width: 2px !important;
   }
   .card-img-overlay {
@@ -78,7 +78,7 @@
           width: 1rem;
           font-size: 1rem;
         }
-        &[data-action='collapse'] {
+        &[data-action="collapse"] {
           i,
           svg {
             transition: all 0.25s ease-out;
@@ -197,7 +197,12 @@
   top: 0;
   right: 37px;
 }
-
+.userImage {
+  border-radius: 15px;
+}
+.userImage {
+  border-radius: 15px;
+}
 // Deposits Card
 .card-deposits {
   .deposits-divider {
@@ -445,10 +450,10 @@
 
     #revenue-report-chart {
       .apexcharts-series {
-        &[seriesName='Earning'] {
+        &[seriesName="Earning"] {
           transform: scaleY(0.965);
         }
-        &[seriesName='Expense'] {
+        &[seriesName="Expense"] {
           transform: scaleY(1.035);
         }
       }

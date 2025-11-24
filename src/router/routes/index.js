@@ -8,6 +8,7 @@ import HorizontalLayout from "@src/layouts/HorizontalLayout";
 import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper";
 
 import NewsList from "../../pages/NewsManagement/NewsList/NewsList";
+import NewsDetail from "../../pages/NewsManagement/NewsDetail/NewsDetail";
 import CreateNews from '../../pages/NewsManagement/CreateNews/CreateNews'
 
 // ** Route Components
@@ -66,6 +67,10 @@ const Routes = [
   {
     path: '/news-list',
     element: <NewsList/>
+  },
+  {
+    path: '/news-detail/:id',
+    element: <NewsDetail/>
   },
   {
     path: '/create-news',

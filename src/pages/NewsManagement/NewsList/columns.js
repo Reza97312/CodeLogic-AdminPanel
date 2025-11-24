@@ -77,7 +77,7 @@ export const columns = ({ handleOpenModal }) => [
             <DropdownItem  
               tag={Link}
               className="w-100"
-              to={`/news/view/${row.id}`}
+              to={`/news-detail/${row.id}`}
             >
               <FileText size={14} className="me-50" />
               <span className="align-middle">مشاهده خبر</span>

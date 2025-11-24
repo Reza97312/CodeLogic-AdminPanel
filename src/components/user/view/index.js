@@ -17,7 +17,7 @@ import UserInfoCard from './UserInfoCard'
 // ** Styles
 import '@styles/react/apps/app-users.scss'
 
-const UserView = () => {
+const NewsView = () => {
   // ** Store Vars
   const store = useSelector(state => state.users)
   const dispatch = useDispatch()
@@ -59,4 +59,4 @@ const UserView = () => {
     </Alert>
   )
 }
-export default UserView
+export default NewsView

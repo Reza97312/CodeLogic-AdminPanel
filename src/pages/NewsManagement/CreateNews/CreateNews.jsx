@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import Wizard from '../../../components/createNewsWizard'
-import NewsDetails from '../../../components/createNewsWizard/steps/NewsDetails'
+import NewsDetails from '../../../components/createNewsWizard'
 
 
 const WizardVertical = () => {

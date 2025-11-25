@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import getNews from '../../core/services/api/get/getNews'
+import getNews from '../../../core/services/api/get/getNews'
 import { Fragment, useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import { columns } from "./columns";
@@ -14,6 +14,7 @@ import {Card, Input, Label, Button, Modal, ModalHeader, ModalBody, ModalFooter} 
 import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import CustomHeader from './CustomHeader/CustomHeader'
+import {deleteNews} from '../../../core/services/api/delete/deleteNews'
 
 
 const NewsList = () => {
@@ -23,11 +24,12 @@ const NewsList = () => {
     setSearchQuery(searchTerm)
   }
 
-
   const { data: newsData, isLoading } = useQuery({
     queryKey: ["GETNEWS", searchQuery],
     queryFn: () => getNews({Query: searchQuery}),
   });
+
+
 
 
 
@@ -71,6 +73,22 @@ const NewsList = () => {
     setSelectedUser(row);
     setOpenModal(true);
   };
+
+
+  const [openDeleteModal, setOpenDeleteModal] = useState(false)
+  const toggleDeleteModal = (value) => {
+    setOpenDeleteModal(value)
+  }
+  const [newsId, setNewsId] = useState()
+  const handleNewsId = (id) => {
+    setNewsId(id)
+  }
+
+
+
+
+
+
 
   // ** Get data on mount
   useEffect(() => {
@@ -233,7 +251,7 @@ const NewsList = () => {
   const [selectedRoles, setSelectedRoles] = useState([]);
   const [isActive, setIsActive] = useState(false);
 
-  const tableColumns = columns({ handleOpenModal });
+  const tableColumns = columns({ handleOpenModal, toggleDeleteModal, handleNewsId});
 
   const allRolesOptions = [
     { value: "employee.admin", label: "Employee.Admin" },
@@ -470,6 +488,29 @@ const NewsList = () => {
             ارسال
           </Button>
         </ModalFooter>
+      </Modal>
+      <Modal 
+      isOpen={openDeleteModal}
+      toggle={() => setOpenDeleteModal(false)}
+      className="modal-dialog-centered"
+      style={{ maxWidth: "600px" }}>
+        <div className="d-flex flex-column align-items-center gap-4 py-2">
+          <span>آیا میخواهید این خبر را حذف کنید؟</span>
+          <div className="d-flex flex-row gap-1">
+            <Button 
+            onClick={() => {toggleDeleteModal(false)}}>
+              انصراف
+            </Button>
+            <Button 
+            onClick={(row) => {
+              deleteNews(newsId)
+              setOpenDeleteModal(false)
+            }}
+            color="primary">
+              حذف
+            </Button>
+          </div>
+        </div>
       </Modal>
     </Fragment>
   );

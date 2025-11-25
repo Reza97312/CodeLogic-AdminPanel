@@ -16,7 +16,7 @@ const statusObj = {
   false: "light-danger",
 };
 
-export const columns = ({ handleOpenModal }) => [
+export const columns = ({ handleOpenModal, toggleDeleteModal, handleNewsId }) => [
   {
     name: <span style={{ fontSize: "14px" }}>خبر</span>,
     sortable: true,
@@ -28,12 +28,16 @@ export const columns = ({ handleOpenModal }) => [
         {renderImage(row)}
         <div className="d-flex flex-column">
           <span className="fw-bolder">{row.title}</span>
-          <small className="text-truncate text-muted mb-0">
-            {row.newsCatregoryName}
-          </small>
         </div>
       </div>
     ),
+  },
+  {
+    name: <span style={{ fontSize: "14px" }}>دسته بندی</span>,
+    sortable: true,
+    minWidth: "200px",
+    selector: (row) => row.addUserFullName,
+    cell: (row) => <span>{row.newsCatregoryName}</span>,
   },
   {
     name: <span style={{ fontSize: "14px" }}>ساخته شده توسط</span>,
@@ -70,10 +74,10 @@ export const columns = ({ handleOpenModal }) => [
           </DropdownToggle>
           <DropdownMenu>
 
-            <DropdownItem
+            <DropdownItem  
               tag={Link}
               className="w-100"
-              to={`/news/view/${row.id}`}
+              to={`/news-detail/${row.id}`}
             >
               <FileText size={14} className="me-50" />
               <span className="align-middle">مشاهده خبر</span>
@@ -83,19 +87,23 @@ export const columns = ({ handleOpenModal }) => [
               tag={Link}
               className="w-100"
               to={`/news/edit/${row.id}`}
+              onClick={(e) => {
+                e.preventDefault();
+                handleOpenModal(row);
+              }}
             >
               <FileText size={14} className="me-50" />
               <span className="align-middle">ویرایش</span>
             </DropdownItem>
 
             <DropdownItem
-              tag="a"
+              onClick={() => {
+                toggleDeleteModal(true)
+                handleNewsId(row.id)
+              }}
+              tag="span"
               href="/"
               className="w-100"
-              onClick={(e) => {
-                e.preventDefault();
-                handleOpenModal(row);
-              }}
             >
               <Trash2 size={14} className="me-50" />
               <span className="align-middle">حذف</span>

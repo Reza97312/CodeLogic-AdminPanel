@@ -1,5 +1,5 @@
 import { Row, Col } from "reactstrap";
-import Table from "./Table";
+import Table from "./Table.js";
 import StatsHorizontal from "@components/widgets/stats/StatsHorizontal";
 import {
   User,

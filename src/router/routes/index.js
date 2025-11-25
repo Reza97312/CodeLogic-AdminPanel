@@ -16,7 +16,8 @@ import PublicRoute from "@components/routes/PublicRoute";
 
 // ** Utils
 import { isObjEmpty } from "@utils";
-import CoursesManagement from "../../pages/CourseManagement/CoursesManagement";
+import CoursesManagement from "../../pages/CourseManagement/CourseList/CoursesManagement";
+import CourseView from "../../pages/CourseManagement/CourseView/CourseView";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -108,6 +109,10 @@ const Routes = [
   {
     path: "/courses-management",
     element: <CoursesManagement />,
+  },
+  {
+    path: "/courses/view/:id",
+    element: <CourseView />,
   },
   {
     path: "*",

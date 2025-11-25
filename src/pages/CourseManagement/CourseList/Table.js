@@ -1,6 +1,6 @@
 // ** React Imports
 import { Fragment, useState } from "react";
-import loading from "../../assets/images/A/loading.gif";
+import loading from "../../../assets/images/A/loading.gif";
 // ** Invoice List Sidebar
 import Sidebar from "./Sidebar";
 
@@ -34,7 +34,7 @@ import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 
 import { useQuery } from "@tanstack/react-query";
-import { GetAllCourses } from "../../core/services/api/get/Courses/GetAllCourses";
+import { GetAllCourses } from "../../../core/services/api/get/Courses/GetAllCourses";
 import { useDebounce } from "use-debounce";
 
 const CustomHeader = ({

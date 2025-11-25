@@ -14,6 +14,7 @@ import PublicRoute from "@components/routes/PublicRoute";
 
 // ** Utils
 import { isObjEmpty } from "@utils";
+import CoursesManagement from "../../pages/CourseManagement/CoursesManagement";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -63,8 +64,8 @@ const Routes = [
     element: <SecondPage />,
   },
   {
-    path: '/news-management',
-    element: <NewsManagement/>
+    path: "/news-management",
+    element: <NewsManagement />,
   },
   {
     path: "/login",
@@ -93,6 +94,10 @@ const Routes = [
     meta: {
       layout: "blank",
     },
+  },
+  {
+    path: "/courses-management",
+    element: <CoursesManagement />,
   },
   {
     path: "*",

@@ -17,6 +17,8 @@ import UserInfoCard from "./UserInfoCard";
 // ** Styles
 import "@styles/react/apps/app-users.scss";
 
+import store from '../store'
+
 const Cview = () => {
   // ** Hooks
   const { id } = useParams();

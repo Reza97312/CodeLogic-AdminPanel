@@ -9,13 +9,15 @@ import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper";
 
 import NewsList from "../../pages/NewsManagement/NewsList/NewsList";
 import NewsDetail from "../../pages/NewsManagement/NewsDetail/NewsDetail";
-import CreateNews from '../../pages/NewsManagement/CreateNews/CreateNews'
+import CreateNews from "../../pages/NewsManagement/CreateNews/CreateNews";
 
 // ** Route Components
 import PublicRoute from "@components/routes/PublicRoute";
 
 // ** Utils
 import { isObjEmpty } from "@utils";
+import CoursesManagement from "../../pages/CourseManagement/CourseList/CoursesManagement";
+import CourseView from "../../pages/CourseManagement/CourseView/CourseView";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -65,16 +67,16 @@ const Routes = [
     element: <SecondPage />,
   },
   {
-    path: '/news-list',
-    element: <NewsList/>
+    path: "/news-list",
+    element: <NewsList />,
   },
   {
-    path: '/news-detail/:id',
-    element: <NewsDetail/>
+    path: "/news-detail/:id",
+    element: <NewsDetail />,
   },
   {
-    path: '/create-news',
-    element: <CreateNews/>
+    path: "/create-news",
+    element: <CreateNews />,
   },
   {
     path: "/login",
@@ -103,6 +105,14 @@ const Routes = [
     meta: {
       layout: "blank",
     },
+  },
+  {
+    path: "/courses-management",
+    element: <CoursesManagement />,
+  },
+  {
+    path: "/courses/view/:id",
+    element: <CourseView />,
   },
   {
     path: "*",

@@ -2,25 +2,28 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
-// ** Store & Actions
-import { getUser } from "../store";
-import { useSelector, useDispatch } from "react-redux";
-
 // ** Reactstrap Imports
 import { Row, Col, Alert } from "reactstrap";
 
 // ** User View Components
-import UserTabs from "./Tabs";
+import UserTabs from "./courseTabs";
 import PlanCard from "./PlanCard";
-import UserInfoCard from "./UserInfoCard";
-
+import UserInfoCard from "./CourseInfoCard";
+import { useQuery } from "@tanstack/react-query";
 // ** Styles
 import "@styles/react/apps/app-users.scss";
+import { GetCourseById } from "../../../../core/services/api/get/Courses/GetCourseByID";
+import CourseInfoCard from "./CourseInfoCard";
+import loading from "../../../../assets/images/A/loading.gif";
+import CourseTabs from "./courseTabs";
 
 const Cview = () => {
   // ** Hooks
   const { id } = useParams();
-
+  const { data: courseData = {}, isPending } = useQuery({
+    queryKey: ["COURSEBYID"],
+    queryFn: () => GetCourseById(id),
+  });
   const [active, setActive] = useState("1");
 
   const toggleTab = (tab) => {
@@ -29,15 +32,18 @@ const Cview = () => {
     }
   };
 
-  return store.selectedUser !== null && store.selectedUser !== undefined ? (
+  return courseData ? (
     <div className="app-user-view">
       <Row>
         <Col xl="4" lg="5" xs={{ order: 1 }} md={{ order: 0, size: 5 }}>
-          <UserInfoCard selectedUser={store.selectedUser} />
-          <PlanCard />
+          {isPending ? (
+            <img className="mx-auto" src={loading} />
+          ) : (
+            <CourseInfoCard selectedCourse={courseData} />
+          )}
         </Col>
         <Col xl="8" lg="7" xs={{ order: 0 }} md={{ order: 1, size: 7 }}>
-          <UserTabs active={active} toggleTab={toggleTab} />
+          <CourseTabs id={id} active={active} toggleTab={toggleTab} />
         </Col>
       </Row>
     </div>

@@ -61,7 +61,7 @@ const checkIsValid = (data) => {
   );
 };
 
-const SidebarNewUsers = ({ open, toggleSidebar }) => {
+const SidebarEditCourses = ({ open, toggleSidebar }) => {
   // ** States
   const [data, setData] = useState(null);
   const [plan, setPlan] = useState("basic");
@@ -278,4 +278,4 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
   );
 };
 
-export default SidebarNewUsers;
+export default SidebarEditCourses;

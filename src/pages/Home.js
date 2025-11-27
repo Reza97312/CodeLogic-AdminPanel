@@ -47,7 +47,7 @@ const Home = () => {
   useEffect(() => {
     setItem(
       "token",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50cyI6W3sicGhvbmUiOiIwOTAzMDU1ODAxNCIsImlkIjo0MywiaXNVc2UiOnRydWV9XSwiaWF0IjoxNzYzODAyNzIyLCJleHAiOjE3NjM4Mzg3MjJ9.s6zukitGl7ja_KCGcE4JFkZ_BPEPAmFkaFEQJQiNhtQ"
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50cyI6W3sicGhvbmUiOiIwOTAzMDU1ODAxNCIsImlkIjo0MywiaXNVc2UiOnRydWV9XSwiaWF0IjoxNzY0MTkwMTU0LCJleHAiOjE3NjQyMjYxNTR9.ETiPEEOrhhQa6_lQQnsi8w9fju2f_5XdBCRDpV9cX1U"
     );
   }, []);
   const { data: profileInfo = {}, isPending: ProfileInfo } = useQuery({

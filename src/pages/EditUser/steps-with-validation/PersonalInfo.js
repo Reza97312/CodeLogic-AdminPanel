@@ -1,44 +1,38 @@
-// ** React Imports
 import { Fragment } from "react";
-
-// ** Utils
 import { isObjEmpty } from "@utils";
-
-// ** Third Party Components
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-// ** Reactstrap Imports
 import { Form, Label, Input, Row, Col, Button, FormFeedback } from "reactstrap";
 
-const defaultValues = {
-  email: "",
-  username: "",
-  password: "",
-  confirmPassword: "",
+const DefValue = (userData) => {
+  return {
+    name: userData.fName,
+    lastname: userData.lName,
+    nationalcode: userData.nationalCode,
+    profile: userData.currentPictureAddress,
+  };
 };
 
-const PersonalInfo = ({ stepper }) => {
-  const SignupSchema = yup.object().shape({
-    username: yup.string().required(),
-    email: yup.string().email().required(),
-    password: yup.string().required(),
-    confirmPassword: yup
-      .string()
-      .required()
-      .oneOf([yup.ref(`password`), null], "Passwords must match"),
-  });
+const PersonalInfo = ({ stepper, initialData }) => {
+  const initialDefValues = DefValue(initialData);
 
-  // ** Hooks
+  const SignupSchema = yup.object().shape({
+    name: yup.string().required("   نام خود را وارد کنید "),
+    lastname: yup.string().required("   نام خانوادگی خود را وارد کنید  "),
+    nationalcode: yup
+      .string()
+      .required("   کد ملی خود را وارد کنید  ")
+      .matches(/^[0-9]{10}$/, "کد ملی نامعتبر است"),
+  });
 
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues,
+    defaultValues: initialDefValues,
     resolver: yupResolver(SignupSchema),
   });
 
@@ -56,93 +50,107 @@ const PersonalInfo = ({ stepper }) => {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Row>
           <Col md="6" className="mb-4">
-            <Label className="form-label" for="username">
+            <Label className="form-label" for="name">
               نام
             </Label>
             <Controller
-              id="username"
-              name="username"
+              id="name"
+              name="name"
               control={control}
               render={({ field }) => (
                 <Input
                   placeholder="نام خود را وارد کنید..."
-                  invalid={errors.username && true}
+                  invalid={errors.name && true}
                   {...field}
                 />
               )}
             />
-            {errors.username && (
-              <FormFeedback>{errors.username.message}</FormFeedback>
-            )}
+            {errors.name && <FormFeedback>{errors.name.message}</FormFeedback>}
           </Col>
           <Col md="6" className="mb-5">
-            <Label className="form-label" for={`email`}>
+            <Label className="form-label" for="lastname">
               نام خانوادگی
             </Label>
             <Controller
               control={control}
-              id="email"
-              name="email"
+              id="lastname"
+              name="lastname"
               render={({ field }) => (
                 <Input
-                  type="email"
+                  type="text"
                   placeholder="نام خانوادگی خود را وارد کنید..."
-                  invalid={errors.email && true}
+                  invalid={errors.lastname && true}
                   {...field}
                 />
               )}
             />
-            {errors.email && (
-              <FormFeedback>{errors.email.message}</FormFeedback>
+            {errors.lastname && (
+              <FormFeedback>{errors.lastname.message}</FormFeedback>
             )}
           </Col>
         </Row>
         <Row>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="password">
+            <Label className="form-label" for="nationalcode">
               کد ملی
             </Label>
             <Controller
-              id="password"
-              name="password"
+              id="nationalcode"
+              name="nationalcode"
               control={control}
               render={({ field }) => (
                 <Input
-                  type="password"
+                  type="text"
                   placeholder="کد ملی خود را وارد کنید..."
-                  invalid={errors.password && true}
+                  invalid={errors.nationalcode && true}
                   {...field}
                 />
               )}
             />
-            {errors.password && (
-              <FormFeedback>{errors.password.message}</FormFeedback>
+            {errors.nationalcode && (
+              <FormFeedback>{errors.nationalcode.message}</FormFeedback>
             )}
           </div>
-          <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="confirmPassword">
+          <div className="form-password-toggle col-md-6 mb-1">
+            <Label className="form-label" for="profile">
               عکس پروفایل
             </Label>
             <Controller
               control={control}
-              id="confirmPassword"
-              name="confirmPassword"
-              render={({ field }) => (
-                <Input
-                  type="file"
-                  placeholder="عکس خود را انتخاب کنید..."
-                  invalid={errors.confirmPassword && true}
-                  {...field}
-                />
+              id="profile"
+              name="profile"
+              render={({ field: { value, onChange, ...field } }) => (
+                <Fragment>
+                  <Input
+                    type="file"
+                    placeholder="عکس خود را انتخاب کنید..."
+                    invalid={errors.profile && true}
+                    onChange={(e) => onChange(e.target.files[0])}
+                    {...field}
+                  />
+
+                  {initialData.currentPictureAddress &&
+                    typeof initialData.currentPictureAddress === "string" && (
+                      <small className="text-muted mt-1 d-block">
+                        عکس فعلی:{" "}
+                        {initialData.currentPictureAddress.substring(0, 30)}...
+                      </small>
+                    )}
+                </Fragment>
               )}
             />
-            {errors.confirmPassword && (
-              <FormFeedback>{errors.confirmPassword.message}</FormFeedback>
+            {errors.profile && (
+              <FormFeedback>{errors.profile.message}</FormFeedback>
             )}
           </div>
         </Row>
         <div className="d-flex justify-content-between mt-5">
-          <Button color="secondary" className="btn-prev" outline disabled>
+          <Button
+            color="secondary"
+            className="btn-prev"
+            outline
+            onClick={() => stepper.previous()}
+          >
             <ArrowLeft
               size={14}
               className="align-middle me-sm-25 me-0"

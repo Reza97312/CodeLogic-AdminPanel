@@ -1,14 +1,5 @@
-// ** React Imports
-import { Link, useNavigate } from "react-router-dom";
-
-// ** Custom Components
+import { Link } from "react-router-dom";
 import Avatar from "@components/avatar";
-
-// ** Store & Actions
-import { store } from "@store/store";
-import { getUser, deleteUser } from "./store";
-
-// ** Icons Imports
 import {
   Slack,
   User,
@@ -19,12 +10,11 @@ import {
   FileText,
   Trash2,
   Archive,
-  CreditCard,
-  Award,
   UserPlus,
+  Book,
+  Eye,
+  Key,
 } from "react-feather";
-
-// ** Reactstrap Imports
 import {
   Badge,
   UncontrolledDropdown,
@@ -32,74 +22,67 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
-
-// ** Renders Client Columns
 const renderClient = (row) => {
-  if (row.avatar.length) {
-    return <Avatar className="me-1" img={row.avatar} width="32" height="32" />;
+  const stateNum = Math.floor(Math.random() * 6),
+    states = [
+      "light-success",
+      "light-danger",
+      "light-warning",
+      "light-info",
+      "light-primary",
+      "light-secondary",
+    ];
+  const color = states[stateNum];
+
+  const userImg = row.pictureAddress;
+
+  if (userImg && userImg !== "Not-set") {
+    return <Avatar className="me-1" img={userImg} width="32" height="32" />;
   } else {
     return (
       <Avatar
         initials
         className="me-1"
-        color={row.avatarColor || "light-primary"}
-        content={row.fullName || "John Doe"}
+        color={color}
+        content={`${row.fname} ${row.lname}`}
       />
     );
   }
 };
 
-// ** Renders Role Columns
 const renderRole = (row) => {
   const roleObj = {
-    subscriber: {
-      class: "text-primary",
-      icon: User,
-    },
-    maintainer: {
-      class: "text-success",
-      icon: Database,
-    },
-    editor: {
-      class: "text-info",
-      icon: Edit2,
-    },
-    author: {
-      class: "text-warning",
-      icon: Settings,
-    },
-    admin: {
-      class: "text-danger",
-      icon: Slack,
-    },
+    student: { class: "text-primary", icon: User },
+    teacher: { class: "text-danger", icon: Book },
+    admin: { class: "text-success", icon: Eye },
+    administrator: { class: "text-info", icon: Edit2 },
+    superadmin: { class: "text-warning", icon: Key },
   };
 
-  const Icon = roleObj[row.role] ? roleObj[row.role].icon : Edit2;
+  const rolesArray = row.roles
+    ? row.roles.map((r) => r.toLowerCase())
+    : row.userRoles
+    ? row.userRoles.split(",").map((r) => r.trim().toLowerCase())
+    : [];
 
   return (
-    <span className="text-truncate text-capitalize align-middle">
-      <Icon
-        size={18}
-        className={`${roleObj[row.role] ? roleObj[row.role].class : ""} me-50`}
-      />
-      {row.role}
-    </span>
+    <div className="d-flex align-items-center gap-1">
+      {rolesArray.map((role) => {
+        const RoleIcon = roleObj[role] ? roleObj[role].icon : User;
+        const roleClass = roleObj[role] ? roleObj[role].class : "";
+        return <RoleIcon key={role} size={18} className={`${roleClass}`} />;
+      })}
+    </div>
   );
 };
 
-const statusObj = {
-  pending: "light-warning",
-  active: "light-success",
-  inactive: "light-secondary",
-};
-
-export const columns = ({ handleOpenModal }) => [
+export const columns = ({ handleOpenModal, handleDeleteUser }) => [
   {
     name: <span style={{ fontSize: "14px" }}>کاربران</span>,
     sortable: true,
     minWidth: "300px",
-    sortField: "fullName",
-    selector: (row) => row.fullName,
+    sortField: "fname",
+    selector: (row) => `${row.fname} ${row.lname}`,
     cell: (row) => (
       <div className="d-flex justify-content-left align-items-center">
         {renderClient(row)}
@@ -107,11 +90,12 @@ export const columns = ({ handleOpenModal }) => [
           <Link
             to={`/apps/user/view/${row.id}`}
             className="user_name text-truncate text-body"
-            onClick={() => store.dispatch(getUser(row.id))}
           >
-            <span className="fw-bolder">{row.fullName}</span>
+            <span className="fw-bolder">
+              {row.fname} {row.lname}
+            </span>
           </Link>
-          <small className="text-truncate text-muted mb-0">{row.email}</small>
+          <small className="text-truncate text-muted mb-0">{row.gmail}</small>
         </div>
       </div>
     ),
@@ -120,51 +104,49 @@ export const columns = ({ handleOpenModal }) => [
     name: <span style={{ fontSize: "14px" }}>نقش</span>,
     sortable: true,
     minWidth: "172px",
-    sortField: "role",
-    selector: (row) => row.role,
+    sortField: "userRoles",
+    selector: (row) => row.userRoles,
     cell: (row) => renderRole(row),
   },
   {
     name: <span style={{ fontSize: "14px" }}>تلفن همراه</span>,
     minWidth: "138px",
     sortable: true,
-    sortField: "currentPlan",
-    selector: (row) => row.currentPlan,
-    cell: (row) => <span className="text-capitalize">{row.currentPlan}</span>,
+    sortField: "phoneNumber",
+    selector: (row) => row.phoneNumber,
+    cell: (row) => <span className="text-capitalize">{row.phoneNumber}</span>,
   },
-
   {
     name: <span style={{ fontSize: "14px" }}>دسترسی</span>,
     minWidth: "230px",
-    sortable: true,
-    sortField: "billing",
-    selector: (row) => row.billing,
+    sortable: false,
     cell: (row) => (
       <div
         onClick={() => handleOpenModal(row)}
-        className="d-flex align-items-center"
+        className="d-flex align-items-center cursor-pointer"
       >
         <UserPlus size={18} />
       </div>
     ),
   },
   {
-    name: <span style={{ fontSize: "14px" }}>وضعیت </span>,
-
+    name: <span style={{ fontSize: "14px" }}>وضعیت</span>,
     minWidth: "138px",
-
     sortable: true,
-    sortField: "status",
-    selector: (row) => row.status,
+    sortField: "active",
+    selector: (row) => row.active,
     cell: (row) => (
-      <Badge className="text-capitalize" color={statusObj[row.status]} pill>
-        {row.status}
+      <Badge
+        className="text-capitalize"
+        color={row.active ? "light-success" : "light-secondary"}
+        pill
+      >
+        {row.active ? "فعال" : "غیرفعال"}
       </Badge>
     ),
   },
   {
-    name: <span style={{ fontSize: "14px" }}>اقدامات </span>,
-
+    name: <span style={{ fontSize: "14px" }}>اقدامات</span>,
     minWidth: "100px",
     cell: (row) => (
       <div className="column-action">
@@ -177,10 +159,9 @@ export const columns = ({ handleOpenModal }) => [
               tag={Link}
               className="w-100"
               to={`/apps/user/view/${row.id}`}
-              onClick={() => store.dispatch(getUser(row.id))}
             >
               <FileText size={14} className="me-50" />
-              <span className="align-middle">جزِئیات کاربر</span>
+              <span className="align-middle">جزئیات کاربر</span>
             </DropdownItem>
             <Link to={`/edituser/${row.id}`}>
               <DropdownItem className="w-100">
@@ -188,14 +169,13 @@ export const columns = ({ handleOpenModal }) => [
                 <span className="align-middle">ویرایش</span>
               </DropdownItem>
             </Link>
-
             <DropdownItem
               tag="a"
               href="/"
               className="w-100"
               onClick={(e) => {
                 e.preventDefault();
-                store.dispatch(deleteUser(row.id));
+                handleDeleteUser(row.id);
               }}
             >
               <Trash2 size={14} className="me-50" />

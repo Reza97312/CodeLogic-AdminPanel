@@ -1,76 +1,31 @@
-// ** React Import
 import { useState } from "react";
-
-// ** Custom Components
 import Sidebar from "@components/sidebar";
-
-// ** Utils
-import { selectThemeColors } from "@utils";
-
-// ** Third Party Components
-import Select from "react-select";
-import classnames from "classnames";
 import { useForm, Controller } from "react-hook-form";
-
-// ** Reactstrap Imports
-import { Button, Label, FormText, Form, Input } from "reactstrap";
-
-// ** Store & Actions
-import { addUser } from "./store";
-import { useDispatch } from "react-redux";
+import { Button, Label, Form, Input } from "reactstrap";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-hot-toast";
+import AddUser from "../../core/services/api/post/AddUser";
 
 const defaultValues = {
   email: "",
   contact: "",
-  company: "",
   fullName: "",
   username: "",
-  country: null,
+  password: "",
 };
 
-const countryOptions = [
-  { label: "Australia", value: "Australia" },
-  { label: "Bangladesh", value: "Bangladesh" },
-  { label: "Belarus", value: "Belarus" },
-  { label: "Brazil", value: "Brazil" },
-  { label: "Canada", value: "Canada" },
-  { label: "China", value: "China" },
-  { label: "France", value: "France" },
-  { label: "Germany", value: "Germany" },
-  { label: "India", value: "India" },
-  { label: "Indonesia", value: "Indonesia" },
-  { label: "Israel", value: "Israel" },
-  { label: "Italy", value: "Italy" },
-  { label: "Japan", value: "Japan" },
-  { label: "Korea", value: "Korea" },
-  { label: "Mexico", value: "Mexico" },
-  { label: "Philippines", value: "Philippines" },
-  { label: "Russia", value: "Russia" },
-  { label: "South", value: "South" },
-  { label: "Thailand", value: "Thailand" },
-  { label: "Turkey", value: "Turkey" },
-  { label: "Ukraine", value: "Ukraine" },
-  { label: "United Arab Emirates", value: "United Arab Emirates" },
-  { label: "United Kingdom", value: "United Kingdom" },
-  { label: "United States", value: "United States" },
-];
-
 const checkIsValid = (data) => {
-  return Object.values(data).every((field) =>
-    typeof field === "object" ? field !== null : field.length > 0
+  return Object.values(data).every(
+    (field) => field && String(field).length > 0
   );
 };
 
 const SidebarNewUsers = ({ open, toggleSidebar }) => {
-  // ** States
-  const [data, setData] = useState(null);
-  const [plan, setPlan] = useState("basic");
-  const [role, setRole] = useState("subscriber");
+  const [isStudent, setIsStudent] = useState(false);
+  const [isTeacher, setIsTeacher] = useState(false);
 
-  // ** Store Vars
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
-  // ** Vars
   const {
     control,
     setValue,
@@ -79,34 +34,35 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
     formState: { errors },
   } = useForm({ defaultValues });
 
-  // ** Function to handle form submit
-  const onSubmit = (data) => {
-    setData(data);
-    if (checkIsValid(data)) {
+  const addUserMutation = useMutation({
+    mutationFn: (userData) => AddUser(userData),
+    onSuccess: () => {
+      toast.success("کاربر با موفقیت افزوده شد");
+
+      queryClient.invalidateQueries({ queryKey: ["GetAllUser"] });
       toggleSidebar();
-      dispatch(
-        addUser({
-          role,
-          avatar: "",
-          status: "active",
-          email: data.email,
-          currentPlan: plan,
-          billing: "auto debit",
-          company: data.company,
-          contact: data.contact,
-          fullName: data.fullName,
-          username: data.username,
-          country: data.country.value,
-        })
-      );
+    },
+    onError: (error) => {
+      toast.error("خطا در افزودن کاربر");
+    },
+  });
+
+  const onSubmit = (data) => {
+    if (checkIsValid(data)) {
+      const payload = {
+        firstName: data.fullName,
+        lastName: data.username,
+        gmail: data.email,
+        password: data.password,
+        phoneNumber: data.contact,
+        isStudent: isStudent,
+        isTeacher: isTeacher,
+      };
+
+      addUserMutation.mutate(payload);
     } else {
       for (const key in data) {
         if (data[key] === null) {
-          setError("country", {
-            type: "manual",
-          });
-        }
-        if (data[key] !== null && data[key].length === 0) {
           setError(key, {
             type: "manual",
           });
@@ -119,8 +75,9 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
     for (const key in defaultValues) {
       setValue(key, "");
     }
-    setRole("subscriber");
-    setPlan("basic");
+
+    setIsStudent(false);
+    setIsTeacher(false);
   };
 
   return (
@@ -156,6 +113,7 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
             )}
           />
         </div>
+
         <div className="mb-1">
           <Label
             style={{ fontSize: "17px" }}
@@ -177,6 +135,7 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
             )}
           />
         </div>
+
         <div className="mb-1">
           <Label
             style={{ fontSize: "17px" }}
@@ -198,6 +157,7 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
             )}
           />
         </div>
+
         <div className="mb-1">
           <Label
             style={{ fontSize: "17px" }}
@@ -219,27 +179,30 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
             )}
           />
         </div>
+
         <div className="mb-1">
           <Label
             style={{ fontSize: "17px" }}
             className="form-label"
-            for="username"
+            for="password"
           >
             رمز عبور <span className="text-danger">*</span>
           </Label>
           <Controller
-            name="username"
+            name="password"
             control={control}
             render={({ field }) => (
               <Input
-                id="username"
+                type="password"
+                id="password"
                 placeholder=" رمز عبور "
-                invalid={errors.username && true}
+                invalid={errors.password && true}
                 {...field}
               />
             )}
           />
         </div>
+
         <div className="mb-3 mt-1">
           <p style={{ fontSize: "17px" }} className="form-label fw-bold mb-1">
             نوع کاربر
@@ -250,6 +213,8 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
               className="form-check-input"
               type="checkbox"
               id="role-student"
+              checked={isStudent}
+              onChange={(e) => setIsStudent(e.target.checked)}
             />
             <label className="form-check-label" htmlFor="role-student">
               دانش‌آموز
@@ -261,14 +226,22 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
               className="form-check-input"
               type="checkbox"
               id="role-teacher"
+              checked={isTeacher}
+              onChange={(e) => setIsTeacher(e.target.checked)}
             />
             <label className="form-check-label" htmlFor="role-teacher">
               معلم
             </label>
           </div>
         </div>
-        <Button type="submit" className="me-1" color="primary">
-          تایید
+
+        <Button
+          type="submit"
+          className="me-1"
+          color="primary"
+          disabled={addUserMutation.isPending}
+        >
+          {addUserMutation.isPending ? "در حال ارسال..." : "تایید"}
         </Button>
         <Button type="reset" color="secondary" outline onClick={toggleSidebar}>
           انصراف

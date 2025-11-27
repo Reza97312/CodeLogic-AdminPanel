@@ -10,7 +10,7 @@ import ReactPaginate from "react-paginate";
 import DataTable from "react-data-table-component";
 import {ChevronDown} from "react-feather";
 import { selectThemeColors } from "@utils";
-import {Card, Input, Label, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
+import {Card, CardHeader, CardTitle, CardBody, Row, Col, Input, Label, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
 import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import CustomHeader from './CustomHeader/CustomHeader'
@@ -23,6 +23,13 @@ const NewsList = () => {
   const handleSearch = (searchTerm) => {
     setSearchQuery(searchTerm)
   }
+
+
+  const [sortingCol , setSortingCol] = useState()
+  const handleSortingCol = (value) => {
+    setSortingCol(value)
+  }
+
 
   const { data: newsData, isLoading } = useQuery({
     queryKey: ["GETNEWS", searchQuery],
@@ -54,15 +61,15 @@ const NewsList = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentRole, setCurrentRole] = useState({
     value: "",
-    label: "Select Role",
+    label: "دسته بندی را انتخاب کنید",
   });
   const [currentPlan, setCurrentPlan] = useState({
     value: "",
-    label: "Select Plan",
+    label: "مرتب سازی",
   });
   const [currentStatus, setCurrentStatus] = useState({
     value: "",
-    label: "Select Status",
+    label: "وضعیت را انتخاب کنید",
     number: 0,
   });
 
@@ -109,7 +116,7 @@ const NewsList = () => {
 
   // ** User filter options
   const roleOptions = [
-    { value: "", label: "Select Role" },
+    { value: "", label: "دسته بندی را انتخاب کنید" },
     { value: "admin", label: "Admin" },
     { value: "author", label: "Author" },
     { value: "editor", label: "Editor" },
@@ -118,15 +125,13 @@ const NewsList = () => {
   ];
 
   const planOptions = [
-    { value: "", label: "Select Plan" },
-    { value: "basic", label: "Basic" },
-    { value: "company", label: "Company" },
-    { value: "enterprise", label: "Enterprise" },
-    { value: "team", label: "Team" },
+    { value: "", label: "مرتب سازی" },
+    { value: "basic", label: "جدیدترین" },
+    { value: "company", label: "قدیمی ترین" },
   ];
 
   const statusOptions = [
-    { value: "", label: "Select Status", number: 0 },
+    { value: "", label: "وضعیت را انتخاب کنید", number: 0 },
     { value: "pending", label: "Pending", number: 1 },
     { value: "active", label: "Active", number: 2 },
     { value: "inactive", label: "Inactive", number: 3 },
@@ -266,14 +271,14 @@ const NewsList = () => {
 
   return (
     <Fragment>
-      {/* <Card>
+      <Card>
         <CardHeader>
           <CardTitle tag="h4">Filters</CardTitle>
         </CardHeader>
         <CardBody>
           <Row>
             <Col md="4">
-              <Label for="role-select">Role</Label>
+              <Label for="role-select">دسته بندی</Label>
               <Select
                 isClearable={false}
                 value={currentRole}
@@ -299,7 +304,7 @@ const NewsList = () => {
               />
             </Col>
             <Col className="my-md-0 my-1" md="4">
-              <Label for="plan-select">Plan</Label>
+              <Label for="plan-select">تاریخ</Label>
               <Select
                 theme={selectThemeColors}
                 isClearable={false}
@@ -325,7 +330,7 @@ const NewsList = () => {
               />
             </Col>
             <Col md="4">
-              <Label for="status-select">Status</Label>
+              <Label for="status-select">وضعیت</Label>
               <Select
                 theme={selectThemeColors}
                 isClearable={false}
@@ -352,7 +357,7 @@ const NewsList = () => {
             </Col>
           </Row>
         </CardBody>
-      </Card> */}
+      </Card>
 
       {
         <Card className="overflow-hidden">

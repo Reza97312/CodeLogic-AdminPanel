@@ -92,8 +92,8 @@ const CustomHeader = ({store,toggleSidebar,handlePerPage,rowsPerPage,handleFilte
         >
           <button 
           onClick={(e) => {handleSearch(e.target.value)}} 
-          className="d-flex align-items-center mb-sm-0 mb-1 me-1 py-1 px-1 rounded-3"
-          style={{ border: "none", boxShadow: "none" }}>
+          className="d-flex align-items-center mb-sm-0 mb-1 me-1 py-1 px-1"
+          style={{ border: "none", boxShadow: "none", backgroundColor: "#FFFFFF" }}>
             <label
               style={{ fontSize: "17px" }}
               className="mb-0 text-nowrap"

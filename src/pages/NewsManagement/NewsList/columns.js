@@ -16,7 +16,7 @@ const statusObj = {
   false: "light-danger",
 };
 
-export const columns = ({ handleOpenModal }) => [
+export const columns = ({ handleOpenModal, toggleDeleteModal, handleNewsId }) => [
   {
     name: <span style={{ fontSize: "14px" }}>خبر</span>,
     sortable: true,
@@ -77,7 +77,7 @@ export const columns = ({ handleOpenModal }) => [
             <DropdownItem  
               tag={Link}
               className="w-100"
-              to={`/news/view/${row.id}`}
+              to={`/news-detail/${row.id}`}
             >
               <FileText size={14} className="me-50" />
               <span className="align-middle">مشاهده خبر</span>
@@ -87,19 +87,23 @@ export const columns = ({ handleOpenModal }) => [
               tag={Link}
               className="w-100"
               to={`/news/edit/${row.id}`}
+              onClick={(e) => {
+                e.preventDefault();
+                handleOpenModal(row);
+              }}
             >
               <FileText size={14} className="me-50" />
               <span className="align-middle">ویرایش</span>
             </DropdownItem>
 
             <DropdownItem
-              tag="a"
+              onClick={() => {
+                toggleDeleteModal(true)
+                handleNewsId(row.id)
+              }}
+              tag="span"
               href="/"
               className="w-100"
-              onClick={(e) => {
-                e.preventDefault();
-                handleOpenModal(row);
-              }}
             >
               <Trash2 size={14} className="me-50" />
               <span className="align-middle">حذف</span>

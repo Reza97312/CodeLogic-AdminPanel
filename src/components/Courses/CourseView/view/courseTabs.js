@@ -47,8 +47,9 @@ import CoursesManagement from "../../../../pages/CourseManagement/CourseList/Cou
 import { Form } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import CoursesUserList from "./CourseUsersList/CoursesUserList";
+import CourseGroups from "../../../../pages/CourseManagement/CourseGroups/CourseGroups";
 
-const CourseTabs = ({ active, toggleTab, id }) => {
+const CourseTabs = ({ active, toggleTab, id, teacherId }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const toggle = () => setModalOpen(!modalOpen);
 
@@ -111,7 +112,9 @@ const CourseTabs = ({ active, toggleTab, id }) => {
           <CoursesUserList id={id} />
           {/* <InvoiceList /> */}
         </TabPane>
-        <TabPane tabId="2">گروه ها</TabPane>
+        <TabPane tabId="2">
+          <CourseGroups courseId={id} teacherId={teacherId} />
+        </TabPane>
         <TabPane tabId="3">کامنت ها</TabPane>
         <TabPane tabId="4">پرداختی ها</TabPane>
         <TabPane tabId="5">شبکه های اجتماعی</TabPane>

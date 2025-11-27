@@ -32,11 +32,13 @@ import {
 import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { GetAllCourses } from "../../../core/services/api/get/Courses/GetAllCourses";
 import { useDebounce } from "use-debounce";
 import SidebarEditCourses from "./EditCourseSidebar";
 import { Link, useNavigate } from "react-router-dom";
+import { DeleteCourse } from "../../../core/services/api/delete/DeleteCourse";
+import { toast } from "react-toastify";
 
 const CustomHeader = ({
   toggleSidebar,
@@ -111,6 +113,17 @@ const UsersList = () => {
       }),
   });
 
+  const { mutate: deleteCourse, isPending: DeleteCoursePending } = useMutation({
+    mutationKey: ["QUERYKEY"],
+    mutationFn: (value) => DeleteCourse(value),
+    onError: (data) => {
+      toast.error(data.response.message || "شما به این روت دسترسی ندارید");
+    },
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+  });
+
   const courses = CoursesData?.courseDtos || [];
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
@@ -135,7 +148,11 @@ const UsersList = () => {
     setSortColumn(column.sortField);
   };
 
-  const tableColumns = columns({ toggleSidebar, handleOpenModal: () => {} });
+  const tableColumns = columns({
+    deleteCourse,
+    toggleSidebar,
+    handleOpenModal: () => {},
+  });
 
   const CustomPagination = () => {
     const count = Math.ceil((CoursesData.totalCount || 0) / rowsPerPage);

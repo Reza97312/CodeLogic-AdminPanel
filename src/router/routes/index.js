@@ -21,6 +21,7 @@ import CourseView from "../../pages/CourseManagement/CourseView/CourseView";
 import CourseUseresTable from "../../components/Courses/CourseView/view/CourseUsersList/UserseTable";
 import CoursesUserList from "../../components/Courses/CourseView/view/CourseUsersList/CoursesUserList";
 import CreateCourse from "../../pages/CourseManagement/CreateCourse/CreateCourse";
+import CourseGroups from "../../pages/CourseManagement/CourseGroups/CourseGroups";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -124,6 +125,10 @@ const Routes = [
   {
     path: "/courses/create",
     element: <CreateCourse />,
+  },
+  {
+    path: "/courses/groups",
+    element: <CourseGroups />,
   },
   {
     path: "*",

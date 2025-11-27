@@ -19,6 +19,7 @@ import {deleteNews} from '../../../core/services/api/delete/deleteNews'
 
 const NewsList = () => {
 
+  
   const [searchQuery, setSearchQuery] = useState()
   const handleSearch = (searchTerm) => {
     setSearchQuery(searchTerm)
@@ -31,9 +32,19 @@ const NewsList = () => {
   }
 
 
+  const [category, setCategory] = useState();
+  const handleSetCategory = (value) => {
+    setCategory(value)
+  }
+
+
   const { data: newsData, isLoading } = useQuery({
-    queryKey: ["GETNEWS", searchQuery],
-    queryFn: () => getNews({Query: searchQuery}),
+    queryKey: ["GETNEWS", searchQuery, sortingCol, category],
+    queryFn: () => getNews({
+      Query: searchQuery,
+      SortType: "insertDate", SortingCol: sortingCol,
+      newsCatregoryName: category
+    }),
   });
 
 
@@ -59,7 +70,7 @@ const NewsList = () => {
   const [sortColumn, setSortColumn] = useState("id");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [currentRole, setCurrentRole] = useState({
+  const [catFilter, setCatFilter] = useState({
     value: "",
     label: "دسته بندی را انتخاب کنید",
   });
@@ -107,7 +118,7 @@ const NewsList = () => {
         q: searchTerm,
         page: currentPage,
         perPage: rowsPerPage,
-        role: currentRole.value,
+        role: catFilter.value,
         status: currentStatus.value,
         currentPlan: currentPlan.value,
       })
@@ -132,9 +143,8 @@ const NewsList = () => {
 
   const statusOptions = [
     { value: "", label: "وضعیت را انتخاب کنید", number: 0 },
-    { value: "pending", label: "Pending", number: 1 },
-    { value: "active", label: "Active", number: 2 },
-    { value: "inactive", label: "Inactive", number: 3 },
+    { value: "pending", label: "فعال", number: 1 },
+    { value: "active", label: "غیرفعال", number: 2 },
   ];
 
   // ** Function in get data on page change
@@ -146,7 +156,7 @@ const NewsList = () => {
         q: searchTerm,
         perPage: rowsPerPage,
         page: page.selected + 1,
-        role: currentRole.value,
+        role: catFilter.value,
         status: currentStatus.value,
         currentPlan: currentPlan.value,
       })
@@ -164,7 +174,7 @@ const NewsList = () => {
         q: searchTerm,
         perPage: value,
         page: currentPage,
-        role: currentRole.value,
+        role: catFilter.value,
         currentPlan: currentPlan.value,
         status: currentStatus.value,
       })
@@ -182,7 +192,7 @@ const NewsList = () => {
         sortColumn,
         page: currentPage,
         perPage: rowsPerPage,
-        role: currentRole.value,
+        role: catFilter.value,
         status: currentStatus.value,
         currentPlan: currentPlan.value,
       })
@@ -217,7 +227,7 @@ const NewsList = () => {
   // ** Table data to render
   const dataToRender = () => {
     const filters = {
-      role: currentRole.value,
+      role: catFilter.value,
       currentPlan: currentPlan.value,
       status: currentStatus.value,
       q: searchTerm,
@@ -246,7 +256,7 @@ const NewsList = () => {
         q: searchTerm,
         page: currentPage,
         perPage: rowsPerPage,
-        role: currentRole.value,
+        role: catFilter.value,
         status: currentStatus.value,
         currentPlan: currentPlan.value,
       })
@@ -273,7 +283,7 @@ const NewsList = () => {
     <Fragment>
       <Card>
         <CardHeader>
-          <CardTitle tag="h4">Filters</CardTitle>
+          <CardTitle tag="h4">فیلترها</CardTitle>
         </CardHeader>
         <CardBody>
           <Row>
@@ -281,13 +291,13 @@ const NewsList = () => {
               <Label for="role-select">دسته بندی</Label>
               <Select
                 isClearable={false}
-                value={currentRole}
+                value={catFilter}
                 options={roleOptions}
                 className="react-select"
                 classNamePrefix="select"
                 theme={selectThemeColors}
                 onChange={(data) => {
-                  setCurrentRole(data);
+                  setCatFilter(data);
                   dispatch(
                     getData({
                       sort,
@@ -300,6 +310,7 @@ const NewsList = () => {
                       currentPlan: currentPlan.value,
                     })
                   );
+                  handleSetCategory(catFilter)
                 }}
               />
             </Col>
@@ -321,11 +332,12 @@ const NewsList = () => {
                       q: searchTerm,
                       page: currentPage,
                       perPage: rowsPerPage,
-                      role: currentRole.value,
+                      role: catFilter.value,
                       currentPlan: data.value,
                       status: currentStatus.value,
                     })
-                  );
+                  );  
+                  handleSortingCol(currentPlan)
                 }}
               />
             </Col>
@@ -348,7 +360,7 @@ const NewsList = () => {
                       page: currentPage,
                       status: data.value,
                       perPage: rowsPerPage,
-                      role: currentRole.value,
+                      role: catFilter.value,
                       currentPlan: currentPlan.value,
                     })
                   );

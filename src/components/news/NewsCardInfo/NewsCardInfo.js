@@ -85,7 +85,7 @@ const NewsInfoCard = ({ selectedNews }) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      id: selectedNews.courseId,
+      id: selectedNews.id,
     },
   });
 
@@ -235,25 +235,25 @@ const NewsInfoCard = ({ selectedNews }) => {
             {selectedNews !== null ? (
               <ul className="list-unstyled">
                 <li className="mb-75">
-                  <span className="fw-bolder me-25">نام خبر : </span>
-                  <span>{selectedNews?.title}</span>
+                  <span className="fw-bolder me-25">زمان شروع :</span>
+                  <span>{selectedNews?.insertDate}</span>
                 </li>
                 <li className="mb-75">
-                  <span className="fw-bolder me-25">تعداد رزرو ها : </span>
-                  <span className="text-capitalize">
-                    {selectedNews?.reserveUserTotal}
-                  </span>
+                  <span className="fw-bolder me-25">آخرین تغییرات :</span>
+                  <span>{selectedNews?.updateDate}</span>
                 </li>
                 <li className="mb-75">
-                  <span className="fw-bolder me-25">وضعیت دوره :</span>
+                  <span className="fw-bolder me-25">عنوان گوگل :</span>
                   <span>
-                    {selectedNews?.statusName === "started"
-                      ? "شروع شده"
-                      : "شروع نشده"}
+                    {selectedNews?.googleTitle}
                   </span>
                 </li>
                 <li className="mb-75">
-                  <span className="fw-bolder me-25">قیمت دوره :</span>
+                  <span className="fw-bolder me-25">توضیحات گوگل :</span>
+                  <span>{selectedNews?.googleDescribe}</span>
+                </li>
+                <li className="mb-75">
+                  <span className="fw-bolder me-25">توضیحات جزئی :</span>
                   {/* <span>{selectedNews?.cost.toLocaleString()}تومان</span> */}
                 </li>
                 <li className="mb-75">
@@ -261,7 +261,11 @@ const NewsInfoCard = ({ selectedNews }) => {
                   <span>{selectedNews?.describe}</span>
                 </li>
                 <li className="mb-75">
-                  <span className="fw-bolder me-25">نام استاد : </span>
+                  <span className="fw-bolder me-25">امتیاز :</span>
+                  <span>{selectedNews?.teacherName}</span>
+                </li>
+                <li className="mb-75">
+                  <span className="fw-bolder me-25">لایک ها :</span>
                   <span>{selectedNews?.teacherName}</span>
                 </li>
               </ul>

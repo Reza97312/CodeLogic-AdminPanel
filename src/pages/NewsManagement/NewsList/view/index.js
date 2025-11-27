@@ -26,6 +26,7 @@ const NewsView = () => {
     queryKey: ["GETNEWS"],
     queryFn: () => getNews(id),
   });
+
   const [active, setActive] = useState("1");
 
   const toggleTab = (tab) => {
@@ -33,7 +34,6 @@ const NewsView = () => {
       setActive(tab);
     }
   };
-
   
   return newsData ? (
     <div className="app-user-view">

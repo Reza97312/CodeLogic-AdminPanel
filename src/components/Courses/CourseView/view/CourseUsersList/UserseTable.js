@@ -1,10 +1,8 @@
 // ** React Imports
 import { Fragment, useState } from "react";
-import loading from "../../../assets/images/A/loading.gif";
+import loading from "../../../../../assets/images/A/loading.gif";
 // ** Invoice List Sidebar
-
-// ** Table Columns
-import { columns } from "./columns";
+// ** Table Column
 
 // ** Third Party Components
 import ReactPaginate from "react-paginate";
@@ -33,65 +31,11 @@ import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 
 import { useQuery } from "@tanstack/react-query";
-import { GetAllCourses } from "../../../core/services/api/get/Courses/GetAllCourses";
 import { useDebounce } from "use-debounce";
-import SidebarEditCourses from "./EditCourseSidebar";
-import { Link, useNavigate } from "react-router-dom";
+import SidebarCreateGroup from "./CreateGroup";
+import { CourseUsersCol } from "./UsersColumns";
 
-const CustomHeader = ({
-  toggleSidebar,
-  handlePerPage,
-  rowsPerPage,
-  handleFilter,
-  searchTerm,
-}) => {
-  return (
-    <div className="invoice-list-table-header w-100 me-1 ms-50 mt-2 mb-75">
-      <Row>
-        <Col xl="6" className="d-flex align-items-center p-0">
-          <div className="d-flex align-items-center w-100">
-            <label style={{ fontSize: "17px" }} htmlFor="rows-per-page">
-              تعداد نمایش :
-            </label>
-            <Input
-              className="mx-50"
-              type="select"
-              id="rows-per-page"
-              value={rowsPerPage}
-              onChange={handlePerPage}
-              style={{ width: "5rem" }}
-            >
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-            </Input>
-          </div>
-        </Col>
-
-        <Col xl="6" className="d-flex justify-content-end p-0 mt-1">
-          <div className="d-flex align-items-center me-1">
-            <label className="mb-0" style={{ fontSize: "17px" }}>
-              جستجو
-            </label>
-            <Input
-              className="ms-50"
-              type="text"
-              value={searchTerm}
-              onChange={(e) => handleFilter(e.target.value)}
-              placeholder="نام دوره..."
-            />
-          </div>
-
-          <Button color="primary" tag={Link} to={"/courses/create"}>
-            اضافه کردن دوره
-          </Button>
-        </Col>
-      </Row>
-    </div>
-  );
-};
-
-const UsersList = () => {
+const CourseUseresTable = ({ id }) => {
   const [openModal, setOpenModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchQuery] = useDebounce(searchTerm, 700);
@@ -101,15 +45,15 @@ const UsersList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const { data: CoursesData = {}, isPending } = useQuery({
-    queryKey: ["ALLCOURSES", currentPage, rowsPerPage, searchQuery],
-    queryFn: () =>
-      GetAllCourses({
-        PageNumber: currentPage,
-        RowsOfPage: rowsPerPage,
-        Query: searchQuery,
-      }),
-  });
+  //   const { data: CoursesData = {}, isPending } = useQuery({
+  //     queryKey: ["ALLCOURSES", currentPage, rowsPerPage, searchQuery],
+  //     queryFn: () =>
+  //       GetAllCourses({
+  //         PageNumber: currentPage,
+  //         RowsOfPage: rowsPerPage,
+  //         Query: searchQuery,
+  //       }),
+  //   });
 
   const courses = CoursesData?.courseDtos || [];
 
@@ -135,7 +79,7 @@ const UsersList = () => {
     setSortColumn(column.sortField);
   };
 
-  const tableColumns = columns({ toggleSidebar, handleOpenModal: () => {} });
+  const tableColumns = CourseUsersCol({ handleOpenModal: () => {} });
 
   const CustomPagination = () => {
     const count = Math.ceil((CoursesData.totalCount || 0) / rowsPerPage);
@@ -177,23 +121,15 @@ const UsersList = () => {
               data={courses}
               onSort={handleSort}
               paginationComponent={CustomPagination}
-              subHeaderComponent={
-                <CustomHeader
-                  toggleSidebar={toggleSidebar}
-                  rowsPerPage={rowsPerPage}
-                  handlePerPage={handlePerPage}
-                  searchTerm={searchTerm}
-                  handleFilter={handleFilter}
-                />
-              }
+              toggleSidebar={toggleSidebar}
             />
           </div>
         )}
       </Card>
 
-      <SidebarEditCourses open={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <SidebarCreateGroup open={sidebarOpen} toggleSidebar={toggleSidebar} />
     </Fragment>
   );
 };
 
-export default UsersList;
+export default CourseUseresTable;

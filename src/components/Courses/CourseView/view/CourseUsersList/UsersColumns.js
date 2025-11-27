@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import Avatar from "@components/avatar";
 import { store } from "@store/store";
-import { deleteUser, getUser } from "./store";
 
 import {
   MoreVertical,
@@ -40,7 +39,7 @@ const statusObj = {
   true: "light-success",
   false: "light-secondary",
 };
-export const columns = ({ handleOpenModal, toggleSidebar }) => [
+export const CourseUsersCol = ({ handleOpenModal, toggleSidebar }) => [
   {
     name: <span style={{ fontSize: "14px" }}>دوره</span>,
     minWidth: "300px",
@@ -115,12 +114,12 @@ export const columns = ({ handleOpenModal, toggleSidebar }) => [
             onClick={() => store.dispatch(getUser(row.id))}
           >
             <FileText size={14} className="me-50" />
-            <span className="align-middle">جزئیات دوره</span>
+            <span className="align-middle">جزئیات کاربر</span>
           </DropdownItem>
 
           <DropdownItem onClick={() => toggleSidebar()}>
             <Archive size={14} className="me-50" />
-            <span className="align-middle">ویرایش</span>
+            <span className="align-middle">تایید</span>
           </DropdownItem>
 
           <DropdownItem

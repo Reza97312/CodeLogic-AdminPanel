@@ -18,6 +18,9 @@ import PublicRoute from "@components/routes/PublicRoute";
 import { isObjEmpty } from "@utils";
 import CoursesManagement from "../../pages/CourseManagement/CourseList/CoursesManagement";
 import CourseView from "../../pages/CourseManagement/CourseView/CourseView";
+import CourseUseresTable from "../../components/Courses/CourseView/view/CourseUsersList/UserseTable";
+import CoursesUserList from "../../components/Courses/CourseView/view/CourseUsersList/CoursesUserList";
+import CreateCourse from "../../pages/CourseManagement/CreateCourse/CreateCourse";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -113,6 +116,14 @@ const Routes = [
   {
     path: "/courses/view/:id",
     element: <CourseView />,
+  },
+  {
+    path: "/courses/users/:id",
+    element: <CoursesUserList />,
+  },
+  {
+    path: "/courses/create",
+    element: <CreateCourse />,
   },
   {
     path: "*",

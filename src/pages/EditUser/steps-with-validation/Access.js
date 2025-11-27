@@ -1,42 +1,54 @@
-// ** React Imports
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import Select from "react-select";
 import { selectThemeColors } from "@utils";
-// ** Utils
 import { isObjEmpty } from "@utils";
-
-// ** Third Party Components
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-// ** Reactstrap Imports
 import { Form, Label, Input, Row, Col, Button, FormFeedback } from "reactstrap";
 
-const defaultValues = {
-  teacher: "",
-  student: "",
-  twostep: "",
-  role: [],
+const DefValue = (userData, allRolesOptions) => {
+  const userRolesOptions = userData.roles
+    .map((role) => {
+      const roleName = role.roleName.toLowerCase();
+
+      const option = allRolesOptions.find(
+        (opt) => opt.value.toLowerCase() === roleName
+      );
+      return option;
+    })
+    .filter((option) => option !== undefined);
+
+  const hasRole = (roleName) =>
+    userRolesOptions.some(
+      (r) => r.value.toLowerCase() === roleName.toLowerCase()
+    );
+
+  return {
+    teacher: hasRole("teacher") ? "yes" : "no",
+    student: hasRole("student") ? "yes" : "no",
+    twostep: userData.twoStepAuth === true ? "yes" : "no",
+    role: userRolesOptions,
+  };
 };
 
-const Access = ({ stepper }) => {
-  const SignupSchema = yup.object().shape({
-    teacher: yup.string().required(),
-    student: yup.string().required(),
-    twostep: yup.string().required(),
-    role: yup.array().min(1),
-  });
+const Access = ({ stepper, initialData, allRoles }) => {
+  const initialDefValues = DefValue(initialData, allRoles);
 
-  // ** Hooks
+  const SignupSchema = yup.object().shape({
+    teacher: yup.string().required("وضعیت معلم الزامی است"),
+    student: yup.string().required("وضعیت دانشجو الزامی است"),
+    twostep: yup.string().required("وضعیت تایید دو مرحله‌ای الزامی است"),
+  });
 
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
-    defaultValues,
+    defaultValues: initialDefValues,
     resolver: yupResolver(SignupSchema),
   });
 
@@ -46,15 +58,24 @@ const Access = ({ stepper }) => {
     }
   };
 
-  const allRolesOptions = [
-    { value: "employee.admin", label: "Employee.Admin" },
-    { value: "administrator", label: "Administrator" },
-    { value: "student", label: "Student" },
-    { value: "editor", label: "Editor" },
-    { value: "contributor", label: "Contributor" },
-  ];
+  const NoOptionsMessage = (props) => {
+    return (
+      <div
+        {...props.innerProps}
+        style={{ textAlign: "center", padding: "8px 12px" }}
+      >
+        تمام نقش‌های موجود انتخاب شده‌اند
+      </div>
+    );
+  };
 
-  const [selectedRoles, setSelectedRoles] = useState([]);
+  const currentRoles = watch("role", initialDefValues.role);
+
+  const availableOptions = allRoles.filter(
+    (option) =>
+      !currentRoles.some((selected) => selected.value === option.value)
+  );
+
   return (
     <Fragment>
       <div className="content-header mb-5">
@@ -83,11 +104,11 @@ const Access = ({ stepper }) => {
               )}
             />
             {errors.teacher && (
-              <FormFeedback>وضعیت معلم را انتخاب کنید</FormFeedback>
+              <FormFeedback>{errors.teacher.message}</FormFeedback>
             )}
           </Col>
           <Col md="6" className="mb-5">
-            <Label className="form-label" for={`student`}>
+            <Label className="form-label" for="student">
               وضعیت دانشجویی
             </Label>
             <Controller
@@ -107,7 +128,7 @@ const Access = ({ stepper }) => {
               )}
             />
             {errors.student && (
-              <FormFeedback>وضعیت دانشجو را انتخاب کنید</FormFeedback>
+              <FormFeedback>{errors.student.message}</FormFeedback>
             )}
           </Col>
         </Row>
@@ -122,17 +143,19 @@ const Access = ({ stepper }) => {
               control={control}
               render={({ field }) => (
                 <Input
-                  type="text"
+                  type="select"
                   placeholder="وضعیت خود را وارد کنید..."
                   invalid={errors.twostep && true}
                   {...field}
-                />
+                >
+                  <option value="">وضعیت را انتخاب کنید...</option>
+                  <option value="yes">فعال</option>
+                  <option value="no">غیرفعال</option>
+                </Input>
               )}
             />
             {errors.twostep && (
-              <FormFeedback>
-                وضعیت تایید دو مرحله ای را انتخاب کنید
-              </FormFeedback>
+              <FormFeedback>{errors.twostep.message}</FormFeedback>
             )}
           </div>
           <div className="form-password-toggle col-md-6 mb-5">
@@ -147,7 +170,7 @@ const Access = ({ stepper }) => {
                 <Select
                   {...field}
                   isMulti
-                  options={allRolesOptions}
+                  options={availableOptions}
                   classNamePrefix="select"
                   className={`react-select ${errors.role ? "is-invalid" : ""}`}
                   value={field.value}
@@ -156,19 +179,25 @@ const Access = ({ stepper }) => {
                   }}
                   theme={selectThemeColors}
                   placeholder="نقش‌ها را انتخاب کنید..."
+                  components={{ NoOptionsMessage }}
                 />
               )}
             />
 
             {errors.role && (
               <FormFeedback className="d-block">
-                نقش کاربر را انتخاب کنید
+                {errors.role.message}
               </FormFeedback>
             )}
           </div>
         </Row>
         <div className="d-flex justify-content-between mt-5">
-          <Button color="secondary" className="btn-prev" outline disabled>
+          <Button
+            color="secondary"
+            className="btn-prev"
+            outline
+            onClick={() => stepper.previous()}
+          >
             <ArrowLeft
               size={14}
               className="align-middle me-sm-25 me-0"

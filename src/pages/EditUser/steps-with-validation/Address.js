@@ -1,26 +1,23 @@
-// ** React Imports
 import { Fragment } from "react";
-
-// ** Utils
 import { isObjEmpty } from "@utils";
-
-// ** Third Party Components
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-// ** Reactstrap Imports
 import { Form, Label, Input, Row, Col, Button, FormFeedback } from "reactstrap";
 
-const defaultValues = {
-  adress: "",
-  about: "",
-  width: "",
-  height: "",
+const DefValue = (userData) => {
+  return {
+    adress: userData.homeAdderess,
+    about: userData.userAbout,
+    width: userData.latitude,
+    height: userData.longitude,
+  };
 };
 
-const Address = ({ stepper }) => {
+const Address = ({ stepper, initialData }) => {
+  const initialDefValues = DefValue(initialData);
+
   const SignupSchema = yup.object().shape({
     adress: yup.string().required(),
     about: yup.string().required(),
@@ -28,14 +25,12 @@ const Address = ({ stepper }) => {
     height: yup.string().required(),
   });
 
-  // ** Hooks
-
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues,
+    defaultValues: initialDefValues,
     resolver: yupResolver(SignupSchema),
   });
 
@@ -73,7 +68,7 @@ const Address = ({ stepper }) => {
             )}
           </Col>
           <Col md="6" className="mb-5">
-            <Label className="form-label" for={`about`}>
+            <Label className="form-label" for="about">
               درباره کاربر
             </Label>
             <Controller
@@ -143,7 +138,12 @@ const Address = ({ stepper }) => {
           </div>
         </Row>
         <div className="d-flex justify-content-between mt-5">
-          <Button color="secondary" className="btn-prev" outline disabled>
+          <Button
+            color="secondary"
+            className="btn-prev"
+            outline
+            onClick={() => stepper.previous()}
+          >
             <ArrowLeft
               size={14}
               className="align-middle me-sm-25 me-0"

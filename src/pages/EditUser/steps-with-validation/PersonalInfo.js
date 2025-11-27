@@ -1,41 +1,38 @@
-// ** React Imports
 import { Fragment } from "react";
-
-// ** Utils
 import { isObjEmpty } from "@utils";
-
-// ** Third Party Components
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-// ** Reactstrap Imports
 import { Form, Label, Input, Row, Col, Button, FormFeedback } from "reactstrap";
 
-const defaultValues = {
-  name: "",
-  lastname: "",
-  nationalcode: "",
-  profile: "",
+const DefValue = (userData) => {
+  return {
+    name: userData.fName,
+    lastname: userData.lName,
+    nationalcode: userData.nationalCode,
+    profile: userData.currentPictureAddress,
+  };
 };
 
-const PersonalInfo = ({ stepper }) => {
-  const SignupSchema = yup.object().shape({
-    name: yup.string().required(),
-    lastname: yup.string().required(),
-    nationalcode: yup.string().required(),
-    profile: yup.string().required(),
-  });
+const PersonalInfo = ({ stepper, initialData }) => {
+  const initialDefValues = DefValue(initialData);
 
-  // ** Hooks
+  const SignupSchema = yup.object().shape({
+    name: yup.string().required("   نام خود را وارد کنید "),
+    lastname: yup.string().required("   نام خانوادگی خود را وارد کنید  "),
+    nationalcode: yup
+      .string()
+      .required("   کد ملی خود را وارد کنید  ")
+      .matches(/^[0-9]{10}$/, "کد ملی نامعتبر است"),
+  });
 
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues,
+    defaultValues: initialDefValues,
     resolver: yupResolver(SignupSchema),
   });
 
@@ -68,10 +65,10 @@ const PersonalInfo = ({ stepper }) => {
                 />
               )}
             />
-            {errors.name && <FormFeedback>نام خود را وارد کنید</FormFeedback>}
+            {errors.name && <FormFeedback>{errors.name.message}</FormFeedback>}
           </Col>
           <Col md="6" className="mb-5">
-            <Label className="form-label" for={`lastname`}>
+            <Label className="form-label" for="lastname">
               نام خانوادگی
             </Label>
             <Controller
@@ -88,7 +85,7 @@ const PersonalInfo = ({ stepper }) => {
               )}
             />
             {errors.lastname && (
-              <FormFeedback>نام خانوادگی خود را وارد کنید</FormFeedback>
+              <FormFeedback>{errors.lastname.message}</FormFeedback>
             )}
           </Col>
         </Row>
@@ -111,10 +108,10 @@ const PersonalInfo = ({ stepper }) => {
               )}
             />
             {errors.nationalcode && (
-              <FormFeedback>کد ملی خود را وارد کنید</FormFeedback>
+              <FormFeedback>{errors.nationalcode.message}</FormFeedback>
             )}
           </div>
-          <div className="form-password-toggle col-md-6 mb-5">
+          <div className="form-password-toggle col-md-6 mb-1">
             <Label className="form-label" for="profile">
               عکس پروفایل
             </Label>
@@ -122,22 +119,38 @@ const PersonalInfo = ({ stepper }) => {
               control={control}
               id="profile"
               name="profile"
-              render={({ field }) => (
-                <Input
-                  type="file"
-                  placeholder="عکس خود را انتخاب کنید..."
-                  invalid={errors.profile && true}
-                  {...field}
-                />
+              render={({ field: { value, onChange, ...field } }) => (
+                <Fragment>
+                  <Input
+                    type="file"
+                    placeholder="عکس خود را انتخاب کنید..."
+                    invalid={errors.profile && true}
+                    onChange={(e) => onChange(e.target.files[0])}
+                    {...field}
+                  />
+
+                  {initialData.currentPictureAddress &&
+                    typeof initialData.currentPictureAddress === "string" && (
+                      <small className="text-muted mt-1 d-block">
+                        عکس فعلی:{" "}
+                        {initialData.currentPictureAddress.substring(0, 30)}...
+                      </small>
+                    )}
+                </Fragment>
               )}
             />
             {errors.profile && (
-              <FormFeedback>عکس پروفایل خود را انتخاب کنید</FormFeedback>
+              <FormFeedback>{errors.profile.message}</FormFeedback>
             )}
           </div>
         </Row>
         <div className="d-flex justify-content-between mt-5">
-          <Button color="secondary" className="btn-prev" outline disabled>
+          <Button
+            color="secondary"
+            className="btn-prev"
+            outline
+            onClick={() => stepper.previous()}
+          >
             <ArrowLeft
               size={14}
               className="align-middle me-sm-25 me-0"

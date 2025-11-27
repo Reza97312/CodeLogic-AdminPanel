@@ -1,41 +1,35 @@
-// ** React Imports
 import { Fragment } from "react";
-
-// ** Utils
 import { isObjEmpty } from "@utils";
-
-// ** Third Party Components
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-// ** Reactstrap Imports
 import { Form, Label, Input, Row, Col, Button, FormFeedback } from "reactstrap";
-
-const defaultValues = {
-  email: "",
-  username: "",
-  phonenumber: "",
-  emailrecovery: "",
+const DefValue = (userData) => {
+  return {
+    username: userData.userName,
+    email: userData.gmail,
+    phonenumber: userData.phoneNumber,
+    emailrecovery: userData.recoveryEmail,
+  };
 };
 
-const Security = ({ stepper }) => {
+const Security = ({ stepper, initialData }) => {
+  const initialDefValues = DefValue(initialData);
+
   const SignupSchema = yup.object().shape({
     username: yup.string().required(),
     phonenumber: yup.string().required(),
     email: yup.string().email().required(),
-    emailrecovery: yup.string().email().required(),
+    emailrecovery: yup.string().required().email(),
   });
-
-  // ** Hooks
 
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues,
+    defaultValues: initialDefValues,
     resolver: yupResolver(SignupSchema),
   });
 
@@ -73,7 +67,7 @@ const Security = ({ stepper }) => {
             )}
           </Col>
           <Col md="6" className="mb-5">
-            <Label className="form-label" for={`email`}>
+            <Label className="form-label" for="email">
               ایمیل
             </Label>
             <Controller
@@ -116,6 +110,7 @@ const Security = ({ stepper }) => {
               <FormFeedback>شماره تلفن خود را وارد کنید</FormFeedback>
             )}
           </div>
+
           <div className="form-password-toggle col-md-6 mb-5">
             <Label className="form-label" for="emailrecovery">
               بازگردانی ایمیل

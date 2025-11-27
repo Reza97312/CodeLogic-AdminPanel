@@ -1,48 +1,48 @@
-// ** React Imports
 import { Fragment } from "react";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import DateObject from "react-date-object";
-import Select from "react-select";
-
-// ** Utils
 import { isObjEmpty } from "@utils";
-
-// ** Third Party Components
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-// ** Reactstrap Imports
 import { Form, Label, Input, Row, Col, Button, FormFeedback } from "reactstrap";
 
-const defaultValues = {
-  birthday: "",
-  gender: "",
-  linkdin: "",
-  telegram: "",
+const Gender = (genderApi) => {
+  if (genderApi === true) return "male";
+  if (genderApi === false) return "female";
+  return "";
+};
+
+const DefValue = (userData) => {
+  return {
+    birthday: userData.birthDay,
+    gender: Gender(userData.gender),
+    linkdin: userData.linkdinProfile,
+    telegram: userData.telegramLink,
+  };
 };
 
 const birthdayPlaceholder = "تاریخ تولد خود را وارد کنید...";
 
-const GenderInformation = ({ stepper }) => {
-  const SignupSchema = yup.object().shape({
-    birthday: yup.string().required(),
-    gender: yup.string().required(),
-    linkdin: yup.string().required(),
-    telegram: yup.string().required(),
-  });
+const GenderInformation = ({ stepper, initialData }) => {
+  const initialDefValues = DefValue(initialData);
 
-  // ** Hooks
+  const SignupSchema = yup.object().shape({
+    birthday: yup.string().required("تاریخ تولد الزامی است"),
+    gender: yup.string().required("انتخاب جنسیت الزامی است"),
+    linkdin: yup.string().required("  لینک خود را وارد کنید   "),
+    telegram: yup.string().required("   لینک خود را وارد کنید  "),
+  });
 
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues,
+    defaultValues: initialDefValues,
     resolver: yupResolver(SignupSchema),
   });
 
@@ -78,7 +78,15 @@ const GenderInformation = ({ stepper }) => {
                     inputClass={`form-control w-100 cursor-pointer ${
                       errors.birthday ? "is-invalid" : ""
                     }`}
-                    value={field.value ? new DateObject(field.value) : ""}
+                    value={
+                      field.value
+                        ? new DateObject({
+                            date: field.value,
+                            calendar: persian,
+                            locale: persian_fa,
+                          })
+                        : null
+                    }
                     onChange={(date) => {
                       field.onChange(date ? date.toDate().toISOString() : null);
                     }}
@@ -90,7 +98,7 @@ const GenderInformation = ({ stepper }) => {
 
             {errors.birthday && (
               <FormFeedback className="d-block">
-                تاریخ تولد خود را وارد کنید
+                {errors.birthday.message}
               </FormFeedback>
             )}
           </Col>
@@ -111,7 +119,7 @@ const GenderInformation = ({ stepper }) => {
               )}
             />
             {errors.gender && (
-              <FormFeedback>جنسیت خود را انتخاب کنید</FormFeedback>
+              <FormFeedback>{errors.gender.message}</FormFeedback>
             )}
           </Col>
         </Row>
@@ -134,7 +142,7 @@ const GenderInformation = ({ stepper }) => {
               )}
             />
             {errors.linkdin && (
-              <FormFeedback>آدرس لینکدین خود را وارد کنید</FormFeedback>
+              <FormFeedback>{errors.linkdin.message}</FormFeedback>
             )}
           </div>
           <div className="form-password-toggle col-md-6 mb-5">
@@ -155,12 +163,17 @@ const GenderInformation = ({ stepper }) => {
               )}
             />
             {errors.telegram && (
-              <FormFeedback>آدرس تلگرام خود را وارد کنید</FormFeedback>
+              <FormFeedback>{errors.telegram.message}</FormFeedback>
             )}
           </div>
         </Row>
         <div className="d-flex justify-content-between mt-5">
-          <Button color="secondary" className="btn-prev" outline disabled>
+          <Button
+            color="secondary"
+            className="btn-prev"
+            outline
+            onClick={() => stepper.previous()}
+          >
             <ArrowLeft
               size={14}
               className="align-middle me-sm-25 me-0"

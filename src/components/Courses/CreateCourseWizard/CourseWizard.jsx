@@ -24,7 +24,6 @@ import { toast } from "react-toastify";
 import { GetAllTeachers } from "../../../core/services/api/get/Teachers/GetAllTeachers";
 import { GetCourseLevels } from "../../../core/services/api/get/Courses/GetCourseLevels";
 
-// ------------------ تبدیل تاریخ شمسی → UTC ------------------
 const convertToUTC = (dateString) => {
   if (!dateString) return "";
   try {
@@ -41,7 +40,6 @@ const convertToUTC = (dateString) => {
   }
 };
 
-// ------------------ Yup Validation Schemas ------------------
 const Step1Schema = Yup.object().shape({
   Title: Yup.string().required("نام دوره لازم است"),
   GoogleTitle: Yup.string().required("نام گوگل دوره لازم است"),
@@ -61,13 +59,14 @@ const Step3Schema = Yup.object().shape({
   courseLvlId: Yup.string().required("سطح دوره لازم است"),
 });
 
-const Step5Schema = Yup.object().shape({
+const Step4Schema = Yup.object().shape({
   ImageAddress: Yup.mixed().required("آپلود عکس لازم است"),
 });
 
-// ------------------ CourseWizardFormik ------------------
 const CourseWizardFormik = () => {
   const [step, setStep] = useState(1);
+  const [LevelName, setLevelName] = useState(null);
+
   const totalSteps = 5;
   const progress = Math.round(((step - 1) / (totalSteps - 1)) * 100);
 
@@ -95,12 +94,12 @@ const CourseWizardFormik = () => {
       ? Step2Schema
       : step === 3
       ? Step3Schema
-      : step === 5
-      ? Step5Schema
-      : null; // مرحله 4 بدون validation
+      : step === 4
+      ? Step4Schema
+      : null;
 
   return (
-    <Container className="py-4">
+    <Container className="py-2">
       <Row className="justify-content-center">
         <Col md={9}>
           <Card>
@@ -125,14 +124,15 @@ const CourseWizardFormik = () => {
                   ImageAddress: null,
                 }}
                 validationSchema={currentSchema}
+                enableReinitialize={false}
                 validateOnChange={false}
+                validateOnBlur={false}
                 onSubmit={(values) => {
                   if (step < totalSteps) {
                     setStep(step + 1);
                     return;
                   }
 
-                  // مرحله 5 → ارسال نهایی
                   const fd = new FormData();
                   fd.append("Title", values.Title);
                   fd.append("GoogleTitle", values.GoogleTitle);
@@ -144,23 +144,15 @@ const CourseWizardFormik = () => {
                   fd.append("Cost", values.Cost);
                   fd.append("courseLvlId", values.courseLvlId);
                   fd.append("TeacherId", values.TeacherId);
-                  if (values.ImageAddress)
-                    if (values.ImageAddress) {
-                      fd.append(
-                        "ImageAddress",
-                        values.ImageAddress,
-                        values.ImageAddress.name
-                      );
-                    }
-                  for (let pair of fd.entries()) {
-                    console.log(pair[0] + ": " + pair[1]);
+                  if (values.ImageAddress) {
+                    fd.append("ImageAddress", values.ImageAddress);
                   }
+
                   Create(fd);
                 }}
               >
                 {({ values, errors, setFieldValue, handleSubmit }) => (
                   <Form onSubmit={handleSubmit}>
-                    {/* ------------------ مرحله 1 ------------------ */}
                     {step === 1 && (
                       <>
                         <Form.Group className="mb-3">
@@ -222,7 +214,6 @@ const CourseWizardFormik = () => {
                       </>
                     )}
 
-                    {/* ------------------ مرحله 2 ------------------ */}
                     {step === 2 && (
                       <>
                         <Row>
@@ -276,7 +267,7 @@ const CourseWizardFormik = () => {
                                 onChange={(e) =>
                                   setFieldValue("TeacherId", e.target.value)
                                 }
-                                isInvalid={!!errors.courseLvlId}
+                                isInvalid={!!errors.TeacherId}
                               >
                                 {pendingTeachers
                                   ? "درحال بارگزاری"
@@ -290,7 +281,7 @@ const CourseWizardFormik = () => {
                                     ))}
                               </Form.Select>
                               <Form.Control.Feedback type="invalid">
-                                {errors.teacherId}
+                                {errors.TeacherId}
                               </Form.Control.Feedback>
                             </Form.Group>
                           </Col>
@@ -298,7 +289,6 @@ const CourseWizardFormik = () => {
                       </>
                     )}
 
-                    {/* ------------------ مرحله 3 ------------------ */}
                     {step === 3 && (
                       <>
                         <Form.Group className="mb-3">
@@ -343,7 +333,13 @@ const CourseWizardFormik = () => {
                             {pendingLevels
                               ? "درحال بارگذاری"
                               : Levels.map((items, index) => (
-                                  <option key={index + 1} value={items.id}>
+                                  <option
+                                    onClick={() =>
+                                      setLevelName(items.levelName)
+                                    }
+                                    key={index + 1}
+                                    value={items.id}
+                                  >
                                     {items.levelName}
                                   </option>
                                 ))}
@@ -355,7 +351,6 @@ const CourseWizardFormik = () => {
                       </>
                     )}
 
-                    {/* ------------------ مرحله 4 — انتخاب عکس ------------------ */}
                     {step === 4 && (
                       <>
                         <h5 className="mb-3 text-center">انتخاب عکس دوره</h5>
@@ -397,6 +392,7 @@ const CourseWizardFormik = () => {
                             onChange={(e) => {
                               const file = e.target.files[0];
                               setFieldValue("ImageAddress", file);
+
                               setPhotoPreview(URL.createObjectURL(file));
                             }}
                             isInvalid={!!errors.ImageAddress}
@@ -408,7 +404,6 @@ const CourseWizardFormik = () => {
                       </>
                     )}
 
-                    {/* ------------------ مرحله 5 — پیش‌نمایش نهایی ------------------ */}
                     {step === 5 && (
                       <>
                         <h5 className="text-center mb-3">
@@ -469,13 +464,12 @@ const CourseWizardFormik = () => {
                             <strong>قیمت: </strong> {values.Cost}
                           </p>
                           <p>
-                            <strong>سطح دوره: </strong> {values.courseLvlId}
+                            <strong>سطح دوره: </strong> {LevelName}
                           </p>
                         </Card>
                       </>
                     )}
 
-                    {/* ------------------ دکمه‌ها ------------------ */}
                     <div className="d-flex justify-content-between mt-4">
                       <Button
                         variant="secondary"

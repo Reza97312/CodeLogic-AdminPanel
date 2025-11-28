@@ -117,7 +117,7 @@ const CourseTabs = ({
         <TabPane tabId="2">
           <CourseGroups courseId={id} teacherId={teacherId} />
         </TabPane>
-        <TabPane tabId="3"><Course</TabPane>
+        <TabPane tabId="3">کامنت ها</TabPane>
         <TabPane tabId="4">
           <CoursePayments payments={payments} />
         </TabPane>

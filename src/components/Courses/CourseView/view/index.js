@@ -44,7 +44,9 @@ const Cview = () => {
         </Col>
         <Col xl="8" lg="7" xs={{ order: 0 }} md={{ order: 1, size: 7 }}>
           <CourseTabs
+            payments={courseData?.payments}
             id={id}
+            students={courseData?.courseStudent}
             teacherId={courseData?.teacherId}
             active={active}
             toggleTab={toggleTab}

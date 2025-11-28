@@ -48,8 +48,17 @@ import { Form } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import CoursesUserList from "./CourseUsersList/CoursesUserList";
 import CourseGroups from "../../../../pages/CourseManagement/CourseGroups/CourseGroups";
+import CourseUsers from "../../../../pages/CourseManagement/CourseUsers/CourseUsers";
+import CoursePayments from "../../../../pages/CourseManagement/CoursePaymentsPage/CoursePayments";
 
-const CourseTabs = ({ active, toggleTab, id, teacherId }) => {
+const CourseTabs = ({
+  active,
+  toggleTab,
+  id,
+  teacherId,
+  students,
+  payments,
+}) => {
   const [modalOpen, setModalOpen] = useState(false);
   const toggle = () => setModalOpen(!modalOpen);
 
@@ -93,12 +102,6 @@ const CourseTabs = ({ active, toggleTab, id, teacherId }) => {
             <span className="fw-bold">پرداختی ها</span>
           </NavLink>
         </NavItem>
-        <NavItem>
-          <NavLink active={active === "5"} onClick={() => toggleTab("5")}>
-            <Link className="font-medium-3 me-50" />
-            <span className="fw-bold">شبکه های اجتماعی</span>
-          </NavLink>
-        </NavItem>
         <Button
           style={{ marginRight: "10px" }}
           color="primary"
@@ -109,15 +112,15 @@ const CourseTabs = ({ active, toggleTab, id, teacherId }) => {
       </Nav>
       <TabContent activeTab={active}>
         <TabPane tabId="1">
-          <CoursesUserList id={id} />
-          {/* <InvoiceList /> */}
+          <CourseUsers students={students} />
         </TabPane>
         <TabPane tabId="2">
           <CourseGroups courseId={id} teacherId={teacherId} />
         </TabPane>
-        <TabPane tabId="3">کامنت ها</TabPane>
-        <TabPane tabId="4">پرداختی ها</TabPane>
-        <TabPane tabId="5">شبکه های اجتماعی</TabPane>
+        <TabPane tabId="3"><Course</TabPane>
+        <TabPane tabId="4">
+          <CoursePayments payments={payments} />
+        </TabPane>
       </TabContent>
 
       {modalOpen && (

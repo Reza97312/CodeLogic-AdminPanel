@@ -20,6 +20,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
+import { PersianDateConverter } from "../../../utility/helper/PersianDateConverter";
 // import { active } from "sortablejs";
 
 const renderCourseImage = (row) => {
@@ -85,7 +86,7 @@ export const columns = ({ handleOpenModal, toggleSidebar, deleteCourse }) => [
     minWidth: "150px",
     cell: (row) => (
       <span className="text-capitalize">
-        {row.startTime.slice(0, 10) || "—"}
+        {PersianDateConverter(row.startTime) || "—"}
       </span>
     ),
   },

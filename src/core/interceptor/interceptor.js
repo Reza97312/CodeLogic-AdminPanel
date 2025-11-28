@@ -20,8 +20,8 @@ const onError = (err) => {
   if (err.response.status === 401 || err.response.status === 403) {
     setItem("isLogin", false);
   }
-  if (err.response.status === 401) {
-  }
+  // if (err.response.status === 401) {
+  // }
   if (err.response.status === 403) {
     removeItem("token");
     toast.error("لطفا ابتداوارد شوید");

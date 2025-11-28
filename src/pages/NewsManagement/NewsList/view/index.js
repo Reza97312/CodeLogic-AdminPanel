@@ -15,7 +15,7 @@ import "@styles/react/apps/app-users.scss";
 import getNews from "../../../../core/services/api/get/getNews";
 import NewsCardInfo from "../../../../components/news/NewsCardInfo/NewsCardInfo";
 import loading from "../../../../assets/images/A/loading.gif";
-import CourseTabs from "../../../../components/Courses/CourseView/view/courseTabs";
+import Tabs from "./Tabs";
 
 import store from '../store'
 
@@ -46,7 +46,7 @@ const NewsView = () => {
           )}
         </Col>
         <Col xl="8" lg="7" xs={{ order: 0 }} md={{ order: 1, size: 7 }}>
-          <CourseTabs id={id} active={active} toggleTab={toggleTab} />
+          <Tabs id={id} active={active} toggleTab={toggleTab} />
         </Col>
       </Row>
     </div>

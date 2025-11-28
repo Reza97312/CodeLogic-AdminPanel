@@ -1,44 +1,35 @@
-// ** React Imports
 import { Fragment } from "react";
-
-// ** Utils
 import { isObjEmpty } from "@utils";
-
-// ** Third Party Components
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-// ** Reactstrap Imports
 import { Form, Label, Input, Row, Col, Button, FormFeedback } from "reactstrap";
-
-const defaultValues = {
-  email: "",
-  username: "",
-  password: "",
-  confirmPassword: "",
+const DefValue = (userData) => {
+  return {
+    username: userData.userName,
+    email: userData.gmail,
+    phonenumber: userData.phoneNumber,
+    emailrecovery: userData.recoveryEmail,
+  };
 };
 
-const Security = ({ stepper }) => {
+const Security = ({ stepper, initialData }) => {
+  const initialDefValues = DefValue(initialData);
+
   const SignupSchema = yup.object().shape({
     username: yup.string().required(),
+    phonenumber: yup.string().required(),
     email: yup.string().email().required(),
-    password: yup.string().required(),
-    confirmPassword: yup
-      .string()
-      .required()
-      .oneOf([yup.ref(`password`), null], "Passwords must match"),
+    emailrecovery: yup.string().required().email(),
   });
-
-  // ** Hooks
 
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues,
+    defaultValues: initialDefValues,
     resolver: yupResolver(SignupSchema),
   });
 
@@ -72,11 +63,11 @@ const Security = ({ stepper }) => {
               )}
             />
             {errors.username && (
-              <FormFeedback>{errors.username.message}</FormFeedback>
+              <FormFeedback>نام کاربری خود را وارد کنید</FormFeedback>
             )}
           </Col>
           <Col md="6" className="mb-5">
-            <Label className="form-label" for={`email`}>
+            <Label className="form-label" for="email">
               ایمیل
             </Label>
             <Controller
@@ -93,51 +84,52 @@ const Security = ({ stepper }) => {
               )}
             />
             {errors.email && (
-              <FormFeedback>{errors.email.message}</FormFeedback>
+              <FormFeedback>ایمیل خود را وارد کنید</FormFeedback>
             )}
           </Col>
         </Row>
         <Row>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="password">
+            <Label className="form-label" for="phonenumber">
               شماره تلفن
             </Label>
             <Controller
-              id="password"
-              name="password"
+              id="phonenumber"
+              name="phonenumber"
               control={control}
               render={({ field }) => (
                 <Input
-                  type="password"
+                  type="text"
                   placeholder="شماره تلفن خود را وارد کنید..."
-                  invalid={errors.password && true}
+                  invalid={errors.phonenumber && true}
                   {...field}
                 />
               )}
             />
-            {errors.password && (
-              <FormFeedback>{errors.password.message}</FormFeedback>
+            {errors.phonenumber && (
+              <FormFeedback>شماره تلفن خود را وارد کنید</FormFeedback>
             )}
           </div>
+
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="confirmPassword">
+            <Label className="form-label" for="emailrecovery">
               بازگردانی ایمیل
             </Label>
             <Controller
               control={control}
-              id="confirmPassword"
-              name="confirmPassword"
+              id="emailrecovery"
+              name="emailrecovery"
               render={({ field }) => (
                 <Input
-                  type="password"
+                  type="email"
                   placeholder="user@email.com"
-                  invalid={errors.confirmPassword && true}
+                  invalid={errors.emailrecovery && true}
                   {...field}
                 />
               )}
             />
-            {errors.confirmPassword && (
-              <FormFeedback>{errors.confirmPassword.message}</FormFeedback>
+            {errors.emailrecovery && (
+              <FormFeedback>ایمیل خود را وارد کنید</FormFeedback>
             )}
           </div>
         </Row>

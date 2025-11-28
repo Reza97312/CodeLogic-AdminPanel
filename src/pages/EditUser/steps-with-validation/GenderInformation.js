@@ -1,52 +1,48 @@
-// ** React Imports
 import { Fragment } from "react";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import DateObject from "react-date-object";
-import Select from "react-select";
-
-// ** Utils
 import { isObjEmpty } from "@utils";
-
-// ** Third Party Components
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-// ** Reactstrap Imports
 import { Form, Label, Input, Row, Col, Button, FormFeedback } from "reactstrap";
 
-const defaultValues = {
-  email: "",
-  username: "",
-  password: "",
-  confirmPassword: "",
-  birthday: "",
+const Gender = (genderApi) => {
+  if (genderApi === true) return "male";
+  if (genderApi === false) return "female";
+  return "";
+};
+
+const DefValue = (userData) => {
+  return {
+    birthday: userData.birthDay,
+    gender: Gender(userData.gender),
+    linkdin: userData.linkdinProfile,
+    telegram: userData.telegramLink,
+  };
 };
 
 const birthdayPlaceholder = "تاریخ تولد خود را وارد کنید...";
 
-const GenderInformation = ({ stepper }) => {
-  const SignupSchema = yup.object().shape({
-    username: yup.string().required(),
-    email: yup.string().email().required(),
-    password: yup.string().required(),
-    confirmPassword: yup
-      .string()
-      .required()
-      .oneOf([yup.ref(`password`), null], "Passwords must match"),
-  });
+const GenderInformation = ({ stepper, initialData }) => {
+  const initialDefValues = DefValue(initialData);
 
-  // ** Hooks
+  const SignupSchema = yup.object().shape({
+    birthday: yup.string().required("تاریخ تولد الزامی است"),
+    gender: yup.string().required("انتخاب جنسیت الزامی است"),
+    linkdin: yup.string().required("  لینک خود را وارد کنید   "),
+    telegram: yup.string().required("   لینک خود را وارد کنید  "),
+  });
 
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues,
+    defaultValues: initialDefValues,
     resolver: yupResolver(SignupSchema),
   });
 
@@ -68,25 +64,42 @@ const GenderInformation = ({ stepper }) => {
               تاریخ تولد
             </Label>
 
-            <Controller
-              control={control}
-              name="birthday"
-              render={({ field }) => (
-                <DatePicker
-                  calendar={persian}
-                  locale={persian_fa}
-                  containerClassName="w-100 "
-                  inputClass="form-control w-100 cursor-pointer"
-                  value={field.value || ""}
-                  onChange={(date) => {
-                    field.onChange(date?.toDate?.()?.toISOString() || "");
-                  }}
-                  placeholder={birthdayPlaceholder}
-                />
-              )}
-            />
-            {errors.username && (
-              <FormFeedback>{errors.username.message}</FormFeedback>
+            <div className={errors.birthday ? "is-invalid" : ""}>
+              <Controller
+                control={control}
+                id="birthday"
+                name="birthday"
+                render={({ field }) => (
+                  <DatePicker
+                    calendar={persian}
+                    locale={persian_fa}
+                    {...field}
+                    containerClassName="w-100"
+                    inputClass={`form-control w-100 cursor-pointer ${
+                      errors.birthday ? "is-invalid" : ""
+                    }`}
+                    value={
+                      field.value
+                        ? new DateObject({
+                            date: field.value,
+                            calendar: persian,
+                            locale: persian_fa,
+                          })
+                        : null
+                    }
+                    onChange={(date) => {
+                      field.onChange(date ? date.toDate().toISOString() : null);
+                    }}
+                    placeholder={birthdayPlaceholder}
+                  />
+                )}
+              />
+            </div>
+
+            {errors.birthday && (
+              <FormFeedback className="d-block">
+                {errors.birthday.message}
+              </FormFeedback>
             )}
           </Col>
 
@@ -112,50 +125,55 @@ const GenderInformation = ({ stepper }) => {
         </Row>
         <Row>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="password">
+            <Label className="form-label" for="linkdin">
               لینک پروفایل لینکدین
             </Label>
             <Controller
-              id="password"
-              name="password"
+              id="linkdin"
+              name="linkdin"
               control={control}
               render={({ field }) => (
                 <Input
-                  type="password"
+                  type="text"
                   placeholder="لینک خود را وارد کنید..."
-                  invalid={errors.password && true}
+                  invalid={errors.linkdin && true}
                   {...field}
                 />
               )}
             />
-            {errors.password && (
-              <FormFeedback>{errors.password.message}</FormFeedback>
+            {errors.linkdin && (
+              <FormFeedback>{errors.linkdin.message}</FormFeedback>
             )}
           </div>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="confirmPassword">
+            <Label className="form-label" for="telegram">
               لینک تلگرام
             </Label>
             <Controller
               control={control}
-              id="confirmPassword"
-              name="confirmPassword"
+              id="telegram"
+              name="telegram"
               render={({ field }) => (
                 <Input
-                  type="password"
+                  type="text"
                   placeholder="لینک خود را انتخاب کنید..."
-                  invalid={errors.confirmPassword && true}
+                  invalid={errors.telegram && true}
                   {...field}
                 />
               )}
             />
-            {errors.confirmPassword && (
-              <FormFeedback>{errors.confirmPassword.message}</FormFeedback>
+            {errors.telegram && (
+              <FormFeedback>{errors.telegram.message}</FormFeedback>
             )}
           </div>
         </Row>
         <div className="d-flex justify-content-between mt-5">
-          <Button color="secondary" className="btn-prev" outline disabled>
+          <Button
+            color="secondary"
+            className="btn-prev"
+            outline
+            onClick={() => stepper.previous()}
+          >
             <ArrowLeft
               size={14}
               className="align-middle me-sm-25 me-0"

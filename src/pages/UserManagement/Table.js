@@ -1,35 +1,15 @@
-// ** React Imports
-import { Fragment, useState, useEffect } from "react";
-
-// ** Invoice List Sidebar
+import { Fragment, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-hot-toast";
+import AddRoleUser from "../../core/services/api/post/AddRoleUser.js";
+import DeleteUser from "../../core/services/api/delete/DeleteUser.js";
 import Sidebar from "./Sidebar";
-
-// ** Table Columns
 import { columns } from "./columns";
-
-// ** Store & Actions
-import { getAllData, getData } from "./store";
-import { useDispatch, useSelector } from "react-redux";
-
-// ** Third Party Components
 import Select from "react-select";
-
 import ReactPaginate from "react-paginate";
 import DataTable from "react-data-table-component";
-import {
-  ChevronDown,
-  Share,
-  Printer,
-  FileText,
-  File,
-  Grid,
-  Copy,
-} from "react-feather";
-
-// ** Utils
+import { ChevronDown } from "react-feather";
 import { selectThemeColors } from "@utils";
-
-// ** Reactstrap Imports
 import {
   Row,
   Col,
@@ -37,39 +17,32 @@ import {
   Input,
   Label,
   Button,
-  CardBody,
-  CardTitle,
-  CardHeader,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-  UncontrolledDropdown,
   Modal,
-  ModalHeader,
   ModalBody,
   ModalFooter,
 } from "reactstrap";
-
-// ** Styles
 import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
-
-// ** Table Header
 const CustomHeader = ({
-  store,
   toggleSidebar,
   handlePerPage,
   rowsPerPage,
   handleFilter,
   searchTerm,
+  roleOptions,
+  currentRole,
+  setCurrentRole,
+  setCurrentPage,
 }) => {
-  // ** Converts table to CSV
+  // Converts table to CSV
   function convertArrayOfObjectsToCSV(array) {
     let result;
-
     const columnDelimiter = ",";
     const lineDelimiter = "\n";
-    const keys = Object.keys(store.data[0]);
+
+    if (!array || array.length === 0) return "";
+
+    const keys = Object.keys(array[0]);
 
     result = "";
     result += keys.join(columnDelimiter);
@@ -79,9 +52,7 @@ const CustomHeader = ({
       let ctr = 0;
       keys.forEach((key) => {
         if (ctr > 0) result += columnDelimiter;
-
         result += item[key];
-
         ctr++;
       });
       result += lineDelimiter;
@@ -90,7 +61,6 @@ const CustomHeader = ({
     return result;
   }
 
-  // ** Downloads CSV
   function downloadCSV(array) {
     const link = document.createElement("a");
     let csv = convertArrayOfObjectsToCSV(array);
@@ -106,11 +76,12 @@ const CustomHeader = ({
     link.setAttribute("download", filename);
     link.click();
   }
+
   return (
     <div className="invoice-list-table-header w-100 me-1 ms-50 mt-2 mb-75">
       <Row>
-        <Col xl="6" className="d-flex align-items-center p-0">
-          <div className="d-flex align-items-center w-100">
+        <Col xl="6" className="d-flex align-items-center p-0 gap-1">
+          <div className="d-flex align-items-center">
             <label style={{ fontSize: "17px" }} htmlFor="rows-per-page">
               تعداد نمایش :
             </label>
@@ -127,12 +98,28 @@ const CustomHeader = ({
               <option value="50">50</option>
             </Input>
           </div>
+          <div className="w-50">
+            <Select
+              isClearable={true}
+              className="react-select"
+              classNamePrefix="select"
+              placeholder="نقش کاربر را انتخاب کنید..."
+              theme={selectThemeColors}
+              options={roleOptions}
+              value={roleOptions.find((r) => r.value === currentRole)}
+              onChange={(e) => {
+                setCurrentRole(e ? e.value : "");
+                setCurrentPage(1);
+              }}
+            />
+          </div>
         </Col>
+
         <Col
           xl="6"
           className="d-flex align-items-sm-center justify-content-xl-end justify-content-start flex-xl-nowrap flex-wrap flex-sm-row flex-column pe-xl-1 p-0 mt-xl-0 mt-1"
         >
-          <div className="d-flex align-items-center mb-sm-0 mb-1 me-1  ">
+          <div className="d-flex align-items-center mb-sm-0 mb-1 me-1">
             <label
               style={{ fontSize: "17px" }}
               className="mb-0 text-nowrap"
@@ -146,43 +133,11 @@ const CustomHeader = ({
               type="text"
               value={searchTerm}
               onChange={(e) => handleFilter(e.target.value)}
-              placeholder="نام کاربر..."
+              placeholder="نام، ایمیل یا شماره..."
             />
           </div>
 
           <div className="d-flex align-items-center table-header-actions">
-            <UncontrolledDropdown className="me-1">
-              <DropdownToggle color="secondary" caret outline>
-                <Share className="font-small-4 me-50" />
-                <span className="align-middle">خروجی</span>
-              </DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem className="w-100">
-                  <Printer className="font-small-4 me-50" />
-                  <span className="align-middle">Print</span>
-                </DropdownItem>
-                <DropdownItem
-                  className="w-100"
-                  onClick={() => downloadCSV(store.data)}
-                >
-                  <FileText className="font-small-4 me-50" />
-                  <span className="align-middle">CSV</span>
-                </DropdownItem>
-                <DropdownItem className="w-100">
-                  <Grid className="font-small-4 me-50" />
-                  <span className="align-middle">Excel</span>
-                </DropdownItem>
-                <DropdownItem className="w-100">
-                  <File className="font-small-4 me-50" />
-                  <span className="align-middle">PDF</span>
-                </DropdownItem>
-                <DropdownItem className="w-100">
-                  <Copy className="font-small-4 me-50" />
-                  <span className="align-middle">Copy</span>
-                </DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
-
             <Button
               className="add-new-user"
               color="primary"
@@ -197,145 +152,128 @@ const CustomHeader = ({
   );
 };
 
-const UsersList = () => {
-  // ** Store Vars
-  const dispatch = useDispatch();
-  const store = useSelector((state) => state.users);
+const UsersList = ({ users = [], isPending, roles = [] }) => {
+  const queryClient = useQueryClient();
 
-  // ** States
+  const addRoleMutation = useMutation({
+    mutationFn: async ({ roleId, userId }) => {
+      return AddRoleUser({ roleId, userId });
+    },
+    onSuccess: () => {
+      toast.success("نقش کاربر با موفقیت اضافه شد");
+      queryClient.invalidateQueries({ queryKey: ["GetAllUser"] });
+    },
+    onError: () => {
+      toast.error("خطا در افزودن نقش");
+    },
+  });
+
+  const deleteUserMutation = useMutation({
+    mutationFn: (userId) => {
+      return DeleteUser({ userId });
+    },
+    onSuccess: () => {
+      toast.success("کاربر با موفقیت حذف شد");
+
+      queryClient.invalidateQueries({ queryKey: ["GetAllUser"] });
+    },
+    onError: (error) => {
+      toast.error("خطا در حذف کاربر");
+    },
+  });
+
+  const handleDeleteUser = (userId) => {
+    deleteUserMutation.mutate(userId);
+  };
+
+  // States
   const [openModal, setOpenModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [sort, setSort] = useState("desc");
+
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortColumn, setSortColumn] = useState("id");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [currentRole, setCurrentRole] = useState({
-    value: "",
-    label: "Select Role",
-  });
-  const [currentPlan, setCurrentPlan] = useState({
-    value: "",
-    label: "Select Plan",
-  });
-  const [currentStatus, setCurrentStatus] = useState({
-    value: "",
-    label: "Select Status",
-    number: 0,
-  });
 
-  // ** Function to toggle sidebar
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const handleOpenModal = (row) => {
     setSelectedUser(row);
+
+    const userRolesArr = row.roles
+      ? row.roles.map((r) => String(r).trim())
+      : row.userRoles
+      ? row.userRoles.split(",").map((r) => String(r).trim())
+      : [];
+
+    const selected = userRolesArr.map((r) => ({
+      value: String(r).toLowerCase(),
+      label: r,
+    }));
+
+    setSelectedRoles(selected);
+
+    setIsActive(false);
+
     setOpenModal(true);
   };
 
-  // ** Get data on mount
-  useEffect(() => {
-    dispatch(getAllData());
-    dispatch(
-      getData({
-        sort,
-        sortColumn,
-        q: searchTerm,
-        page: currentPage,
-        perPage: rowsPerPage,
-        role: currentRole.value,
-        status: currentStatus.value,
-        currentPlan: currentPlan.value,
-      })
-    );
-  }, [dispatch, store.data.length, sort, sortColumn, currentPage]);
+  const [currentRole, setCurrentRole] = useState("");
 
-  // ** User filter options
   const roleOptions = [
-    { value: "", label: "Select Role" },
-    { value: "admin", label: "Admin" },
-    { value: "author", label: "Author" },
-    { value: "editor", label: "Editor" },
-    { value: "maintainer", label: "Maintainer" },
-    { value: "subscriber", label: "Subscriber" },
+    { value: "", label: "نقش کاربر را انتخاب کنید..." },
+    ...Array.from(
+      new Set(
+        users.flatMap((u) =>
+          u.roles ? u.roles.map((r) => String(r).toLowerCase()) : []
+        )
+      )
+    ).map((role) => ({ value: role, label: role })),
   ];
 
-  const planOptions = [
-    { value: "", label: "Select Plan" },
-    { value: "basic", label: "Basic" },
-    { value: "company", label: "Company" },
-    { value: "enterprise", label: "Enterprise" },
-    { value: "team", label: "Team" },
-  ];
+  const filteredData = users.filter((item) => {
+    const term = searchTerm.trim().toLowerCase();
 
-  const statusOptions = [
-    { value: "", label: "Select Status", number: 0 },
-    { value: "pending", label: "Pending", number: 1 },
-    { value: "active", label: "Active", number: 2 },
-    { value: "inactive", label: "Inactive", number: 3 },
-  ];
+    const matchesSearch =
+      term === "" ||
+      (item.fname && item.fname.toLowerCase().includes(term)) ||
+      (item.lname && item.lname.toLowerCase().includes(term)) ||
+      (item.gmail && item.gmail.toLowerCase().includes(term)) ||
+      (item.phoneNumber && item.phoneNumber.includes(term));
 
-  // ** Function in get data on page change
-  const handlePagination = (page) => {
-    dispatch(
-      getData({
-        sort,
-        sortColumn,
-        q: searchTerm,
-        perPage: rowsPerPage,
-        page: page.selected + 1,
-        role: currentRole.value,
-        status: currentStatus.value,
-        currentPlan: currentPlan.value,
-      })
-    );
-    setCurrentPage(page.selected + 1);
-  };
+    const matchesRole =
+      currentRole === "" ||
+      (item.roles &&
+        item.roles.map((r) => String(r).toLowerCase()).includes(currentRole));
 
-  // ** Function in get data on rows per page
+    return matchesSearch && matchesRole;
+  });
+
+  const handlePagination = (page) => setCurrentPage(page.selected + 1);
+
   const handlePerPage = (e) => {
-    const value = parseInt(e.currentTarget.value);
-    dispatch(
-      getData({
-        sort,
-        sortColumn,
-        q: searchTerm,
-        perPage: value,
-        page: currentPage,
-        role: currentRole.value,
-        currentPlan: currentPlan.value,
-        status: currentStatus.value,
-      })
-    );
-    setRowsPerPage(value);
+    setRowsPerPage(parseInt(e.currentTarget.value));
+    setCurrentPage(1);
   };
 
-  // ** Function in get data on search query change
   const handleFilter = (val) => {
     setSearchTerm(val);
-    dispatch(
-      getData({
-        sort,
-        q: val,
-        sortColumn,
-        page: currentPage,
-        perPage: rowsPerPage,
-        role: currentRole.value,
-        status: currentStatus.value,
-        currentPlan: currentPlan.value,
-      })
-    );
+    setCurrentPage(1);
   };
 
-  // ** Custom Pagination
-  const CustomPagination = () => {
-    const count = Number(Math.ceil(store.total / rowsPerPage));
+  const dataToRender = () => {
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    return filteredData.slice(startIndex, endIndex);
+  };
 
+  const CustomPagination = () => {
+    const count = Math.ceil(filteredData.length / rowsPerPage);
     return (
       <ReactPaginate
         previousLabel={""}
         nextLabel={""}
-        pageCount={count || 1}
+        pageCount={count}
         activeClassName="active"
         forcePage={currentPage !== 0 ? currentPage - 1 : 0}
         onPageChange={(page) => handlePagination(page)}
@@ -352,166 +290,51 @@ const UsersList = () => {
     );
   };
 
-  // ** Table data to render
-  const dataToRender = () => {
-    const filters = {
-      role: currentRole.value,
-      currentPlan: currentPlan.value,
-      status: currentStatus.value,
-      q: searchTerm,
-    };
-
-    const isFiltered = Object.keys(filters).some(function (k) {
-      return filters[k].length > 0;
-    });
-
-    if (store.data.length > 0) {
-      return store.data;
-    } else if (store.data.length === 0 && isFiltered) {
-      return [];
-    } else {
-      return store.allData.slice(0, rowsPerPage);
-    }
-  };
-
-  const handleSort = (column, sortDirection) => {
-    setSort(sortDirection);
-    setSortColumn(column.sortField);
-    dispatch(
-      getData({
-        sort,
-        sortColumn,
-        q: searchTerm,
-        page: currentPage,
-        perPage: rowsPerPage,
-        role: currentRole.value,
-        status: currentStatus.value,
-        currentPlan: currentPlan.value,
-      })
-    );
-  };
+  const tableColumns = columns({ handleOpenModal, handleDeleteUser });
 
   const [selectedRoles, setSelectedRoles] = useState([]);
   const [isActive, setIsActive] = useState(false);
 
-  const tableColumns = columns({ handleOpenModal });
+  const allRolesOptions = (() => {
+    const rolesU = users.flatMap((u) => {
+      if (u.roles && Array.isArray(u.roles))
+        return u.roles.map((r) => String(r).trim());
+      if (u.userRoles && typeof u.userRoles === "string")
+        return u.userRoles.split(",").map((r) => String(r).trim());
+      return [];
+    });
 
-  const allRolesOptions = [
-    { value: "employee.admin", label: "Employee.Admin" },
-    { value: "administrator", label: "Administrator" },
-    { value: "student", label: "Student" },
-    { value: "editor", label: "Editor" },
-    { value: "contributor", label: "Contributor" },
-  ];
+    const unique = Array.from(new Set(rolesU.filter((r) => r && r.length)));
 
+    return unique.map((role) => ({
+      value: String(role).toLowerCase(),
+      label: role,
+    }));
+  })();
   return (
     <Fragment>
-      <Card>
-        <CardHeader>
-          <CardTitle tag="h4">Filters</CardTitle>
-        </CardHeader>
-        <CardBody>
-          <Row>
-            <Col md="4">
-              <Label for="role-select">Role</Label>
-              <Select
-                isClearable={false}
-                value={currentRole}
-                options={roleOptions}
-                className="react-select"
-                classNamePrefix="select"
-                theme={selectThemeColors}
-                onChange={(data) => {
-                  setCurrentRole(data);
-                  dispatch(
-                    getData({
-                      sort,
-                      sortColumn,
-                      q: searchTerm,
-                      role: data.value,
-                      page: currentPage,
-                      perPage: rowsPerPage,
-                      status: currentStatus.value,
-                      currentPlan: currentPlan.value,
-                    })
-                  );
-                }}
-              />
-            </Col>
-            <Col className="my-md-0 my-1" md="4">
-              <Label for="plan-select">Plan</Label>
-              <Select
-                theme={selectThemeColors}
-                isClearable={false}
-                className="react-select"
-                classNamePrefix="select"
-                options={planOptions}
-                value={currentPlan}
-                onChange={(data) => {
-                  setCurrentPlan(data);
-                  dispatch(
-                    getData({
-                      sort,
-                      sortColumn,
-                      q: searchTerm,
-                      page: currentPage,
-                      perPage: rowsPerPage,
-                      role: currentRole.value,
-                      currentPlan: data.value,
-                      status: currentStatus.value,
-                    })
-                  );
-                }}
-              />
-            </Col>
-            <Col md="4">
-              <Label for="status-select">Status</Label>
-              <Select
-                theme={selectThemeColors}
-                isClearable={false}
-                className="react-select"
-                classNamePrefix="select"
-                options={statusOptions}
-                value={currentStatus}
-                onChange={(data) => {
-                  setCurrentStatus(data);
-                  dispatch(
-                    getData({
-                      sort,
-                      sortColumn,
-                      q: searchTerm,
-                      page: currentPage,
-                      status: data.value,
-                      perPage: rowsPerPage,
-                      role: currentRole.value,
-                      currentPlan: currentPlan.value,
-                    })
-                  );
-                }}
-              />
-            </Col>
-          </Row>
-        </CardBody>
-      </Card>
-
       <Card className="overflow-hidden">
         <div className="react-dataTable">
           <DataTable
             noHeader
             subHeader
-            sortServer
+            sortServer={false}
             pagination
             responsive
             paginationServer
             columns={tableColumns}
-            onSort={handleSort}
             sortIcon={<ChevronDown />}
             className="react-dataTable"
             paginationComponent={CustomPagination}
             data={dataToRender()}
+            progressPending={isPending}
             subHeaderComponent={
               <CustomHeader
-                store={store}
+                roleOptions={roleOptions}
+                currentRole={currentRole}
+                setCurrentPage={setCurrentPage}
+                setCurrentRole={setCurrentRole}
+                data={filteredData}
                 searchTerm={searchTerm}
                 rowsPerPage={rowsPerPage}
                 handleFilter={handleFilter}
@@ -529,97 +352,104 @@ const UsersList = () => {
         isOpen={openModal}
         toggle={() => setOpenModal(false)}
         className="modal-dialog-centered"
-        style={{ maxWidth: "600px" }}
+        style={{ maxWidth: "450px" }}
       >
         <ModalBody>
-          <p
-            className="mb-1 pt-2 text-center fw-bold fs-5"
-            style={{ letterSpacing: "0.5px" }}
-          >
-            ویرایش نقش کاربر
-          </p>
-
-          <p
-            className="mb-2 text-center text-muted"
-            style={{ fontSize: "0.95rem" }}
-          >
-            برای ویرایش نقش کاربر از گزینه‌های زیر استفاده کنید.
-          </p>
-
+          <p className="mb-1 pt-2 text-center fw-bold fs-5">ویرایش نقش کاربر</p>
           {selectedUser && (
             <div className="mt-3 pt-3 pb-3 border-top d-flex align-items-center gap-1">
               <span className="fw-medium">نام:</span>
-              <span className="text-primary">{selectedUser.fullName}</span>
+              <span className="text-primary">
+                {selectedUser.fname} {selectedUser.lname}
+              </span>
             </div>
           )}
-
           <div className="mb-4">
             <Label className="form-label fw-semibold" for="user-roles">
               نقش‌ها
             </Label>
-
             <Select
               isMulti
               name="roles"
               options={allRolesOptions}
               className="react-select"
+              placeholder="نقش خود را انتخاب کنید..."
               classNamePrefix="select"
               value={selectedRoles}
-              onChange={setSelectedRoles}
+              onChange={(val) => setSelectedRoles(val)}
               theme={selectThemeColors}
-              placeholder="نقش‌ها را انتخاب کنید..."
+              noOptionsMessage={() =>
+                selectedRoles.length === allRolesOptions.length &&
+                "تمام نقش‌های موجود انتخاب شده‌اند"
+              }
             />
           </div>
-
           <div className="mb-4">
-            <Label className="form-label mb-2 fw-semibold" for="user-status">
-              فعال سازی همه
-            </Label>
-
             <div className="d-flex align-items-center gap-2">
               <div className="form-switch form-check-primary">
                 <Input
                   type="switch"
                   id="user-status"
-                  name="user-status"
                   checked={isActive}
-                  onChange={() => setIsActive(!isActive)}
+                  onChange={() => {
+                    const newStatus = !isActive;
+                    setIsActive(newStatus);
+
+                    if (newStatus) {
+                      setSelectedRoles(
+                        allRolesOptions.map((r) => ({
+                          value: r.value,
+                          label: r.label,
+                        }))
+                      );
+                    } else {
+                      setSelectedRoles([]);
+                    }
+                  }}
                 />
               </div>
-
-              <span
-                className={`fw-medium ${
-                  isActive ? "text-success" : "text-secondary"
-                }`}
-              >
-                {isActive ? "فعال" : "غیرفعال"}
-              </span>
+              <span>{isActive ? "فعال" : "غیرفعال"}</span>
             </div>
           </div>
         </ModalBody>
-
         <ModalFooter className="d-flex justify-content-between">
-          <Button
-            color="secondary"
-            outline
-            onClick={() => setOpenModal(false)}
-            style={{
-              padding: "0.5rem 1.2rem",
-              borderRadius: "6px",
-              transition: "all 0.2s",
-            }}
-          >
+          <Button color="secondary" outline onClick={() => setOpenModal(false)}>
             انصراف
           </Button>
-
           <Button
             color="primary"
-            onClick={() => setOpenModal(false)}
-            style={{
-              padding: "0.5rem 1.5rem",
-              borderRadius: "6px",
-              boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-              transition: "all 0.2s",
+            onClick={() => {
+              if (!selectedUser || selectedRoles.length === 0) {
+                toast.error("حداقل یک نقش انتخاب کنید");
+                return;
+              }
+
+              const selectedRoleValue = selectedRoles[0]?.value
+                .trim()
+                .toLowerCase();
+
+              const roleId = roles.find(
+                (r) => r.name.toLowerCase().trim() === selectedRoleValue
+              )?.id;
+
+              const currentUserRoles = selectedUser.userRoles
+                ? selectedUser.userRoles
+                    .split(",")
+                    .map((r) => r.trim().toLowerCase())
+                : [];
+
+              if (currentUserRoles.includes(selectedRoleValue)) {
+                toast.error(`کاربر از قبل دارای نقش ${selectedRoleValue} است.`);
+                setOpenModal(false);
+                return;
+              }
+
+              addRoleMutation.mutate({
+                roleId,
+                userId: selectedUser.id,
+              });
+
+              setOpenModal(false);
             }}
           >
             ارسال

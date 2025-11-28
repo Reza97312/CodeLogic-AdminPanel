@@ -1,44 +1,36 @@
-// ** React Imports
 import { Fragment } from "react";
-
-// ** Utils
 import { isObjEmpty } from "@utils";
-
-// ** Third Party Components
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-// ** Reactstrap Imports
 import { Form, Label, Input, Row, Col, Button, FormFeedback } from "reactstrap";
 
-const defaultValues = {
-  email: "",
-  username: "",
-  password: "",
-  confirmPassword: "",
+const DefValue = (userData) => {
+  return {
+    adress: userData.homeAdderess,
+    about: userData.userAbout,
+    width: userData.latitude,
+    height: userData.longitude,
+  };
 };
 
-const Address = ({ stepper }) => {
-  const SignupSchema = yup.object().shape({
-    username: yup.string().required(),
-    email: yup.string().email().required(),
-    password: yup.string().required(),
-    confirmPassword: yup
-      .string()
-      .required()
-      .oneOf([yup.ref(`password`), null], "Passwords must match"),
-  });
+const Address = ({ stepper, initialData }) => {
+  const initialDefValues = DefValue(initialData);
 
-  // ** Hooks
+  const SignupSchema = yup.object().shape({
+    adress: yup.string().required(),
+    about: yup.string().required(),
+    width: yup.string().required(),
+    height: yup.string().required(),
+  });
 
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues,
+    defaultValues: initialDefValues,
     resolver: yupResolver(SignupSchema),
   });
 
@@ -56,93 +48,102 @@ const Address = ({ stepper }) => {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Row>
           <Col md="6" className="mb-4">
-            <Label className="form-label" for="username">
+            <Label className="form-label" for="adress">
               آدرس
             </Label>
             <Controller
-              id="username"
-              name="username"
+              id="adress"
+              name="adress"
               control={control}
               render={({ field }) => (
                 <Input
                   placeholder="آدرس خود را وارد کنید..."
-                  invalid={errors.username && true}
+                  invalid={errors.adress && true}
                   {...field}
                 />
               )}
             />
-            {errors.username && (
-              <FormFeedback>{errors.username.message}</FormFeedback>
+            {errors.adress && (
+              <FormFeedback>آدرس خود را وارد کنید</FormFeedback>
             )}
           </Col>
           <Col md="6" className="mb-5">
-            <Label className="form-label" for={`email`}>
+            <Label className="form-label" for="about">
               درباره کاربر
             </Label>
             <Controller
               control={control}
-              id="email"
-              name="email"
+              id="about"
+              name="about"
               render={({ field }) => (
                 <Input
-                  type="email"
+                  type="text"
                   placeholder="اطلاعات خود را وارد کنید..."
-                  invalid={errors.email && true}
+                  invalid={errors.about && true}
                   {...field}
                 />
               )}
             />
-            {errors.email && (
-              <FormFeedback>{errors.email.message}</FormFeedback>
+            {errors.about && (
+              <FormFeedback>اطلاعات خود را وارد کنید</FormFeedback>
             )}
           </Col>
         </Row>
         <Row>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="password">
+            <Label className="form-label" for="width">
               عرض جغرافیایی
             </Label>
             <Controller
-              id="password"
-              name="password"
+              id="width"
+              name="width"
               control={control}
               render={({ field }) => (
                 <Input
-                  type="password"
+                  type="text"
                   placeholder="عرض جغرافیایی خود را وارد کنید..."
-                  invalid={errors.password && true}
+                  invalid={errors.width && true}
                   {...field}
                 />
               )}
             />
-            {errors.password && (
-              <FormFeedback>{errors.password.message}</FormFeedback>
+            {errors.width && (
+              <FormFeedback>
+                عرض جغرافیایی محل سکونت خود را وارد کنید
+              </FormFeedback>
             )}
           </div>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="confirmPassword">
+            <Label className="form-label" for="height">
               طول جغرافیایی
             </Label>
             <Controller
               control={control}
-              id="confirmPassword"
-              name="confirmPassword"
+              id="height"
+              name="height"
               render={({ field }) => (
                 <Input
-                  type="password"
+                  type="text"
                   placeholder="طول جغرافیایی خود را انتخاب کنید..."
-                  invalid={errors.confirmPassword && true}
+                  invalid={errors.height && true}
                   {...field}
                 />
               )}
             />
-            {errors.confirmPassword && (
-              <FormFeedback>{errors.confirmPassword.message}</FormFeedback>
+            {errors.height && (
+              <FormFeedback>
+                طول جغرافیایی محل سکونت خود را وارد کنید
+              </FormFeedback>
             )}
           </div>
         </Row>
         <div className="d-flex justify-content-between mt-5">
-          <Button color="secondary" className="btn-prev" outline disabled>
+          <Button
+            color="secondary"
+            className="btn-prev"
+            outline
+            onClick={() => stepper.previous()}
+          >
             <ArrowLeft
               size={14}
               className="align-middle me-sm-25 me-0"

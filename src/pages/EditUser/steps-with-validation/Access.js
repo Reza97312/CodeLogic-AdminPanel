@@ -1,45 +1,54 @@
-// ** React Imports
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import Select from "react-select";
 import { selectThemeColors } from "@utils";
-// ** Utils
 import { isObjEmpty } from "@utils";
-
-// ** Third Party Components
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-// ** Reactstrap Imports
 import { Form, Label, Input, Row, Col, Button, FormFeedback } from "reactstrap";
 
-const defaultValues = {
-  email: "",
-  username: "",
-  password: "",
-  confirmPassword: "",
+const DefValue = (userData, allRolesOptions) => {
+  const userRolesOptions = userData.roles
+    .map((role) => {
+      const roleName = role.roleName.toLowerCase();
+
+      const option = allRolesOptions.find(
+        (opt) => opt.value.toLowerCase() === roleName
+      );
+      return option;
+    })
+    .filter((option) => option !== undefined);
+
+  const hasRole = (roleName) =>
+    userRolesOptions.some(
+      (r) => r.value.toLowerCase() === roleName.toLowerCase()
+    );
+
+  return {
+    teacher: hasRole("teacher") ? "yes" : "no",
+    student: hasRole("student") ? "yes" : "no",
+    twostep: userData.twoStepAuth === true ? "yes" : "no",
+    role: userRolesOptions,
+  };
 };
 
-const Access = ({ stepper }) => {
-  const SignupSchema = yup.object().shape({
-    username: yup.string().required(),
-    email: yup.string().email().required(),
-    password: yup.string().required(),
-    confirmPassword: yup
-      .string()
-      .required()
-      .oneOf([yup.ref(`password`), null], "Passwords must match"),
-  });
+const Access = ({ stepper, initialData, allRoles }) => {
+  const initialDefValues = DefValue(initialData, allRoles);
 
-  // ** Hooks
+  const SignupSchema = yup.object().shape({
+    teacher: yup.string().required("وضعیت معلم الزامی است"),
+    student: yup.string().required("وضعیت دانشجو الزامی است"),
+    twostep: yup.string().required("وضعیت تایید دو مرحله‌ای الزامی است"),
+  });
 
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
-    defaultValues,
+    defaultValues: initialDefValues,
     resolver: yupResolver(SignupSchema),
   });
 
@@ -49,15 +58,24 @@ const Access = ({ stepper }) => {
     }
   };
 
-  const allRolesOptions = [
-    { value: "employee.admin", label: "Employee.Admin" },
-    { value: "administrator", label: "Administrator" },
-    { value: "student", label: "Student" },
-    { value: "editor", label: "Editor" },
-    { value: "contributor", label: "Contributor" },
-  ];
+  const NoOptionsMessage = (props) => {
+    return (
+      <div
+        {...props.innerProps}
+        style={{ textAlign: "center", padding: "8px 12px" }}
+      >
+        تمام نقش‌های موجود انتخاب شده‌اند
+      </div>
+    );
+  };
 
-  const [selectedRoles, setSelectedRoles] = useState([]);
+  const currentRoles = watch("role", initialDefValues.role);
+
+  const availableOptions = allRoles.filter(
+    (option) =>
+      !currentRoles.some((selected) => selected.value === option.value)
+  );
+
   return (
     <Fragment>
       <div className="content-header mb-5">
@@ -66,18 +84,18 @@ const Access = ({ stepper }) => {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Row>
           <Col md="6" className="mb-4">
-            <Label className="form-label" for="username">
+            <Label className="form-label" for="teacher">
               وضعیت معلم
             </Label>
             <Controller
-              id="username"
-              name="username"
+              id="teacher"
+              name="teacher"
               control={control}
               render={({ field }) => (
                 <Input
                   type="select"
                   {...field}
-                  invalid={errors.username && true}
+                  invalid={errors.teacher && true}
                 >
                   <option value="">وضعیت خود را انتخاب کنید...</option>
                   <option value="yes">بله</option>
@@ -85,76 +103,101 @@ const Access = ({ stepper }) => {
                 </Input>
               )}
             />
-            {errors.username && (
-              <FormFeedback>{errors.username.message}</FormFeedback>
+            {errors.teacher && (
+              <FormFeedback>{errors.teacher.message}</FormFeedback>
             )}
           </Col>
           <Col md="6" className="mb-5">
-            <Label className="form-label" for={`email`}>
+            <Label className="form-label" for="student">
               وضعیت دانشجویی
             </Label>
             <Controller
               control={control}
-              id="email"
-              name="email"
+              id="student"
+              name="student"
               render={({ field }) => (
-                <Input type="select" {...field} invalid={errors.email && true}>
+                <Input
+                  type="select"
+                  {...field}
+                  invalid={errors.student && true}
+                >
                   <option value="">وضعیت خود را انتخاب کنید...</option>
                   <option value="yes">بله</option>
                   <option value="no">خیر</option>
                 </Input>
               )}
             />
-            {errors.email && (
-              <FormFeedback>{errors.email.message}</FormFeedback>
+            {errors.student && (
+              <FormFeedback>{errors.student.message}</FormFeedback>
             )}
           </Col>
         </Row>
         <Row>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="password">
+            <Label className="form-label" for="twostep">
               وضعیت تایید دو مرحله ای
             </Label>
             <Controller
-              id="password"
-              name="password"
+              id="twostep"
+              name="twostep"
               control={control}
               render={({ field }) => (
                 <Input
-                  type="password"
+                  type="select"
                   placeholder="وضعیت خود را وارد کنید..."
-                  invalid={errors.password && true}
+                  invalid={errors.twostep && true}
                   {...field}
-                />
+                >
+                  <option value="">وضعیت را انتخاب کنید...</option>
+                  <option value="yes">فعال</option>
+                  <option value="no">غیرفعال</option>
+                </Input>
               )}
             />
-            {errors.password && (
-              <FormFeedback>{errors.password.message}</FormFeedback>
+            {errors.twostep && (
+              <FormFeedback>{errors.twostep.message}</FormFeedback>
             )}
           </div>
           <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="confirmPassword">
+            <Label className="form-label" for="role">
               نقش کاربر
             </Label>
 
-            <Select
-              isMulti
-              name="roles"
-              options={allRolesOptions}
-              className="react-select"
-              classNamePrefix="select"
-              value={selectedRoles}
-              onChange={setSelectedRoles}
-              theme={selectThemeColors}
-              placeholder="نقش‌ها را انتخاب کنید..."
+            <Controller
+              name="role"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  isMulti
+                  options={availableOptions}
+                  classNamePrefix="select"
+                  className={`react-select ${errors.role ? "is-invalid" : ""}`}
+                  value={field.value}
+                  onChange={(selected) => {
+                    field.onChange(selected);
+                  }}
+                  theme={selectThemeColors}
+                  placeholder="نقش‌ها را انتخاب کنید..."
+                  components={{ NoOptionsMessage }}
+                />
+              )}
             />
-            {errors.confirmPassword && (
-              <FormFeedback>{errors.confirmPassword.message}</FormFeedback>
+
+            {errors.role && (
+              <FormFeedback className="d-block">
+                {errors.role.message}
+              </FormFeedback>
             )}
           </div>
         </Row>
         <div className="d-flex justify-content-between mt-5">
-          <Button color="secondary" className="btn-prev" outline disabled>
+          <Button
+            color="secondary"
+            className="btn-prev"
+            outline
+            onClick={() => stepper.previous()}
+          >
             <ArrowLeft
               size={14}
               className="align-middle me-sm-25 me-0"

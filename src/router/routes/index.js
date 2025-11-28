@@ -18,7 +18,6 @@ import PublicRoute from "@components/routes/PublicRoute";
 import { isObjEmpty } from "@utils";
 import CoursesManagement from "../../pages/CourseManagement/CourseList/CoursesManagement";
 import CourseView from "../../pages/CourseManagement/CourseView/CourseView";
-import CourseUseresTable from "../../components/Courses/CourseView/view/CourseUsersList/UserseTable";
 import CoursesUserList from "../../components/Courses/CourseView/view/CourseUsersList/CoursesUserList";
 import CreateCourse from "../../pages/CourseManagement/CreateCourse/CreateCourse";
 
@@ -35,12 +34,10 @@ const TemplateTitle = "%s - Vuexy React Admin Template";
 const DefaultRoute = "/home";
 
 const Home = lazy(() => import("../../pages/Home"));
-const SecondPage = lazy(() => import("../../pages/SecondPage"));
 const Login = lazy(() => import("../../pages/Login"));
 const Register = lazy(() => import("../../pages/Register"));
 const ForgotPassword = lazy(() => import("../../pages/ForgotPassword"));
 const Error = lazy(() => import("../../pages/Error"));
-const Sample = lazy(() => import("../../pages/Sample"));
 const UserManagement = lazy(() =>
   import("../../pages/UserManagement/UserManagement")
 );
@@ -64,10 +61,6 @@ const Routes = [
   {
     path: "/home",
     element: <Home />,
-  },
-  {
-    path: "/second-page",
-    element: <SecondPage />,
   },
   {
     path: "/news-list",

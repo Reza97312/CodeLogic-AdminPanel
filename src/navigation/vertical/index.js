@@ -27,12 +27,6 @@ export default [
     ],
   },
   {
-    id: "secondPage",
-    title: "Second Page",
-    icon: <Mail size={20} />,
-    navLink: "/second-page",
-  },
-  {
     id: "news",
     title: "مدیریت اخبار",
     icon: <Circle size={12} />,

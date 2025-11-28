@@ -203,7 +203,7 @@ const NewsInfoCard = ({ selectedNews }) => {
                       }
                       className="text-capitalize"
                     >
-                      {selectedNews.isActive ? "فعال" : "غیرفعال"}
+                      {selectedNews?.isActive ? "فعال" : "غیرفعال"}
                     </Badge>
                   ) : null}
                 </div>

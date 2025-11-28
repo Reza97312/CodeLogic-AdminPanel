@@ -33,6 +33,7 @@ import { selectThemeColors } from "@utils";
 // ** Styles
 import "@styles/react/libs/react-select/_react-select.scss";
 import { Sortable } from "sortablejs";
+import { PersianDateConverter } from "../../../../utility/helper/PersianDateConverter";
 
 const roleColors = {
   editor: "light-info",
@@ -240,11 +241,11 @@ const CourseInfoCard = ({ selectedCourse }) => {
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">زمان شروع : </span>
-                  <span>{selectedCourse?.startTime.slice(0, 10)}</span>
+                  <span>{PersianDateConverter(selectedCourse?.startTime)}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">زمان پایان :</span>
-                  <span>{selectedCourse?.endTime.slice(0, 10)}</span>
+                  <span>{PersianDateConverter(selectedCourse?.endTime)}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">تعداد رزرو ها : </span>

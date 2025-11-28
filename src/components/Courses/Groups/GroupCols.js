@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import Avatar from "@components/avatar";
 import { store } from "@store/store";
-import { deleteUser, getUser } from "./store";
 
 import {
   MoreVertical,
@@ -20,8 +19,6 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
-import { PersianDateConverter } from "../../../utility/helper/PersianDateConverter";
-// import { active } from "sortablejs";
 
 const renderCourseImage = (row) => {
   if (row.imageAddress) {
@@ -34,7 +31,7 @@ const renderCourseImage = (row) => {
       initials
       className="me-1"
       color="light-primary"
-      content={row.title || "Course"}
+      content={row.groupName || "Course"}
     />
   );
 };
@@ -42,64 +39,54 @@ const statusObj = {
   true: "light-success",
   false: "light-secondary",
 };
-export const columns = ({ handleOpenModal, toggleSidebar, deleteCourse }) => [
+export const GroupsCols = ({ handleOpenModal, toggleSidebar }) => [
   {
-    name: <span style={{ fontSize: "14px" }}>دوره</span>,
+    name: <span style={{ fontSize: "14px" }}>نام گروه</span>,
     minWidth: "300px",
     cell: (row) => (
       <div className="d-flex align-items-center">
-        {renderCourseImage(row)}
+        {/* {renderCourseImage(row)} */}
         <div className="d-flex flex-column">
-          <Link
-            to={`/courses/view/${row.id}`}
-            className="text-body"
-            onClick={() => store.dispatch(getUser(row.id))}
-          >
-            <span className="fw-bolder">{row.title}</span>
-          </Link>
+          <span className="fw-bolder">{row.groupName}</span>
         </div>
       </div>
     ),
   },
 
   {
-    name: <span style={{ fontSize: "14px" }}>قیمت</span>,
+    name: <span style={{ fontSize: "14px" }}>ظرفیت</span>,
     minWidth: "150px",
-    cell: (row) => (
-      <span className="text-capitalize">{row.cost.toLocaleString()} تومان</span>
-    ),
+    cell: (row) => <span className="text-capitalize">{row.groupCapacity}</span>,
   },
 
-  {
-    name: <span style={{ fontSize: "14px" }}>انقضا</span>,
-    minWidth: "150px",
-    cell: (row) =>
-      row.isExpire ? (
-        <Check size={20} color="green" />
-      ) : (
-        <X size={20} color="red" />
-      ),
-  },
+  //   {
+  //     name: <span style={{ fontSize: "14px" }}>انقضا</span>,
+  //     minWidth: "150px",
+  //     cell: (row) =>
+  //       row.isExpire ? (
+  //         <Check size={20} color="green" />
+  //       ) : (
+  //         <X size={20} color="red" />
+  //       ),
+  //   },
 
-  {
-    name: <span style={{ fontSize: "14px" }}>تاریخ شروع</span>,
-    minWidth: "150px",
-    cell: (row) => (
-      <span className="text-capitalize">
-        {PersianDateConverter(row.startTime) || "—"}
-      </span>
-    ),
-  },
+  //   {
+  //     name: <span style={{ fontSize: "14px" }}>تاریخ شروع</span>,
+  //     minWidth: "150px",
+  //     cell: (row) => (
+  //       <span className="text-capitalize">
+  //         {row.startTime.slice(0, 10) || "—"}
+  //       </span>
+  //     ),
+  //   },
 
-  {
-    name: <span style={{ fontSize: "14px" }}>فعال / غیرفعال</span>,
-    minWidth: "150px",
-    cell: (row) => (
-      <Badge color={statusObj[row.isActive]} pill>
-        {row.isActive ? "فعال" : "غیرفعال"}
-      </Badge>
-    ),
-  },
+  //   {
+  //     name: <span style={{ fontSize: "14px" }}>فعال / غیرفعال</span>,
+  //     minWidth: "150px",
+  //     cell: (row) => (
+  //       <span>{row.}</span>
+  //     ),
+  //   },
 
   {
     name: <span style={{ fontSize: "14px" }}>اقدامات</span>,
@@ -111,14 +98,14 @@ export const columns = ({ handleOpenModal, toggleSidebar, deleteCourse }) => [
         </DropdownToggle>
 
         <DropdownMenu>
-          <DropdownItem
+          {/* <DropdownItem
             tag={Link}
             to={`/courses/view/${row.courseId}`}
             onClick={() => store.dispatch(getUser(row.id))}
           >
             <FileText size={14} className="me-50" />
-            <span className="align-middle">جزئیات دوره</span>
-          </DropdownItem>
+            <span className="align-middle">جزئیات کاربر</span>
+          </DropdownItem> */}
 
           <DropdownItem onClick={() => toggleSidebar()}>
             <Archive size={14} className="me-50" />
@@ -126,12 +113,10 @@ export const columns = ({ handleOpenModal, toggleSidebar, deleteCourse }) => [
           </DropdownItem>
 
           <DropdownItem
-            onClick={() =>
-              deleteCourse({
-                CourseActive: row.active,
-                courseId: row.courseId,
-              })
-            }
+            onClick={(e) => {
+              e.preventDefault();
+              store.dispatch(deleteUser(row.id));
+            }}
           >
             <Trash2 size={14} className="me-50" />
             <span className="align-middle">حذف</span>

@@ -1,5 +1,9 @@
 import axios from "axios";
-import {getItem,removeItem,setItem,} from "../../utility/helper/storage.services";
+import {
+  getItem,
+  removeItem,
+  setItem,
+} from "../../utility/helper/storage.services";
 import { toast } from "react-toastify";
 
 const baseURL = "https://sepehracademy.liara.run";
@@ -14,9 +18,13 @@ const onSuccess = (response) => {
 
 const onError = (err) => {
   if (err.response.status === 401 || err.response.status === 403) {
-    toast.error("لطفا ابتداوارد شوید");
     setItem("isLogin", false);
+  }
+  // if (err.response.status === 401) {
+  // }
+  if (err.response.status === 403) {
     removeItem("token");
+    toast.error("لطفا ابتداوارد شوید");
   }
 
   if (err.response.status >= 400 && err.response.status < 500) {

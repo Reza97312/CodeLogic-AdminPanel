@@ -121,7 +121,7 @@ const Home = () => {
         <Col lg="4" md="6" xs="12">
           <Card className="shadow-sm">
             <CardBody className="text-center mx-auto">
-              <h4 className="mb-3">تعداد کامنت ها بر اساس دسته بندی ها</h4>
+              <h4 className="mb-3"> تکنولوژی های استفاده شده در دوره ها </h4>
               <CommentCharts />
             </CardBody>
           </Card>

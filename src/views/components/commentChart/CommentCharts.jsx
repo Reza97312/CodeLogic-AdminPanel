@@ -45,7 +45,7 @@ const CommentCharts = () => {
     labels,
     datasets: [
       {
-        label: "تعداد کامنت‌ها",
+        label: "تعداد استفاده از تکنولوژی",
         data: values,
         backgroundColor: "rgba(0, 140, 120, 0.2)",
         borderColor: "rgba(0, 140, 120, 1)",

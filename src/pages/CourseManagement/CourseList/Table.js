@@ -116,8 +116,8 @@ const UsersList = () => {
   const { mutate: deleteCourse, isPending: DeleteCoursePending } = useMutation({
     mutationKey: ["QUERYKEY"],
     mutationFn: (value) => DeleteCourse(value),
-    onError: (data) => {
-      toast.error(data.response.message || "شما به این روت دسترسی ندارید");
+    onError: (error) => {
+      toast.error(error.response?.data?.message);
     },
     onSuccess: (data) => {
       toast.success(data.message);

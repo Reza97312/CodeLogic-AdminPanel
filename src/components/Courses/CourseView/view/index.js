@@ -17,7 +17,7 @@ import CourseInfoCard from "./CourseInfoCard";
 import loading from "../../../../assets/images/A/loading.gif";
 import CourseTabs from "./courseTabs";
 
-import store from '../store'
+import store from "../store";
 
 const Cview = () => {
   // ** Hooks

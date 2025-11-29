@@ -42,7 +42,13 @@ const statusObj = {
   true: "light-success",
   false: "light-secondary",
 };
-export const columns = ({ handleOpenModal, toggleSidebar, deleteCourse }) => [
+export const columns = ({
+  getActiveData,
+  handleOpenModal,
+  toggleSidebar,
+  deleteCourse,
+  toggleActiveModal,
+}) => [
   {
     name: <span style={{ fontSize: "14px" }}>دوره</span>,
     minWidth: "300px",
@@ -125,7 +131,15 @@ export const columns = ({ handleOpenModal, toggleSidebar, deleteCourse }) => [
           </DropdownItem>
           <DropdownItem>
             <Archive size={14} className="me-50" />
-            <span className="align-middle">غیر فعال کردن </span>
+            <span
+              onClick={() => {
+                toggleActiveModal(true);
+                getActiveData(row);
+              }}
+              className="align-middle"
+            >
+              غیر فعال/فعال{" "}
+            </span>
           </DropdownItem>
 
           <DropdownItem

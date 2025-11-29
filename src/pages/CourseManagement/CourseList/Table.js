@@ -39,6 +39,7 @@ import SidebarEditCourses from "./EditCourseSidebar";
 import { Link, useNavigate } from "react-router-dom";
 import { DeleteCourse } from "../../../core/services/api/delete/DeleteCourse";
 import { toast } from "react-toastify";
+import SetActivateCourse from "../../../components/Courses/SetActivateCourse/SetActivateCourse";
 
 const CustomHeader = ({
   toggleSidebar,
@@ -102,7 +103,15 @@ const UsersList = () => {
   const [sort, setSort] = useState("DESC");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [OpenActiveModal, setOpenActiveModal] = useState(false);
+  const [activeData, setActiveData] = useState({});
 
+  const toggleActiveModal = (value) => {
+    setOpenActiveModal(value);
+  };
+  const getActiveData = (d) => {
+    setActiveData(d);
+  };
   const { data: CoursesData = {}, isPending } = useQuery({
     queryKey: ["ALLCOURSES", currentPage, rowsPerPage, searchQuery],
     queryFn: () =>
@@ -150,6 +159,8 @@ const UsersList = () => {
 
   const tableColumns = columns({
     deleteCourse,
+    getActiveData,
+    toggleActiveModal,
     toggleSidebar,
     handleOpenModal: () => {},
   });
@@ -209,6 +220,13 @@ const UsersList = () => {
       </Card>
 
       <SidebarEditCourses open={sidebarOpen} toggleSidebar={toggleSidebar} />
+      {OpenActiveModal && (
+        <SetActivateCourse
+          isOpen={OpenActiveModal}
+          activeData={activeData}
+          toggleActiveModal={toggleActiveModal}
+        />
+      )}
     </Fragment>
   );
 };

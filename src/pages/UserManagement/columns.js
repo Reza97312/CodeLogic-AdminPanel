@@ -76,7 +76,7 @@ const renderRole = (row) => {
   );
 };
 
-export const columns = ({ handleOpenModal, handleDeleteUser }) => [
+export const columns = ({ handleOpenModal, deleteUser }) => [
   {
     name: <span style={{ fontSize: "14px" }}>کاربران</span>,
     sortable: true,
@@ -88,7 +88,7 @@ export const columns = ({ handleOpenModal, handleDeleteUser }) => [
         {renderClient(row)}
         <div className="d-flex flex-column">
           <Link
-            to={`/apps/user/view/${row.id}`}
+            to={`/userdetails/${row.id}`}
             className="user_name text-truncate text-body"
           >
             <span className="fw-bolder">
@@ -158,7 +158,7 @@ export const columns = ({ handleOpenModal, handleDeleteUser }) => [
             <DropdownItem
               tag={Link}
               className="w-100"
-              to={`/apps/user/view/${row.id}`}
+              to={`/userdetails/${row.id}`}
             >
               <FileText size={14} className="me-50" />
               <span className="align-middle">جزئیات کاربر</span>
@@ -170,13 +170,13 @@ export const columns = ({ handleOpenModal, handleDeleteUser }) => [
               </DropdownItem>
             </Link>
             <DropdownItem
-              tag="a"
-              href="/"
               className="w-100"
-              onClick={(e) => {
-                e.preventDefault();
-                handleDeleteUser(row.id);
-              }}
+              onClick={() =>
+                deleteUser({
+                  CourseActive: row.active,
+                  courseId: row.courseId,
+                })
+              }
             >
               <Trash2 size={14} className="me-50" />
               <span className="align-middle">حذف کاربر</span>

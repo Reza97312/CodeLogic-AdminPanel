@@ -13,7 +13,7 @@ const UserManagement = () => {
     SortType: "InsertDate",
     IsActiveUser: true,
     IsDeletedUser: true,
-    Query: "",
+    // Query: "",
   };
 
   const { data, isPending } = useQuery({

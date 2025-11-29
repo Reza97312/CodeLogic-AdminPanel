@@ -1,62 +1,76 @@
-// ** React Imports
-import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-
-// ** Store & Actions
-import { getUser } from '../store'
-import { useSelector, useDispatch } from 'react-redux'
-
-// ** Reactstrap Imports
-import { Row, Col, Alert } from 'reactstrap'
-
-// ** User View Components
-import UserTabs from './Tabs'
-import PlanCard from './PlanCard'
-import UserInfoCard from './UserInfoCard'
-
-// ** Styles
-import '@styles/react/apps/app-users.scss'
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import GetUserDetails from "../../../core/services/api/get/GetUserDetails";
+import { Row, Col } from "reactstrap";
+import UserTabs from "./Tabs";
+import UserInfoCard from "./UserInfoCard";
+import "@styles/react/apps/app-users.scss";
+import GetAllUser from "../../../core/services/api/get/GetAllUser";
+// import loader from "../../../assets/images/Infinity Loader.json";
+// import Lottie from "lottie-react";
 
 const UserView = () => {
-  // ** Store Vars
-  const store = useSelector(state => state.users)
-  const dispatch = useDispatch()
+  const params = {
+    PageNumber: 1,
+    RowsOfPage: 1000,
+    SortingCol: "DESC",
+    SortType: "InsertDate",
+    IsActiveUser: true,
+    IsDeletedUser: true,
+  };
 
-  // ** Hooks
-  const { id } = useParams()
+  const { data } = useQuery({
+    queryKey: ["GetAllUser", params],
+    queryFn: () => GetAllUser(params),
+  });
 
-  // ** Get suer on mount
-  useEffect(() => {
-    dispatch(getUser(parseInt(id)))
-  }, [dispatch])
+  const users = data?.listUser ?? [];
+  const rolesList = data?.roles ?? [];
 
-  const [active, setActive] = useState('1')
+  const { id } = useParams();
+  const userId = parseInt(id);
 
-  const toggleTab = tab => {
+  const { data: user, isLoading } = useQuery({
+    queryKey: ["GetUserDetails", userId],
+    queryFn: () => GetUserDetails(userId),
+    enabled: !!id && !isNaN(userId),
+  });
+
+  const [active, setActive] = useState("1");
+
+  const toggleTab = (tab) => {
     if (active !== tab) {
-      setActive(tab)
+      setActive(tab);
     }
-  }
+  };
 
-  return store.selectedUser !== null && store.selectedUser !== undefined ? (
-    <div className='app-user-view'>
+  const LoadingCard = (
+    <>
+      {/* <Lottie animationData={loader} /> */}
+      <p className="mt-2">در حال بارگذاری اطلاعات کاربر...</p>
+    </>
+  );
+
+  return (
+    <div className="app-user-view">
       <Row>
-        <Col xl='4' lg='5' xs={{ order: 1 }} md={{ order: 0, size: 5 }}>
-          <UserInfoCard selectedUser={store.selectedUser} />
-          <PlanCard />
+        <Col xl="4" lg="5" xs={{ order: 1 }} md={{ order: 0, size: 5 }}>
+          {!isLoading ? (
+            LoadingCard
+          ) : (
+            <UserInfoCard
+              initialData={user}
+              users={users}
+              rolesList={rolesList}
+            />
+          )}
         </Col>
-        <Col xl='8' lg='7' xs={{ order: 0 }} md={{ order: 1, size: 7 }}>
+        <Col xl="8" lg="7" xs={{ order: 0 }} md={{ order: 1, size: 7 }}>
           <UserTabs active={active} toggleTab={toggleTab} />
         </Col>
       </Row>
     </div>
-  ) : (
-    <Alert color='danger'>
-      <h4 className='alert-heading'>User not found</h4>
-      <div className='alert-body'>
-        User with id: {id} doesn't exist. Check list of all Users: <Link to='/apps/user/list'>Users List</Link>
-      </div>
-    </Alert>
-  )
-}
-export default UserView
+  );
+};
+export default UserView;

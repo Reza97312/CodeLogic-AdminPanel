@@ -41,11 +41,11 @@ const Login = lazy(() => import("../../pages/Login"));
 const Register = lazy(() => import("../../pages/Register"));
 const ForgotPassword = lazy(() => import("../../pages/ForgotPassword"));
 const Error = lazy(() => import("../../pages/Error"));
-const Sample = lazy(() => import("../../pages/Sample"));
 const UserManagement = lazy(() =>
   import("../../pages/UserManagement/UserManagement")
 );
 const EditUser = lazy(() => import("../../pages/EditUser/EditUser"));
+const UserDetails = lazy(() => import("../../pages/UserManagement/view"));
 
 // ** Merge Routes
 const Routes = [
@@ -61,6 +61,10 @@ const Routes = [
   {
     path: "/user-management",
     element: <UserManagement />,
+  },
+  {
+    path: "/userdetails/:id",
+    element: <UserDetails />,
   },
   {
     path: "/home",

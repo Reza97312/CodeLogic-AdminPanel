@@ -23,6 +23,7 @@ import {
 } from "reactstrap";
 import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
+
 const CustomHeader = ({
   toggleSidebar,
   handlePerPage,
@@ -168,23 +169,16 @@ const UsersList = ({ users = [], isPending, roles = [] }) => {
     },
   });
 
-  const deleteUserMutation = useMutation({
-    mutationFn: (userId) => {
-      return DeleteUser({ userId });
+  const { mutate: deleteUser, isPending: DeleteCoursePending } = useMutation({
+    mutationKey: ["QUERYKEY"],
+    mutationFn: (value) => DeleteUser(value),
+    onError: (data) => {
+      toast.error(data.response.message || "شما به این روت دسترسی ندارید");
     },
-    onSuccess: () => {
-      toast.success("کاربر با موفقیت حذف شد");
-
-      queryClient.invalidateQueries({ queryKey: ["GetAllUser"] });
-    },
-    onError: (error) => {
-      toast.error("خطا در حذف کاربر");
+    onSuccess: (data) => {
+      toast.success(data.message);
     },
   });
-
-  const handleDeleteUser = (userId) => {
-    deleteUserMutation.mutate(userId);
-  };
 
   // States
   const [openModal, setOpenModal] = useState(false);
@@ -290,7 +284,7 @@ const UsersList = ({ users = [], isPending, roles = [] }) => {
     );
   };
 
-  const tableColumns = columns({ handleOpenModal, handleDeleteUser });
+  const tableColumns = columns({ handleOpenModal, deleteUser });
 
   const [selectedRoles, setSelectedRoles] = useState([]);
   const [isActive, setIsActive] = useState(false);

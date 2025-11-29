@@ -1,5 +1,5 @@
 import React from 'react'
-import NewsView from '../../../components/user/view'
+import NewsView from '../NewsList/view'
 
 
 const NewsDetail = () => {

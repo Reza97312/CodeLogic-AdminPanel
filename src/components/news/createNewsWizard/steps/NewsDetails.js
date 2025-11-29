@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import { Label, Row, Col, Input, Form, Button } from 'reactstrap'
-import { createNews } from '../../../core/services/api/post/createNews'
+import { createNews } from '../../../../core/services/api/post/createNews'
 import { toast } from 'react-toastify'
 import { Formik } from 'formik'
 import * as yup from 'yup'

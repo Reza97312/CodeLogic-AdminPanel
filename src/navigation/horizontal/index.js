@@ -8,12 +8,6 @@ export default [
     navLink: "/home",
   },
   {
-    id: "secondPage",
-    title: "Second Page",
-    icon: <Mail size={20} />,
-    navLink: "/second-page",
-  },
-  {
     id: "courses",
     title: "مدیریت دوره ها",
     icon: <List size={12} />,

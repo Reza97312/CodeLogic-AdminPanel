@@ -7,7 +7,6 @@ import getAdminNewsComments from '../../../../core/services/api/get/getAdminNews
 import { Row, Col, Alert } from "reactstrap";
 
 // ** User View Components
-import UserTabs from "../../../../components/Courses/CourseView/view/courseTabs";
 import PlanCard from "../../../UserManagement/view/PlanCard";
 import UserInfoCard from "../../../UserManagement/view/UserInfoCard";
 import { useQuery } from "@tanstack/react-query";
@@ -19,6 +18,7 @@ import loading from "../../../../assets/images/A/loading.gif";
 import Tabs from "./Tabs";
 
 import store from '../store'
+
 
 const NewsView = () => {
   // ** Hooks

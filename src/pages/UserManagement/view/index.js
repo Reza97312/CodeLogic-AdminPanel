@@ -7,8 +7,8 @@ import UserTabs from "./Tabs";
 import UserInfoCard from "./UserInfoCard";
 import "@styles/react/apps/app-users.scss";
 import GetAllUser from "../../../core/services/api/get/GetAllUser";
-// import loader from "../../../assets/images/Infinity Loader.json";
-// import Lottie from "lottie-react";
+import loader from "../../../assets/images/icons/Infinity Loader.json";
+import Lottie from "lottie-react";
 
 const UserView = () => {
   const params = {
@@ -45,19 +45,18 @@ const UserView = () => {
     }
   };
 
-  const LoadingCard = (
-    <>
-      {/* <Lottie animationData={loader} /> */}
-      <p className="mt-2">در حال بارگذاری اطلاعات کاربر...</p>
-    </>
-  );
-
   return (
     <div className="app-user-view">
       <Row>
         <Col xl="4" lg="5" xs={{ order: 1 }} md={{ order: 0, size: 5 }}>
-          {!isLoading ? (
-            LoadingCard
+          {isLoading ? (
+            <div className="text-center  d-flex justify-content-center align-items-center flex-column">
+              <Lottie
+                animationData={loader}
+                style={{ width: "200px", height: "200px", marginTop: "150px" }}
+              />
+              <p className="mt-2">در حال بارگذاری اطلاعات کاربر...</p>
+            </div>
           ) : (
             <UserInfoCard
               initialData={user}
@@ -67,7 +66,7 @@ const UserView = () => {
           )}
         </Col>
         <Col xl="8" lg="7" xs={{ order: 0 }} md={{ order: 1, size: 7 }}>
-          <UserTabs active={active} toggleTab={toggleTab} />
+          <UserTabs user={user} active={active} toggleTab={toggleTab} />
         </Col>
       </Row>
     </div>

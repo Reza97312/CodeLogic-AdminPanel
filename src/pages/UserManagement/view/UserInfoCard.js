@@ -260,7 +260,10 @@ const UserInfoCard = ({ initialData, users, rolesList = [] }) => {
                 </div>
 
                 <div className="col-12 mt-2">
-                  <div className="bg-light p-2 rounded border-start border-3 border-primary">
+                  <div
+                    style={{ border: "1px solid #ccc" }}
+                    className=" p-2 rounded "
+                  >
                     <small className="text-muted fw-bold d-block mb-1">
                       آدرس سکونت
                     </small>
@@ -269,11 +272,14 @@ const UserInfoCard = ({ initialData, users, rolesList = [] }) => {
                 </div>
 
                 <div className="col-12 mt-2">
-                  <div className="bg-light p-2 rounded border-start border-3 border-primary">
+                  <div
+                    style={{ border: "1px solid #ccc" }}
+                    className=" p-2 rounded "
+                  >
                     <small className="text-muted fw-bold d-block mb-1">
                       درباره من
                     </small>
-                    <span className="fs-6 text-justify">{userAbout}</span>
+                    <span className=" fs-6 text-justify">{userAbout}</span>
                   </div>
                 </div>
               </div>

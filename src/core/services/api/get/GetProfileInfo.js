@@ -1,4 +1,3 @@
-import React from "react";
 import http from "../../../interceptor/interceptor.js";
 export const GetProfileInfo = async () => {
   try {

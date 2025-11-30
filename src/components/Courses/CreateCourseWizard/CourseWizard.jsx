@@ -19,7 +19,6 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { CreateCourse } from "../../../core/services/api/post/Courses/CreateCourse";
 import { toast } from "react-toastify";
 import { GetAllTeachers } from "../../../core/services/api/get/Teachers/GetAllTeachers";
 import { GetCourseLevels } from "../../../core/services/api/get/Courses/GetCourseLevels";

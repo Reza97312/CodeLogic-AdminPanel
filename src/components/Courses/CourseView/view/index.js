@@ -52,6 +52,7 @@ const Cview = () => {
             teacherId={courseData?.teacherId}
             active={active}
             toggleTab={toggleTab}
+            teacherName={courseData?.teacherName}
           />
         </Col>
       </Row>

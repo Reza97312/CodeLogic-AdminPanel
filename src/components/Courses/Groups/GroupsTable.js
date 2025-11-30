@@ -37,7 +37,14 @@ import { useDebounce } from "use-debounce";
 import { GetCourseGroups } from "../../../core/services/api/get/Courses/GetCourseGroups";
 import { GroupsCols } from "./GroupCols";
 
-const GroupTable = ({ courseId, teacherId }) => {
+const GroupTable = ({
+  courseId,
+  teacherId,
+  teacherName,
+  handleEditModal,
+  toggleDeleteModal,
+  getGroupId,
+}) => {
   const [openModal, setOpenModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchQuery] = useDebounce(searchTerm, 700);
@@ -78,7 +85,13 @@ const GroupTable = ({ courseId, teacherId }) => {
     setSortColumn(column.sortField);
   };
 
-  const tableColumns = GroupsCols({ handleOpenModal: () => {} });
+  const tableColumns = GroupsCols({
+    handleOpenModal: () => {},
+    teacherName,
+    handleEditModal,
+    toggleDeleteModal,
+    getGroupId,
+  });
 
   const CustomPagination = () => {
     const count = Math.ceil((GroupsData.length || 0) / rowsPerPage);

@@ -59,7 +59,7 @@ const SetActivateCourse = ({ activeData, toggleActiveModal, isOpen }) => {
             className="mb-1 pt-2 text-center fw-bold fs-5"
             style={{ letterSpacing: "0.5px" }}
           >
-            ویرایش وضعیت دوره
+            فعال / غیرفعال کردن دوره
           </p>
 
           <div className="mb-4">

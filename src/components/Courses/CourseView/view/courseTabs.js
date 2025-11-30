@@ -58,6 +58,7 @@ const CourseTabs = ({
   teacherId,
   students,
   payments,
+  teacherName,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const toggle = () => setModalOpen(!modalOpen);
@@ -102,81 +103,23 @@ const CourseTabs = ({
             <span className="fw-bold">پرداختی ها</span>
           </NavLink>
         </NavItem>
-        <Button
-          style={{ marginRight: "10px" }}
-          color="primary"
-          onClick={toggle}
-        >
-          ساخت گروه
-        </Button>
       </Nav>
       <TabContent activeTab={active}>
         <TabPane tabId="1">
           <CourseUsers students={students} />
         </TabPane>
         <TabPane tabId="2">
-          <CourseGroups courseId={id} teacherId={teacherId} />
+          <CourseGroups
+            teacherName={teacherName}
+            courseId={id}
+            teacherId={teacherId}
+          />
         </TabPane>
         <TabPane tabId="3">کامنت ها</TabPane>
         <TabPane tabId="4">
           <CoursePayments payments={payments} />
         </TabPane>
       </TabContent>
-
-      {modalOpen && (
-        <Modal isOpen={modalOpen} toggle={toggle} centered>
-          <ModalHeader toggle={toggle}>ایجاد گروه جدید</ModalHeader>
-          <ModalBody>
-            <form onSubmit={handleSubmit(handleFormSubmit)}>
-              <FormGroup>
-                <Label for="groupName">نام گروه</Label>
-                <Controller
-                  name="groupName"
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <Input {...field} placeholder="نام گروه" />
-                  )}
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <Label for="description">توضیحات</Label>
-                <Controller
-                  name="description"
-                  control={control}
-                  render={({ field }) => <Input {...field} type="textarea" />}
-                />
-              </FormGroup>
-
-              <FormGroup check className="mb-3">
-                <Controller
-                  name="isActive"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      type="checkbox"
-                      checked={field.value}
-                      onChange={(e) => field.onChange(e.target.checked)}
-                    />
-                  )}
-                />
-                <Label check>فعال باشد</Label>
-              </FormGroup>
-
-              <div className="text-end">
-                <Button color="secondary" onClick={toggle} className="me-2">
-                  لغو
-                </Button>
-                <Button color="primary" type="submit">
-                  ایجاد گروه
-                </Button>
-              </div>
-            </form>
-          </ModalBody>
-        </Modal>
-      )}
     </Fragment>
   );
 };

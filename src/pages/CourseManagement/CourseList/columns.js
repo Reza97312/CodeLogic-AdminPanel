@@ -129,17 +129,14 @@ export const columns = ({
             <Archive size={14} className="me-50" />
             <span className="align-middle">غیر منقضی کردن </span>
           </DropdownItem>
-          <DropdownItem>
+          <DropdownItem
+            onClick={() => {
+              toggleActiveModal(true);
+              getActiveData(row);
+            }}
+          >
             <Archive size={14} className="me-50" />
-            <span
-              onClick={() => {
-                toggleActiveModal(true);
-                getActiveData(row);
-              }}
-              className="align-middle"
-            >
-              غیر فعال/فعال{" "}
-            </span>
+            <span className="align-middle">غیر فعال/فعال </span>
           </DropdownItem>
 
           <DropdownItem

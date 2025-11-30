@@ -4,8 +4,6 @@ const GetUserDetails = async (userId) => {
   try {
     const result = await Http.get(`/User/UserDetails/${userId}`);
 
-    console.log(result);
-
     return result;
   } catch (error) {
     console.log(error);

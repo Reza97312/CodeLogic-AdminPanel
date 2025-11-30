@@ -52,11 +52,10 @@ export const CourseUsersCol = ({ handleOpenModal, toggleSidebar }) => [
       <div className="d-flex align-items-center">
         {renderCourseImage(row)}
         <div className="d-flex flex-column">
-          <span className="fw-bolder">
+          <Link to={`/userdetails/${row.user.id}`} className="fw-bolder">
             {row.user.fName}
-            {""}
             {row.user.lName}
-          </span>
+          </Link>
         </div>
       </div>
     ),
@@ -107,7 +106,7 @@ export const CourseUsersCol = ({ handleOpenModal, toggleSidebar }) => [
         </DropdownToggle>
 
         <DropdownMenu>
-          <DropdownItem tag={Link} to={`/courses/view/${row.courseId}`}>
+          <DropdownItem tag={Link} to={`/userdetails/${row.user.id}`}>
             <FileText size={14} className="me-50" />
             <span className="align-middle">جزئیات کاربر</span>
           </DropdownItem>
@@ -117,7 +116,7 @@ export const CourseUsersCol = ({ handleOpenModal, toggleSidebar }) => [
             <span className="align-middle">ویرایش</span>
           </DropdownItem> */}
 
-          <DropdownItem
+          {/* <DropdownItem
             onClick={(e) => {
               e.preventDefault();
               store.dispatch(deleteUser(row.id));
@@ -125,7 +124,7 @@ export const CourseUsersCol = ({ handleOpenModal, toggleSidebar }) => [
           >
             <Trash2 size={14} className="me-50" />
             <span className="align-middle">حذف</span>
-          </DropdownItem>
+          </DropdownItem> */}
         </DropdownMenu>
       </UncontrolledDropdown>
     ),

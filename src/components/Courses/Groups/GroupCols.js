@@ -39,7 +39,14 @@ const statusObj = {
   true: "light-success",
   false: "light-secondary",
 };
-export const GroupsCols = ({ handleOpenModal, toggleSidebar }) => [
+export const GroupsCols = ({
+  handleOpenModal,
+  toggleSidebar,
+  teacherName,
+  handleEditModal,
+  toggleDeleteModal,
+  getGroupId,
+}) => [
   {
     name: <span style={{ fontSize: "14px" }}>نام گروه</span>,
     minWidth: "300px",
@@ -52,7 +59,18 @@ export const GroupsCols = ({ handleOpenModal, toggleSidebar }) => [
       </div>
     ),
   },
-
+  {
+    name: <span style={{ fontSize: "14px" }}>نام مدرس</span>,
+    minWidth: "300px",
+    cell: (row) => (
+      <div className="d-flex align-items-center">
+        {/* {renderCourseImage(row)} */}
+        <div className="d-flex flex-column">
+          <span className="fw-bolder">{teacherName}</span>
+        </div>
+      </div>
+    ),
+  },
   {
     name: <span style={{ fontSize: "14px" }}>ظرفیت</span>,
     minWidth: "150px",
@@ -107,15 +125,15 @@ export const GroupsCols = ({ handleOpenModal, toggleSidebar }) => [
             <span className="align-middle">جزئیات کاربر</span>
           </DropdownItem> */}
 
-          <DropdownItem onClick={() => toggleSidebar()}>
+          <DropdownItem onClick={() => handleEditModal(row)}>
             <Archive size={14} className="me-50" />
             <span className="align-middle">ویرایش</span>
           </DropdownItem>
 
           <DropdownItem
-            onClick={(e) => {
-              e.preventDefault();
-              store.dispatch(deleteUser(row.id));
+            onClick={() => {
+              toggleDeleteModal(true);
+              getGroupId(row.id);
             }}
           >
             <Trash2 size={14} className="me-50" />

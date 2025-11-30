@@ -42,7 +42,13 @@ const statusObj = {
   true: "light-success",
   false: "light-secondary",
 };
-export const columns = ({ handleOpenModal, toggleSidebar, deleteCourse }) => [
+export const columns = ({
+  getActiveData,
+  handleOpenModal,
+  toggleSidebar,
+  deleteCourse,
+  toggleActiveModal,
+}) => [
   {
     name: <span style={{ fontSize: "14px" }}>دوره</span>,
     minWidth: "300px",
@@ -51,7 +57,7 @@ export const columns = ({ handleOpenModal, toggleSidebar, deleteCourse }) => [
         {renderCourseImage(row)}
         <div className="d-flex flex-column">
           <Link
-            to={`/courses/view/${row.id}`}
+            to={`/courses/view/${row.courseId}`}
             className="text-body"
             onClick={() => store.dispatch(getUser(row.id))}
           >
@@ -100,7 +106,6 @@ export const columns = ({ handleOpenModal, toggleSidebar, deleteCourse }) => [
       </Badge>
     ),
   },
-
   {
     name: <span style={{ fontSize: "14px" }}>اقدامات</span>,
     minWidth: "120px",
@@ -120,9 +125,18 @@ export const columns = ({ handleOpenModal, toggleSidebar, deleteCourse }) => [
             <span className="align-middle">جزئیات دوره</span>
           </DropdownItem>
 
-          <DropdownItem onClick={() => toggleSidebar()}>
+          <DropdownItem>
             <Archive size={14} className="me-50" />
-            <span className="align-middle">ویرایش</span>
+            <span className="align-middle">غیر منقضی کردن </span>
+          </DropdownItem>
+          <DropdownItem
+            onClick={() => {
+              toggleActiveModal(true);
+              getActiveData(row);
+            }}
+          >
+            <Archive size={14} className="me-50" />
+            <span className="align-middle">غیر فعال/فعال </span>
           </DropdownItem>
 
           <DropdownItem

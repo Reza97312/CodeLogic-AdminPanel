@@ -19,10 +19,11 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { CreateCourse } from "../../../core/services/api/post/Courses/CreateCourse";
 import { toast } from "react-toastify";
 import { GetAllTeachers } from "../../../core/services/api/get/Teachers/GetAllTeachers";
 import { GetCourseLevels } from "../../../core/services/api/get/Courses/GetCourseLevels";
+import { useLocation, useNavigate } from "react-router-dom";
+import { EditCourse } from "../../../core/services/api/put/Courses/EditCourse";
 
 const convertToUTC = (dateString) => {
   if (!dateString) return "";
@@ -60,10 +61,14 @@ const Step3Schema = Yup.object().shape({
 });
 
 const Step4Schema = Yup.object().shape({
-  ImageAddress: Yup.mixed().required("آپلود عکس لازم است"),
+  ImageAddress: Yup.mixed(),
 });
 
 const CourseWizardFormik = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isEdit = location.state?.isEdit || false;
+  const firstData = location.state?.updateData;
   const [step, setStep] = useState(1);
   const [LevelName, setLevelName] = useState(null);
 
@@ -83,10 +88,21 @@ const CourseWizardFormik = () => {
   const { mutate: Create, isPending } = useMutation({
     mutationKey: ["CREATECOURSE"],
     mutationFn: (formData) => CreateCourse(formData),
-    onSuccess: (data) => toast.success(data.message),
+    onSuccess: (data) => {
+      toast.success(data.message);
+      navigate("/courses-management");
+    },
     onError: (err) => toast.error(err.response?.data?.message),
   });
-
+  const { mutate: Edit } = useMutation({
+    mutationKey: ["UPDATECOURSE"],
+    mutationFn: (formData) => EditCourse(formData),
+    onSuccess: (data) => {
+      toast.success(data.message);
+      navigate(`/courses/view/${firstData.courseId}`);
+    },
+    onError: (err) => toast.error(err.response?.data?.message),
+  });
   const currentSchema =
     step === 1
       ? Step1Schema
@@ -111,17 +127,17 @@ const CourseWizardFormik = () => {
 
               <Formik
                 initialValues={{
-                  Title: "",
-                  GoogleTitle: "",
-                  describe: "",
-                  MiniDescribe: "",
-                  StartTime: "",
-                  TeacherId: "",
-                  EndTime: "",
-                  Capacity: "",
-                  Cost: "",
-                  courseLvlId: "",
-                  ImageAddress: null,
+                  Title: isEdit ? firstData.title : "",
+                  GoogleTitle: isEdit ? firstData.googleTitle : "",
+                  describe: isEdit ? firstData.describe : "",
+                  MiniDescribe: isEdit ? firstData.miniDescribe : "",
+                  StartTime: isEdit ? firstData.startTime : "",
+                  TeacherId: isEdit ? firstData.teacherId : "",
+                  EndTime: isEdit ? firstData.endTime : "",
+                  Capacity: isEdit ? firstData.capacity : "",
+                  Cost: isEdit ? firstData.cost : "",
+                  courseLvlId: isEdit ? firstData.courseLvlId : "",
+                  ImageAddress: isEdit ? firstData.imageAddress : null,
                 }}
                 validationSchema={currentSchema}
                 enableReinitialize={false}
@@ -134,6 +150,9 @@ const CourseWizardFormik = () => {
                   }
 
                   const fd = new FormData();
+                  {
+                    isEdit ? fd.append("Id", firstData.courseId) : "";
+                  }
                   fd.append("Title", values.Title);
                   fd.append("GoogleTitle", values.GoogleTitle);
                   fd.append("describe", values.describe);
@@ -148,7 +167,9 @@ const CourseWizardFormik = () => {
                     fd.append("ImageAddress", values.ImageAddress);
                   }
 
-                  Create(fd);
+                  {
+                    isEdit ? Edit(fd) : Create(fd);
+                  }
                 }}
               >
                 {({ values, errors, setFieldValue, handleSubmit }) => (
@@ -359,6 +380,17 @@ const CourseWizardFormik = () => {
                             {photoPreview ? (
                               <Image
                                 src={photoPreview}
+                                roundedCircle
+                                style={{
+                                  width: 200,
+                                  height: 200,
+                                  objectFit: "cover",
+                                  border: "3px solid #ddd",
+                                }}
+                              />
+                            ) : isEdit ? (
+                              <Image
+                                src={firstData.imageAddress}
                                 roundedCircle
                                 style={{
                                   width: 200,

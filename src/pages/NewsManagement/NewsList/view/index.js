@@ -6,9 +6,9 @@ import { useParams, Link } from "react-router-dom";
 import { Row, Col, Alert } from "reactstrap";
 
 // ** User View Components
-import UserTabs from "../../../../components/Courses/CourseView/view/courseTabs";
-import PlanCard from "../../../UserManagement/view/PlanCard";
-import UserInfoCard from "../../../UserManagement/view/UserInfoCard";
+// import UserTabs from "../../../../components/Courses/CourseView/view/courseTabs";
+// import PlanCard from "../../../UserManagement/view/PlanCard";
+// import UserInfoCard from "../../../UserManagement/view/UserInfoCard";
 import { useQuery } from "@tanstack/react-query";
 // ** Styles
 import "@styles/react/apps/app-users.scss";
@@ -17,7 +17,7 @@ import NewsCardInfo from "../../../../components/news/NewsCardInfo/NewsCardInfo"
 import loading from "../../../../assets/images/A/loading.gif";
 import CourseTabs from "../../../../components/Courses/CourseView/view/courseTabs";
 
-import store from '../store'
+import store from "../store";
 
 const NewsView = () => {
   // ** Hooks
@@ -34,7 +34,7 @@ const NewsView = () => {
       setActive(tab);
     }
   };
-  
+
   return newsData ? (
     <div className="app-user-view">
       <Row>

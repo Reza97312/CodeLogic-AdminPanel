@@ -43,6 +43,7 @@ const UserManagement = lazy(() =>
   import("../../pages/UserManagement/UserManagement")
 );
 const EditUser = lazy(() => import("../../pages/EditUser/EditUser"));
+const UserDetails = lazy(() => import("../../pages/UserManagement/view"));
 
 // ** Merge Routes
 const Routes = [
@@ -58,6 +59,10 @@ const Routes = [
   {
     path: "/user-management",
     element: <UserManagement />,
+  },
+  {
+    path: "/userdetails/:id",
+    element: <UserDetails />,
   },
   {
     path: "/home",

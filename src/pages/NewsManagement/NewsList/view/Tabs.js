@@ -54,7 +54,7 @@ const UserTabs = ({ active, toggleTab, newsCommentsData}) => {
       <TabContent activeTab={active}>
         <TabPane tabId='1'>
           <UserProjectsList newsCommentsData={newsCommentsData}/>
-          <UserTimeline />
+          {/* <UserTimeline /> */}
           {/* <InvoiceList /> */}
         </TabPane>
         {/* <TabPane tabId='2'>

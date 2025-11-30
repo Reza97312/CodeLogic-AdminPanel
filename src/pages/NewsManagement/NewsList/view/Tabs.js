@@ -16,7 +16,7 @@ import UserTimeline from './UserTimeline'
 import Notifications from './Notifications'
 import UserProjectsList from './UserProjectsList'
 
-const UserTabs = ({ active, toggleTab }) => {
+const UserTabs = ({ active, toggleTab, newsCommentsData}) => {
   return (
     <Fragment>
       <Nav pills className='mb-2'>
@@ -53,7 +53,7 @@ const UserTabs = ({ active, toggleTab }) => {
       </Nav>
       <TabContent activeTab={active}>
         <TabPane tabId='1'>
-          <UserProjectsList />
+          <UserProjectsList newsCommentsData={newsCommentsData}/>
           <UserTimeline />
           {/* <InvoiceList /> */}
         </TabPane>

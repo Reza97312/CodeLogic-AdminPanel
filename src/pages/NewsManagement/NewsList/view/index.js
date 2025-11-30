@@ -1,6 +1,7 @@
 // ** React Imports
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import getAdminNewsComments from '../../../../core/services/api/get/getAdminNewsComments'
 
 // ** Reactstrap Imports
 import { Row, Col, Alert } from "reactstrap";
@@ -27,6 +28,13 @@ const NewsView = () => {
     queryFn: () => getNews(id),
   });
 
+
+  const {data: newsCommentsData} = useQuery({
+    queryKey: ['GETADMINNEWSCOMMENTS'],
+    queryFn: () => getAdminNewsComments(id)
+  })
+
+
   const [active, setActive] = useState("1");
 
   const toggleTab = (tab) => {
@@ -46,7 +54,7 @@ const NewsView = () => {
           )}
         </Col>
         <Col xl="8" lg="7" xs={{ order: 0 }} md={{ order: 1, size: 7 }}>
-          <Tabs id={id} active={active} toggleTab={toggleTab} />
+          <Tabs id={id} active={active} toggleTab={toggleTab} newsCommentsData={newsCommentsData}/>
         </Col>
       </Row>
     </div>

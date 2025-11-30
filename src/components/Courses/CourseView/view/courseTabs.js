@@ -50,6 +50,7 @@ import CoursesUserList from "./CourseUsersList/CoursesUserList";
 import CourseGroups from "../../../../pages/CourseManagement/CourseGroups/CourseGroups";
 import CourseUsers from "../../../../pages/CourseManagement/CourseUsers/CourseUsers";
 import CoursePayments from "../../../../pages/CourseManagement/CoursePaymentsPage/CoursePayments";
+import CourseComments from "../../../../pages/CourseManagement/CourseComments/CourseComments";
 
 const CourseTabs = ({
   active,
@@ -115,7 +116,9 @@ const CourseTabs = ({
             teacherId={teacherId}
           />
         </TabPane>
-        <TabPane tabId="3">کامنت ها</TabPane>
+        <TabPane tabId="3">
+          <CourseComments id={id} />
+        </TabPane>
         <TabPane tabId="4">
           <CoursePayments payments={payments} />
         </TabPane>

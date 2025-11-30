@@ -1,4 +1,4 @@
-import http from "../../../interceptor/interceptor.js";
+import http from "../../../../interceptor/interceptor.js";
 export const DeleteCourse = (value) => {
   try {
     const result = http.delete("/Course/DeleteCourse", {

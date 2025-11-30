@@ -1,4 +1,4 @@
-import http from "../../../interceptor/interceptor.js";
+import http from "../../../../interceptor/interceptor.js";
 export const DeleteCourseGroup = (payload) => {
   try {
     const fd = new FormData();

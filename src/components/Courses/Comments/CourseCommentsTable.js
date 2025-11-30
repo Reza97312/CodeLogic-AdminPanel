@@ -25,39 +25,38 @@ import {
   ModalBody,
   ModalFooter,
 } from "reactstrap";
-
 // ** Styles
 import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 
 import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
+import { CourseCommentsCol } from "./CourseCommentsCol";
+import { GetCourseComments } from "../../../core/services/api/get/Courses/GetCourseComments";
+import DeleteCmModal from "./DeleteCmModal";
+import AcceptCmModal from "./AcceptCmModal";
 // import SidebarCreateGroup from "./CreateGroup";
 // // import { CourseUsersCol } from "./UsersColumns";
 // import { GetCourseGroups } from "../../../core/services/api/get/Courses/GetCourseGroups";
-import { CourseUsersCol } from "./CourseUsersCol";
 
-const CourseCommentsTable = ({ courseId, teacherId, students }) => {
-  const [openModal, setOpenModal] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchQuery] = useDebounce(searchTerm, 700);
+const CourseCommentsTable = ({ id }) => {
+  const { data: cmData, isPending } = useQuery({
+    queryKey: ["GETCOURSECOMMENT"],
+    queryFn: () => GetCourseComments(id),
+  });
+
   const [currentPage, setCurrentPage] = useState(1);
   const [sortColumn, setSortColumn] = useState("");
   const [sort, setSort] = useState("DESC");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [OpenDeleteModal, setOpenDeleteModal] = useState(false);
+  const [commentId, setCommentId] = useState(null);
+  const [openEditModal, setOpenEditModal] = useState(null);
+  const toggleEditModal = (value) => setOpenEditModal(value);
 
-  //   const { data: GroupsData = [], isPending } = useQuery({
-  //     queryKey: ["COURSEGROUPS"],
-  //     queryFn: () =>
-  //       GetCourseGroups({
-  //         course: courseId,
-  //         teacher: teacherId,
-  //       }),
-  //   });
-
-  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
-
+  const toggleDeleteModal = (val) => setOpenDeleteModal(val);
+  const handleCmId = (value) => setCommentId(value);
   const handlePagination = (page) => {
     setCurrentPage(page.selected + 1);
     window.scrollTo(0, 0);
@@ -78,10 +77,15 @@ const CourseCommentsTable = ({ courseId, teacherId, students }) => {
     setSortColumn(column.sortField);
   };
 
-  const tableColumns = CourseUsersCol({ handleOpenModal: () => {} });
+  const tableColumns = CourseCommentsCol({
+    handleCmId,
+    toggleEditModal,
+    toggleDeleteModal,
+    handleOpenModal: () => {},
+  });
 
   const CustomPagination = () => {
-    const count = Math.ceil((students.length || 0) / rowsPerPage);
+    const count = Math.ceil((cmData?.comments.length || 0) / rowsPerPage);
 
     return (
       <ReactPaginate
@@ -104,28 +108,38 @@ const CourseCommentsTable = ({ courseId, teacherId, students }) => {
   return (
     <Fragment>
       <Card className="overflow-hidden">
-        {/* {isPending ? (
+        {isPending ? (
           <img className="mx-auto" src={loading} />
-        ) : ( */}
-        <div className="react-dataTable">
-          <DataTable
-            noHeader
-            pagination
-            paginationServer
-            sortServer
-            responsive
-            columns={tableColumns}
-            sortIcon={<ChevronDown />}
-            data={students}
-            onSort={handleSort}
-            paginationComponent={CustomPagination}
-            toggleSidebar={toggleSidebar}
-          />
-        </div>
-        {/* )} */}
+        ) : (
+          <div className="react-dataTable">
+            <DataTable
+              noHeader
+              pagination
+              paginationServer
+              sortServer
+              responsive
+              columns={tableColumns}
+              sortIcon={<ChevronDown />}
+              data={cmData?.comments}
+              paginationComponent={CustomPagination}
+            />
+          </div>
+        )}
       </Card>
-      {/* 
-      <SidebarCreateGroup open={sidebarOpen} toggleSidebar={toggleSidebar} /> */}
+      {OpenDeleteModal && (
+        <DeleteCmModal
+          isOpen={OpenDeleteModal}
+          toggleDeleteModal={toggleDeleteModal}
+          commentId={commentId}
+        />
+      )}
+      {openEditModal && (
+        <AcceptCmModal
+          isOpen={openEditModal}
+          toggleEditModal={toggleEditModal}
+          commentId={commentId}
+        />
+      )}
     </Fragment>
   );
 };

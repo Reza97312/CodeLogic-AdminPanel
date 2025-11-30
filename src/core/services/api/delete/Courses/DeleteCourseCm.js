@@ -1,9 +1,9 @@
 import http from "../../../../interceptor/interceptor.js";
-export const GetCourseComments = async (id) => {
+export const DeleteCourseCm = (id) => {
   try {
-    const result = await http.get(`/Course/CommentManagment`, {
+    const result = http.delete("/Course/DeleteCourseComment", {
       params: {
-        courseId: id,
+        CourseCommandId: id,
       },
     });
     console.log(result);

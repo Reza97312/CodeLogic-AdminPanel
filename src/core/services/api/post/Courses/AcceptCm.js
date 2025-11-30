@@ -1,10 +1,9 @@
+import React from "react";
 import http from "../../../../interceptor/interceptor.js";
-export const GetCourseComments = async (id) => {
+export const AcceptCm = async (id) => {
   try {
-    const result = await http.get(`/Course/CommentManagment`, {
-      params: {
-        courseId: id,
-      },
+    const result = await http.post("/Course/AcceptCourseComment", {
+      CommentCourseId: id,
     });
     console.log(result);
     return result;

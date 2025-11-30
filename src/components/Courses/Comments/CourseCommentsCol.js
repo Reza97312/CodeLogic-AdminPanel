@@ -44,58 +44,46 @@ const statusObj = {
   true: "light-success",
   false: "light-secondary",
 };
-export const CourseCommentsCol = ({ handleOpenModal, toggleSidebar }) => [
+export const CourseCommentsCol = ({
+  toggleDeleteModal,
+  handleCmId,
+  toggleEditModal,
+}) => [
   {
     name: <span style={{ fontSize: "14px" }}>نام کاربر</span>,
     minWidth: "300px",
     cell: (row) => (
-      <div className="d-flex align-items-center">
-        {renderCourseImage(row)}
-        <div className="d-flex flex-column">
-          <span className="fw-bolder">
-            {row.user.fName}
-            {""}
-            {row.user.lName}
-          </span>
-        </div>
+      <div className="d-flex flex-column">
+        <span className="fw-bolder">{row.userFullName}</span>
       </div>
     ),
   },
 
   {
-    name: <span style={{ fontSize: "14px" }}>ایمیل کاربر</span>,
+    name: <span style={{ fontSize: "14px" }}>عنوان کامنت</span>,
     minWidth: "150px",
-    cell: (row) => <span className="text-capitalize">{row.user.gmail}</span>,
+    cell: (row) => <span className="text-capitalize">{row.commentTitle}</span>,
   },
 
-  //   {
-  //     name: <span style={{ fontSize: "14px" }}>انقضا</span>,
-  //     minWidth: "150px",
-  //     cell: (row) =>
-  //       row.isExpire ? (
-  //         <Check size={20} color="green" />
-  //       ) : (
-  //         <X size={20} color="red" />
-  //       ),
-  //   },
+  {
+    name: <span style={{ fontSize: "14px" }}>متن کامنت</span>,
+    minWidth: "150px",
+    cell: (row) => (
+      <div className="d-flex flex-column text-truncate">
+        <span className="fw-bolder">{row.describe}</span>
+      </div>
+    ),
+  },
 
-  //   {
-  //     name: <span style={{ fontSize: "14px" }}>تاریخ شروع</span>,
-  //     minWidth: "150px",
-  //     cell: (row) => (
-  //       <span className="text-capitalize">
-  //         {row.startTime.slice(0, 10) || "—"}
-  //       </span>
-  //     ),
-  //   },
-
-  //   {
-  //     name: <span style={{ fontSize: "14px" }}>فعال / غیرفعال</span>,
-  //     minWidth: "150px",
-  //     cell: (row) => (
-  //       <span>{row.}</span>
-  //     ),
-  //   },
+  {
+    name: <span style={{ fontSize: "14px" }}>وضعیت تایید</span>,
+    minWidth: "150px",
+    cell: (row) => (
+      <Badge color={row.accept ? "light-success" : "light-secondary"} pill>
+        {row.accept ? "تایید شده" : "تایید نشده"}
+      </Badge>
+    ),
+  },
 
   {
     name: <span style={{ fontSize: "14px" }}>اقدامات</span>,
@@ -107,20 +95,20 @@ export const CourseCommentsCol = ({ handleOpenModal, toggleSidebar }) => [
         </DropdownToggle>
 
         <DropdownMenu>
-          <DropdownItem tag={Link} to={`/courses/view/${row.courseId}`}>
+          <DropdownItem
+            onClick={() => {
+              toggleEditModal(true);
+              handleCmId(row.id);
+            }}
+          >
             <FileText size={14} className="me-50" />
-            <span className="align-middle">جزئیات کاربر</span>
+            <span className="align-middle">تایید</span>
           </DropdownItem>
 
-          {/* <DropdownItem onClick={() => toggleSidebar()}>
-            <Archive size={14} className="me-50" />
-            <span className="align-middle">ویرایش</span>
-          </DropdownItem> */}
-
           <DropdownItem
-            onClick={(e) => {
-              e.preventDefault();
-              store.dispatch(deleteUser(row.id));
+            onClick={() => {
+              toggleDeleteModal(true);
+              handleCmId(row.id);
             }}
           >
             <Trash2 size={14} className="me-50" />

@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { Button, Modal } from "reactstrap";
-import { DeleteCourseGroup } from "../../../../core/services/api/delete/Courses/DeleteCourseGroup";
+import { DeleteCourseCm } from "../../../core/services/api/delete/Courses/DeleteCourseCm";
 import { toast } from "react-toastify";
 
-const DeleteGroupModal = ({ isOpen, toggleDeleteModal, groupId }) => {
+const DeleteCmModal = ({ toggleDeleteModal, isOpen, commentId }) => {
   const queryClient = useQueryClient();
-  const { mutate: deleteGroup, isPending } = useMutation({
-    mutationKey: ["DELETEGROUP"],
-    mutationFn: (value) => DeleteCourseGroup(value),
+  const { mutate: deleteCm, isPending } = useMutation({
+    mutationKey: ["DELETECM"],
+    mutationFn: () => DeleteCourseCm(commentId),
     onError: (err) => {
       if (err) {
         toast.error(err.response?.data?.message);
@@ -17,7 +17,7 @@ const DeleteGroupModal = ({ isOpen, toggleDeleteModal, groupId }) => {
     onSuccess: (data) => {
       toast.success(data.message);
       toggleDeleteModal(false);
-      queryClient.invalidateQueries(["COURSEGROUPS"]);
+      queryClient.invalidateQueries(["GETCOURSECOMMENT"]);
     },
   });
   return (
@@ -27,19 +27,19 @@ const DeleteGroupModal = ({ isOpen, toggleDeleteModal, groupId }) => {
       className="modal-dialog-centered"
       style={{ maxWidth: "350px" }}
     >
-      <div className="d-flex flex-column align-items-center gap-4 py-2">
-        <span>آیا میخواهید این گروه را حذف کنید؟</span>
+      <div className="d-flex flex-column align-items-center gap-2 py-2">
+        <span>آیا میخواهید این کامنت را حذف کنید؟</span>
         <div className="d-flex flex-row gap-1">
           <Button onClick={() => toggleDeleteModal(false)}>انصراف</Button>
           <Button
             onClick={() => {
-              console.log("id", groupId);
+              console.log("id", commentId);
 
-              deleteGroup(groupId);
+              deleteCm(commentId);
             }}
             color="primary"
           >
-            حذف
+            {isPending ? "در حال حذف" : "حذف"}
           </Button>
         </div>
       </div>
@@ -47,4 +47,4 @@ const DeleteGroupModal = ({ isOpen, toggleDeleteModal, groupId }) => {
   );
 };
 
-export default DeleteGroupModal;
+export default DeleteCmModal;

@@ -37,7 +37,7 @@ import { GetAllCourses } from "../../../core/services/api/get/Courses/GetAllCour
 import { useDebounce } from "use-debounce";
 import SidebarEditCourses from "./EditCourseSidebar";
 import { Link, useNavigate } from "react-router-dom";
-import { DeleteCourse } from "../../../core/services/api/delete/DeleteCourse";
+import { DeleteCourse } from "../../../core/services/api/delete/Courses/DeleteCourse";
 import { toast } from "react-toastify";
 import SetActivateCourse from "../../../components/Courses/SetActivateCourse/SetActivateCourse";
 

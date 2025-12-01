@@ -7,11 +7,20 @@ import VerticalLayout from "@src/layouts/VerticalLayout";
 import HorizontalLayout from "@src/layouts/HorizontalLayout";
 import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper";
 
+import NewsList from "../../pages/NewsManagement/NewsList/NewsList";
+import NewsDetail from "../../pages/NewsManagement/NewsDetail/NewsDetail";
+import CreateNews from "../../pages/NewsManagement/CreateNews/CreateNews";
+
 // ** Route Components
 import PublicRoute from "@components/routes/PublicRoute";
 
 // ** Utils
 import { isObjEmpty } from "@utils";
+import CoursesManagement from "../../pages/CourseManagement/CourseList/CoursesManagement";
+import CourseView from "../../pages/CourseManagement/CourseView/CourseView";
+import CoursesUserList from "../../components/Courses/CourseView/view/CourseUsersList/CoursesUserList";
+import CreateCourse from "../../pages/CourseManagement/CreateCourse/CreateCourse";
+import CourseGroups from "../../pages/CourseManagement/CourseGroups/CourseGroups";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -26,12 +35,14 @@ const TemplateTitle = "%s - Vuexy React Admin Template";
 const DefaultRoute = "/home";
 
 const Home = lazy(() => import("../../pages/Home"));
-const SecondPage = lazy(() => import("../../pages/SecondPage"));
 const Login = lazy(() => import("../../pages/Login"));
 const Register = lazy(() => import("../../pages/Register"));
 const ForgotPassword = lazy(() => import("../../pages/ForgotPassword"));
 const Error = lazy(() => import("../../pages/Error"));
-const Sample = lazy(() => import("../../pages/Sample"));
+const UserManagement = lazy(() =>
+  import("../../pages/UserManagement/UserManagement")
+);
+const EditUser = lazy(() => import("../../pages/EditUser/EditUser"));
 
 // ** Merge Routes
 const Routes = [
@@ -41,16 +52,28 @@ const Routes = [
     element: <Navigate replace to={DefaultRoute} />,
   },
   {
+    path: "/edituser/:id",
+    element: <EditUser />,
+  },
+  {
+    path: "/user-management",
+    element: <UserManagement />,
+  },
+  {
     path: "/home",
     element: <Home />,
   },
   {
-    path: "/sample",
-    element: <Sample />,
+    path: "/news-list",
+    element: <NewsList />,
   },
   {
-    path: "/second-page",
-    element: <SecondPage />,
+    path: "/news-detail/:id",
+    element: <NewsDetail />,
+  },
+  {
+    path: "/create-news",
+    element: <CreateNews />,
   },
   {
     path: "/login",
@@ -79,6 +102,26 @@ const Routes = [
     meta: {
       layout: "blank",
     },
+  },
+  {
+    path: "/courses-management",
+    element: <CoursesManagement />,
+  },
+  {
+    path: "/courses/view/:id",
+    element: <CourseView />,
+  },
+  {
+    path: "/courses/users/:id",
+    element: <CoursesUserList />,
+  },
+  {
+    path: "/courses/create",
+    element: <CreateCourse />,
+  },
+  {
+    path: "/courses/groups",
+    element: <CourseGroups />,
   },
   {
     path: "*",

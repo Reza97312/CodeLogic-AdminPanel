@@ -95,7 +95,7 @@
 
 // Card match height
 .match-height {
-  > [class*='col'] {
+  > [class*="col"] {
     display: flex;
     flex-flow: column;
 

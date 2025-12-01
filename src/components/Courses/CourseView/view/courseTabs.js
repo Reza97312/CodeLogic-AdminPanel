@@ -52,6 +52,7 @@ import CourseUsers from "../../../../pages/CourseManagement/CourseUsers/CourseUs
 import CoursePayments from "../../../../pages/CourseManagement/CoursePaymentsPage/CoursePayments";
 import CourseComments from "../../../../pages/CourseManagement/CourseComments/CourseComments";
 import CourseSoucials from "../../../../pages/CourseManagement/CourseSoucials/CourseSoucials";
+import CourseAssistance from "../../../../pages/CourseManagement/CourseAssistance/CourseAssistance";
 
 const CourseTabs = ({
   active,
@@ -111,6 +112,12 @@ const CourseTabs = ({
             <span className="fw-bold">گروه های مجازی</span>
           </NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink active={active === "6"} onClick={() => toggleTab("6")}>
+            <User className="font-medium-3 me-50" />
+            <span className="fw-bold">منتور های دوره</span>
+          </NavLink>
+        </NavItem>
       </Nav>
       <TabContent activeTab={active}>
         <TabPane tabId="1">
@@ -131,6 +138,9 @@ const CourseTabs = ({
         </TabPane>
         <TabPane tabId="5">
           <CourseSoucials courseId={id} />
+        </TabPane>
+        <TabPane tabId="6">
+          <CourseAssistance courseId={id} />
         </TabPane>
       </TabContent>
     </Fragment>

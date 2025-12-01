@@ -24,7 +24,7 @@ import { GetAllTeachers } from "../../../core/services/api/get/Teachers/GetAllTe
 import { GetCourseLevels } from "../../../core/services/api/get/Courses/GetCourseLevels";
 import { useLocation, useNavigate } from "react-router-dom";
 import { EditCourse } from "../../../core/services/api/put/Courses/EditCourse";
-
+import { CreateCourse } from "../../../core/services/api/post/Courses/CreateCourse";
 const convertToUTC = (dateString) => {
   if (!dateString) return "";
   try {
@@ -44,26 +44,26 @@ const convertToUTC = (dateString) => {
 const Step1Schema = Yup.object().shape({
   Title: Yup.string().required("نام دوره لازم است"),
   GoogleTitle: Yup.string().required("نام گوگل دوره لازم است"),
-  describe: Yup.string().required("توضیحات لازم است"),
+  Describe: Yup.string().required("توضیحات لازم است"),
   MiniDescribe: Yup.string().required("توضیح کوتاه لازم است"),
 });
 
 const Step2Schema = Yup.object().shape({
   StartTime: Yup.string().required("تاریخ شروع لازم است"),
   EndTime: Yup.string().required("تاریخ پایان لازم است"),
-  TeacherId: Yup.string().required("انتخاب استاد  لازم است"),
+  TeacherId: Yup.number().required("انتخاب استاد  لازم است"),
 });
 
 const Step3Schema = Yup.object().shape({
   Capacity: Yup.number().required("ظرفیت لازم است"),
   Cost: Yup.number().required("قیمت لازم است"),
-  courseLvlId: Yup.string().required("سطح دوره لازم است"),
+  CourseLvlId: Yup.number().required("سطح دوره لازم است"),
 });
 
 const Step4Schema = Yup.object().shape({
   ImageAddress: Yup.mixed(),
 });
-
+const EmptySchema = Yup.object().shape({});
 const CourseWizardFormik = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -112,7 +112,7 @@ const CourseWizardFormik = () => {
       ? Step3Schema
       : step === 4
       ? Step4Schema
-      : null;
+      : EmptySchema;
 
   return (
     <Container className="py-2">
@@ -129,14 +129,14 @@ const CourseWizardFormik = () => {
                 initialValues={{
                   Title: isEdit ? firstData.title : "",
                   GoogleTitle: isEdit ? firstData.googleTitle : "",
-                  describe: isEdit ? firstData.describe : "",
+                  Describe: isEdit ? firstData.describe : "",
                   MiniDescribe: isEdit ? firstData.miniDescribe : "",
                   StartTime: isEdit ? firstData.startTime : "",
-                  TeacherId: isEdit ? firstData.teacherId : "",
+                  TeacherId: isEdit ? firstData.teacherId : 0,
                   EndTime: isEdit ? firstData.endTime : "",
-                  Capacity: isEdit ? firstData.capacity : "",
-                  Cost: isEdit ? firstData.cost : "",
-                  courseLvlId: isEdit ? firstData.courseLvlId : "",
+                  Capacity: isEdit ? firstData.capacity : 0,
+                  Cost: isEdit ? firstData.cost : 0,
+                  CourseLvlId: isEdit ? firstData.courseLvlId : 0,
                   ImageAddress: isEdit ? firstData.imageAddress : null,
                 }}
                 validationSchema={currentSchema}
@@ -155,17 +155,17 @@ const CourseWizardFormik = () => {
                   }
                   fd.append("Title", values.Title);
                   fd.append("GoogleTitle", values.GoogleTitle);
-                  fd.append("describe", values.describe);
+                  fd.append("Describe", values.Describe);
                   fd.append("MiniDescribe", values.MiniDescribe);
                   fd.append("StartTime", convertToUTC(values.StartTime));
                   fd.append("EndTime", convertToUTC(values.EndTime));
-                  fd.append("Capacity", values.Capacity);
-                  fd.append("Cost", values.Cost);
-                  fd.append("courseLvlId", values.courseLvlId);
-                  fd.append("TeacherId", values.TeacherId);
-                  if (values.ImageAddress) {
-                    fd.append("ImageAddress", values.ImageAddress);
-                  }
+
+                  fd.append("Capacity", Number(values.Capacity));
+                  fd.append("Cost", Number(values.Cost));
+                  fd.append("CourseLvlId", Number(values.CourseLvlId));
+                  fd.append("TeacherId", Number(values.TeacherId));
+
+                  fd.append("ImageAddress", values.ImageAddress);
 
                   {
                     isEdit ? Edit(fd) : Create(fd);
@@ -208,14 +208,14 @@ const CourseWizardFormik = () => {
                           <Form.Control
                             as="textarea"
                             rows={4}
-                            value={values.describe}
+                            value={values.Describe}
                             onChange={(e) =>
-                              setFieldValue("describe", e.target.value)
+                              setFieldValue("Describe", e.target.value)
                             }
-                            isInvalid={!!errors.describe}
+                            isInvalid={!!errors.Describe}
                           />
                           <Form.Control.Feedback type="invalid">
-                            {errors.describe}
+                            {errors.Describe}
                           </Form.Control.Feedback>
                         </Form.Group>
 
@@ -243,12 +243,14 @@ const CourseWizardFormik = () => {
                               <Form.Label>تاریخ شروع</Form.Label>
                               <DatePicker
                                 value={values.StartTime}
-                                onChange={(d) =>
+                                onChange={(d) => {
+                                  console.log("date", d.format("YYYY/MM/DD"));
+
                                   setFieldValue(
                                     "StartTime",
                                     d?.format("YYYY/MM/DD")
-                                  )
-                                }
+                                  );
+                                }}
                                 calendar={persian}
                                 locale={persian_fa}
                                 inputClass="form-control"
@@ -286,10 +288,14 @@ const CourseWizardFormik = () => {
                               <Form.Select
                                 value={values.TeacherId}
                                 onChange={(e) =>
-                                  setFieldValue("TeacherId", e.target.value)
+                                  setFieldValue(
+                                    "TeacherId",
+                                    parseInt(e.target.value)
+                                  )
                                 }
                                 isInvalid={!!errors.TeacherId}
                               >
+                                <option value="">انتخاب کنید...</option>
                                 {pendingTeachers
                                   ? "درحال بارگزاری"
                                   : Teachers.map((item, index) => (
@@ -345,12 +351,16 @@ const CourseWizardFormik = () => {
                         <Form.Group>
                           <Form.Label>سطح دوره</Form.Label>
                           <Form.Select
-                            value={values.courseLvlId}
+                            value={values.CourseLvlId}
                             onChange={(e) =>
-                              setFieldValue("courseLvlId", e.target.value)
+                              setFieldValue(
+                                "CourseLvlId",
+                                parseInt(e.target.value)
+                              )
                             }
-                            isInvalid={!!errors.courseLvlId}
+                            isInvalid={!!errors.CourseLvlId}
                           >
+                            <option value="">انتخاب کنید...</option>
                             {pendingLevels
                               ? "درحال بارگذاری"
                               : Levels.map((items, index) => (
@@ -366,7 +376,7 @@ const CourseWizardFormik = () => {
                                 ))}
                           </Form.Select>
                           <Form.Control.Feedback type="invalid">
-                            {errors.courseLvlId}
+                            {errors.CourseLvlId}
                           </Form.Control.Feedback>
                         </Form.Group>
                       </>
@@ -478,7 +488,7 @@ const CourseWizardFormik = () => {
                             <strong>نام دوره: </strong> {values.Title}
                           </p>
                           <p>
-                            <strong>توضیحات: </strong> {values.describe}
+                            <strong>توضیحات: </strong> {values.Describe}
                           </p>
                           <p>
                             <strong>توضیح کوتاه: </strong> {values.MiniDescribe}

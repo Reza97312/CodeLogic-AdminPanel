@@ -18,6 +18,7 @@ import loading from "../../../../assets/images/A/loading.gif";
 import CourseTabs from "./courseTabs";
 
 import store from "../store";
+import AddTechModal from "../../Technology/AddTechModal";
 
 const Cview = () => {
   // ** Hooks
@@ -33,6 +34,8 @@ const Cview = () => {
       setActive(tab);
     }
   };
+  const [openTechModal, setOpenTechModal] = useState(false);
+  const toggleTechModal = (val) => setOpenTechModal(val);
 
   return courseData ? (
     <div className="app-user-view">
@@ -41,7 +44,10 @@ const Cview = () => {
           {isPending ? (
             <img className="mx-auto" src={loading} />
           ) : (
-            <CourseInfoCard selectedCourse={courseData} />
+            <CourseInfoCard
+              toggleTechModal={toggleTechModal}
+              selectedCourse={courseData}
+            />
           )}
         </Col>
         <Col xl="8" lg="7" xs={{ order: 0 }} md={{ order: 1, size: 7 }}>
@@ -56,6 +62,14 @@ const Cview = () => {
           />
         </Col>
       </Row>
+      {openTechModal && (
+        <AddTechModal
+          isOpen={openTechModal}
+          toggleTechModal={toggleTechModal}
+          initialData={courseData?.courseTeches}
+          courseId={id}
+        />
+      )}
     </div>
   ) : (
     <Alert color="danger">

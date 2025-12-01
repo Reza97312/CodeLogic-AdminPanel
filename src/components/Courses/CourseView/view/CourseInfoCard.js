@@ -75,7 +75,7 @@ const languageOptions = [
 
 const MySwal = withReactContent(Swal);
 
-const CourseInfoCard = ({ selectedCourse }) => {
+const CourseInfoCard = ({ selectedCourse, toggleTechModal }) => {
   const navigate = useNavigate();
   // ** State
   const [editStatus, setEditStatus] = useState(false);
@@ -251,6 +251,26 @@ const CourseInfoCard = ({ selectedCourse }) => {
                   <span className="fw-bolder me-25">زمان پایان :</span>
                   <span>{PersianDateConverter(selectedCourse?.endTime)}</span>
                 </li>
+
+                <li className="mb-75">
+                  <span className="fw-bolder me-25">تکنولوژی ها :</span>
+                  <span>
+                    {selectedCourse.courseTeches.length > 0
+                      ? selectedCourse.courseTeches.map((r, index) => (
+                          <span style={{ marginLeft: "6px" }}>
+                            <Badge
+                              key={index}
+                              color="light-primary"
+                              className="text-capitalize "
+                            >
+                              {r}
+                            </Badge>
+                          </span>
+                        ))
+                      : "تکنولوژِی ای یافت نشد "}
+                  </span>
+                </li>
+
                 <li className="mb-75">
                   <span className="fw-bolder me-25">تعداد رزرو ها : </span>
                   <span className="text-capitalize">
@@ -277,10 +297,10 @@ const CourseInfoCard = ({ selectedCourse }) => {
             ) : null}
           </div>
           <div
-            className="d-flex justify-content-center pt-2 "
+            className="d-flex justify-content-center  "
             style={{ gap: "10px" }}
           >
-            <Button onClick={() => setEditStatus(true)} color="primary">
+            <Button onClick={() => setEditStatus(true)} color="warning">
               تغییر وضعیت دوره
             </Button>
             <Button
@@ -295,6 +315,9 @@ const CourseInfoCard = ({ selectedCourse }) => {
               }
             >
               ویرایش دوره
+            </Button>
+            <Button onClick={() => toggleTechModal(true)} color="info">
+              افزودن تکنولوژی
             </Button>
           </div>
         </CardBody>

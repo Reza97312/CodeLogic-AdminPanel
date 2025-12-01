@@ -132,16 +132,16 @@ export const columns = [
   }
 ]
 
-const UserProjectsList = () => {
+const UserProjectsList = (newsCommentsData) => {
   return (
     <Card>
-      <CardHeader tag='h4'>User's Projects List</CardHeader>
+      <CardHeader tag='h4'>کامنت های اخبار</CardHeader>
       <div className='react-dataTable user-view-account-projects'>
         <DataTable
           noHeader
           responsive
           columns={columns}
-          data={projectsArr}
+          data={newsCommentsData}
           className='react-dataTable'
           sortIcon={<ChevronDown size={10} />}
         />

@@ -15,13 +15,19 @@ const CourseGroups = ({ courseId, teacherId, teacherName }) => {
     setEditGroupData(row);
   };
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const toggleDeleteModal = (val) => setOpenDeleteModal(val);
+  const toggleDeleteModal = (val) => {
+    setOpenDeleteModal(val);
+  };
   const [groupId, setGroupId] = useState(null);
   const getGroupId = (id) => setGroupId(id);
+
   return (
     <div>
       <Button
-        onClick={() => setOpenCreateGroup(true)}
+        onClick={() => {
+          setOpenCreateGroup(true);
+          setEditGroupData(null);
+        }}
         style={{ marginBottom: "10px" }}
         color="primary"
       >

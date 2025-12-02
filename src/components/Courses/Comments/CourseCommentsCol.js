@@ -19,6 +19,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
+import { toast } from "react-toastify";
 
 const renderCourseImage = (row) => {
   if (row.user.currentPictureAddress) {
@@ -97,8 +98,12 @@ export const CourseCommentsCol = ({
         <DropdownMenu>
           <DropdownItem
             onClick={() => {
-              toggleEditModal(true);
-              handleCmId(row.id);
+              if (row.accept === true) {
+                toast.error("این دوره تایید شده است !!!!");
+              } else {
+                toggleEditModal(true);
+                handleCmId(row.id);
+              }
             }}
           >
             <FileText size={14} className="me-50" />

@@ -37,9 +37,7 @@ const AddTechModal = ({ isOpen, toggleTechModal, initialData, courseId }) => {
       techData.length > 0
     ) {
       const filteredData = techData.filter((item) =>
-        initialData.some((init) =>
-          item.techName.trim().toLowerCase().includes(init.trim().toLowerCase())
-        )
+        initialData.some((init) => item.techName.includes(init))
       );
 
       const initialOptions = filteredData.map((tech) => ({

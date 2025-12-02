@@ -53,6 +53,7 @@ const CourseCommentsTable = ({ id }) => {
   const [OpenDeleteModal, setOpenDeleteModal] = useState(false);
   const [commentId, setCommentId] = useState(null);
   const [openEditModal, setOpenEditModal] = useState(null);
+
   const toggleEditModal = (value) => setOpenEditModal(value);
 
   const toggleDeleteModal = (val) => setOpenDeleteModal(val);

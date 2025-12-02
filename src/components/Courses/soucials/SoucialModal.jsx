@@ -22,6 +22,7 @@ import { Form } from "react-bootstrap";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { CreateSoucial } from "../../../core/services/api/post/Courses/CreateSoucial";
+import { EditCourseSoucials } from "../../../core/services/api/put/Courses/EditCourseSoucials";
 
 const SelectSchema = Yup.object().shape({
   groupLink: Yup.string()
@@ -35,6 +36,20 @@ const SoucialModal = ({ courseId, isOpen, toggleSocialModal, EditData }) => {
   const { mutate: Create, isPending } = useMutation({
     mutationKey: ["CREATESOUCIAL"],
     mutationFn: (payload) => CreateSoucial(payload),
+    onError: (err) => {
+      toast.error(err.response?.data?.message);
+    },
+    onSuccess: (data) => {
+      if (data) {
+        toast.success(data.message);
+        toggleSocialModal(false);
+        queryClient.invalidateQueries(["SOUCIALS"]);
+      }
+    },
+  });
+  const { mutate: update } = useMutation({
+    mutationKey: ["CREATESOUCIAL"],
+    mutationFn: (payload) => EditCourseSoucials(payload),
     onError: (err) => {
       toast.error(err.response?.data?.message);
     },
@@ -66,6 +81,7 @@ const SoucialModal = ({ courseId, isOpen, toggleSocialModal, EditData }) => {
             <Formik
               enableReinitialize
               initialValues={{
+                id: EditData?.id || "",
                 groupName: EditData?.groupName || "",
                 groupLink: EditData?.groupLink || "",
                 courseId: courseId,
@@ -73,7 +89,9 @@ const SoucialModal = ({ courseId, isOpen, toggleSocialModal, EditData }) => {
               validationSchema={SelectSchema}
               onSubmit={(values) => {
                 console.log(values);
-                Create(values);
+                {
+                  EditData ? update(values) : Create(values);
+                }
               }}
             >
               {({ values, errors, setFieldValue, handleSubmit }) => (

@@ -11,7 +11,6 @@ const CourseGroups = ({ courseId, teacherId, teacherName }) => {
   };
   const [EditGroupData, setEditGroupData] = useState(null);
   const handleEditModal = (row) => {
-    setOpenCreateGroup(true);
     setEditGroupData(row);
   };
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -40,6 +39,7 @@ const CourseGroups = ({ courseId, teacherId, teacherName }) => {
         handleEditModal={handleEditModal}
         toggleDeleteModal={toggleDeleteModal}
         getGroupId={getGroupId}
+        toggleCreateGroupModal={toggleCreateGroupModal}
       />
       {openCreateGroup && (
         <CreateGroupModal

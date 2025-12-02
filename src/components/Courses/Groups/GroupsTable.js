@@ -44,6 +44,7 @@ const GroupTable = ({
   handleEditModal,
   toggleDeleteModal,
   getGroupId,
+  toggleCreateGroupModal,
 }) => {
   const [openModal, setOpenModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -91,6 +92,7 @@ const GroupTable = ({
     handleEditModal,
     toggleDeleteModal,
     getGroupId,
+    toggleCreateGroupModal,
   });
 
   const CustomPagination = () => {

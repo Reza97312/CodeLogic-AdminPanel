@@ -46,6 +46,7 @@ export const GroupsCols = ({
   handleEditModal,
   toggleDeleteModal,
   getGroupId,
+  toggleCreateGroupModal,
 }) => [
   {
     name: <span style={{ fontSize: "14px" }}>نام گروه</span>,
@@ -125,7 +126,12 @@ export const GroupsCols = ({
             <span className="align-middle">جزئیات کاربر</span>
           </DropdownItem> */}
 
-          <DropdownItem onClick={() => handleEditModal(row)}>
+          <DropdownItem
+            onClick={() => {
+              handleEditModal(row);
+              toggleCreateGroupModal(true);
+            }}
+          >
             <Archive size={14} className="me-50" />
             <span className="align-middle">ویرایش</span>
           </DropdownItem>

@@ -88,7 +88,7 @@ const CreateGroupModal = ({
               enableReinitialize
               initialValues={{
                 Id: EditGroupData?.id || "",
-                CourseId: EditGroupData?.CourseId || courseId,
+                CourseId: courseId,
                 GroupName: EditGroupData?.groupName || "",
                 GroupCapacity: EditGroupData?.groupCapacity || 0,
               }}

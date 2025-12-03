@@ -17,7 +17,7 @@ const validationSchema = yup.object({
 
 
 
-const NewsDetails = ({ stepper, type }) => {
+const CreateNewsForm = ({ stepper, type }) => {
 
   const onSubmit = async (values, { resetForm }) => {
     await createNews(values.title, values.googleTitle, values.googleDescribe, values.miniDescribe, values.describe, values.categoryId,
@@ -146,4 +146,4 @@ const NewsDetails = ({ stepper, type }) => {
   )
 }
 
-export default NewsDetails
+export default CreateNewsForm

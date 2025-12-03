@@ -10,5 +10,6 @@ export const AcceptCm = async (id) => {
     return result;
   } catch (err) {
     console.log(err);
+    throw err;
   }
 };

@@ -13,5 +13,6 @@ export const DeleteCourseGroup = (payload) => {
     return result;
   } catch (err) {
     console.log(err);
+    throw err;
   }
 };

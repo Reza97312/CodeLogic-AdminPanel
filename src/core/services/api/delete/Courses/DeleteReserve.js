@@ -1,9 +1,9 @@
+import { data } from "jquery";
 import http from "../../../../interceptor/interceptor.js";
-export const DeleteCourse = (value) => {
+export const DeleteReserve = (payload) => {
   try {
-    const result = http.delete("/Course/DeleteCourse", {
-      active: value.active,
-      id: value.courseId,
+    const result = http.delete("/CourseReserve", {
+      data: payload,
     });
     console.log(result);
     return result;

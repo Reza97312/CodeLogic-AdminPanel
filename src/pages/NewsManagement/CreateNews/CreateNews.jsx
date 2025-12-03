@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import Wizard from '../../../components/news/createNewsWizard'
+import Wizard from '../../../components/news/createNewsForm'
 import NewsDetails from '../../NewsManagement/NewsDetail/NewsDetail'
 
 

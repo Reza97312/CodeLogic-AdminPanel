@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import Wizard from '@components/wizard'
-import NewsDetails from './steps/NewsDetails'
+import NewsDetails from './steps/CreateNewsForm'
 import {FileText} from 'react-feather'
 
 

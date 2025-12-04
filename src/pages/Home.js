@@ -44,12 +44,6 @@ import { setItem } from "../utility/helper/storage.services.js";
 import { GetDashboardReport } from "../core/services/api/get/GetDashboradReport.js";
 
 const Home = () => {
-  useEffect(() => {
-    setItem(
-      "token",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50cyI6W3sicGhvbmUiOiIwOTAzMDU1ODAxNCIsImlkIjo0MywiaXNVc2UiOnRydWV9XSwiaWF0IjoxNzY0NDU5ODkxLCJleHAiOjE3NjQ0OTU4OTF9.TVoQIpKK1AQsJqivbMFTSd1y2YW8Af2i9mTNO4pDakM"
-    );
-  }, []);
   const { data: profileInfo = {}, isPending: ProfileInfo } = useQuery({
     queryKey: ["PROFILEINFO"],
     queryFn: () => GetProfileInfo(),

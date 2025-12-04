@@ -422,7 +422,7 @@ const CourseWizardFormik = () => {
                             )}
                           </div>
 
-                          {/* <Form.Control
+                          <Form.Control
                             type="file"
                             accept="image/*"
                             onChange={(e) => {
@@ -435,7 +435,7 @@ const CourseWizardFormik = () => {
                           />
                           <Form.Control.Feedback type="invalid">
                             {errors.ImageAddress}
-                          </Form.Control.Feedback> */}
+                          </Form.Control.Feedback>
                         </Form.Group>
                       </>
                     )}

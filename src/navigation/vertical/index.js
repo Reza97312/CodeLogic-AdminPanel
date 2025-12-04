@@ -70,4 +70,10 @@ export default [
     icon: <User size={20} />,
     navLink: "/user-management",
   },
+  {
+    id: "userTasks",
+    title: "تسک ها",
+    icon: <Circle size={12}/>,
+    navLink: "/user-homeworks" 
+  }
 ];

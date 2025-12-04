@@ -16,7 +16,7 @@ const NewsDetail = () => {
   
 
   const { id } = useParams();
-  const { data: newsData, isPending } = useQuery({
+  const { data: selectedNews, isPending } = useQuery({
     queryKey: ["GETNEWSDETAIL"],
     queryFn: () => getNewsDetail(id),
   });
@@ -38,14 +38,14 @@ const NewsDetail = () => {
   };
 
 
-  return newsData ? (
+  return selectedNews ? (
     <div className="app-user-view">
       <Row>
         <Col xl="4" lg="5" xs={{ order: 1 }} md={{ order: 0, size: 5 }}>
           {isPending ? (
             <img className="mx-auto" src={loading} />
           ) : (
-            <NewsCardInfo selectedNews={newsData.detailsNewsDto} />
+            <NewsCardInfo selectedNews={selectedNews.detailsNewsDto} />
           )}
         </Col>
         <Col xl="8" lg="7" xs={{ order: 0 }} md={{ order: 1, size: 7 }}>

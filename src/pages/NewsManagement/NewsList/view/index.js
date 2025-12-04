@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import getAdminNewsComments from '../../../../core/services/api/get/getAdminNewsComments'
+import getAdminNewsComments from '../../../../core/services/api/get/News/getAdminNewsComments'
 import { Row, Col, Alert } from "reactstrap";
 import { useQuery } from "@tanstack/react-query";
 import "@styles/react/apps/app-users.scss";

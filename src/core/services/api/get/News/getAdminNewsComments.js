@@ -1,4 +1,4 @@
-import Http from '../../../interceptor/interceptor';
+import Http from '../../../../interceptor/interceptor';
 
 const getNews = async (id) => {
     try {

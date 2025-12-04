@@ -1,13 +1,5 @@
-import {
-  Mail,
-  Home,
-  User,
-  Circle,
-  List,
-  Paperclip,
-  FilePlus,
-  Archive,
-} from "react-feather";
+import {Mail, Home, Airplay, Circle, User, List, Paperclip, FilePlus, Archive, CheckSquare} from "react-feather";
+
 
 export default [
   {
@@ -72,7 +64,7 @@ export default [
   {
     id: "userTasks",
     title: "تسک ها",
-    icon: <Circle size={12}/>,
+    icon: <CheckSquare size={12}/>,
     navLink: "/user-homeworks" 
   }
 ];

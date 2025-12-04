@@ -9,19 +9,21 @@ const CustomHeader = ({store,toggleSidebar,handlePerPage,rowsPerPage,handleFilte
   
 
     const debouncedSearch = useCallback(
-        debounce((value) => {
-        handleSearch(value);
-        }, 2000),
-        []
+      debounce((value) => {
+      handleSearch(value);
+      }, 2000),
+      []
     );
-    const handleChange = (e) => {
-        const value = e.target.value;
-        debouncedSearch(value);
+    const onChange = (value) => {
+      debouncedSearch(value);
     };
+    const onSearchEnter = (value) => {
+      if(e.key === 'Enter'){
+        debouncedSearch(value)
+      }
+    }
 
 
-  
-    // ** Converts table to CSV
   function convertArrayOfObjectsToCSV(array) {
     let result;
 
@@ -48,7 +50,7 @@ const CustomHeader = ({store,toggleSidebar,handlePerPage,rowsPerPage,handleFilte
     return result;
   }
 
-  // ** Downloads CSV
+
   function downloadCSV(array) {
     const link = document.createElement("a");
     let csv = convertArrayOfObjectsToCSV(array);
@@ -90,10 +92,7 @@ const CustomHeader = ({store,toggleSidebar,handlePerPage,rowsPerPage,handleFilte
           xl="6"
           className="d-flex align-items-sm-center justify-content-xl-end justify-content-start flex-xl-nowrap flex-wrap flex-sm-row flex-column pe-xl-1 p-0 mt-xl-0 mt-1"
         >
-          <button 
-          onClick={(e) => {handleSearch(e.target.value)}} 
-          className="d-flex align-items-center mb-sm-0 mb-1 me-1 py-1 px-1"
-          style={{ border: "none", boxShadow: "none", backgroundColor: "#FFFFFF" }}>
+          <div className="d-flex align-items-center me-1">
             <label
               style={{ fontSize: "17px" }}
               className="mb-0 text-nowrap"
@@ -106,11 +105,10 @@ const CustomHeader = ({store,toggleSidebar,handlePerPage,rowsPerPage,handleFilte
               className="ms-50 w-100"
               type="text"
               value={searchTerm}
-              onChange={(e) => {handleFilter(e.target.value); handleChange(e)}}
+              onChange={(e) => {handleFilter(e.target.value); onChange(e.target.value); onSearchEnter(e.target.value)}}
               placeholder="نام خبر..."
             />
-          </button>
-
+          </div>
           <div className="d-flex align-items-center table-header-actions">
             <UncontrolledDropdown className="me-1">
               <DropdownToggle color="secondary" caret outline>

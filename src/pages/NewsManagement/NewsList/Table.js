@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import getNews from '../../../core/services/api/get/getNews'
+import getNews from '../../../core/services/api/get/News/getNews'
 import { Fragment, useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import { columns } from "./columns";

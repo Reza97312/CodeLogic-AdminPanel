@@ -1,4 +1,13 @@
-import { Mail, Home, User, Circle, List } from "react-feather";
+import {
+  Mail,
+  Home,
+  User,
+  Circle,
+  List,
+  Paperclip,
+  FilePlus,
+  Archive,
+} from "react-feather";
 
 export default [
   {
@@ -13,16 +22,25 @@ export default [
     icon: <List size={12} />,
     children: [
       {
-        id: "newsList",
+        id: "CourseList",
+        icon: <Paperclip size={8} />,
         title: "لیست دوره ها",
         permissions: ["admin", "editor"],
         navLink: "/courses-management",
       },
       {
         id: "createCourse",
+        icon: <FilePlus size={8} />,
         title: "ساخت دوره",
         permissions: ["admin", "editor"],
         navLink: "/courses/create",
+      },
+      {
+        id: "ReservedCourse",
+        icon: <Archive size={8} />,
+        title: "مدیریت لیست رزرو ها",
+        permissions: ["admin", "editor"],
+        navLink: "/courses/reserves",
       },
     ],
   },

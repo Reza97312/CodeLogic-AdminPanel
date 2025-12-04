@@ -10,5 +10,6 @@ export const DeleteCourseCm = (id) => {
     return result;
   } catch (err) {
     console.log(err);
+    throw err;
   }
 };

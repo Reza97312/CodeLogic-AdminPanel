@@ -7,5 +7,6 @@ export const CreateSoucial = async (payload) => {
     return result;
   } catch (err) {
     console.log(err);
+    throw err;
   }
 };

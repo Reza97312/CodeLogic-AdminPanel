@@ -1,12 +1,10 @@
-import React from "react";
 import http from "../../../../interceptor/interceptor.js";
-export const AddAssistance = async (payload) => {
+export const GetCourseReserved = async () => {
   try {
-    const result = await http.post("/CourseAssistance", payload);
+    const result = await http.get("/CourseReserve");
     console.log(result);
     return result;
   } catch (err) {
     console.log(err);
-    throw err;
   }
 };

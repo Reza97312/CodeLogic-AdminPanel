@@ -1,8 +1,11 @@
 import React from "react";
 import http from "../../../../interceptor/interceptor.js";
-export const AddAssistance = async (payload) => {
+export const AcceptReserve = async (payload) => {
   try {
-    const result = await http.post("/CourseAssistance", payload);
+    const result = await http.post(
+      "/CourseReserve/SendReserveToCourse",
+      payload
+    );
     console.log(result);
     return result;
   } catch (err) {

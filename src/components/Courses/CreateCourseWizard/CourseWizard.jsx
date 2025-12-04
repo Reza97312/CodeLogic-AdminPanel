@@ -20,11 +20,11 @@ import persian_fa from "react-date-object/locales/persian_fa";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { GetAllTeachers } from "../../../core/services/api/get/Teachers/GetAllTeachers";
-import { GetCourseLevels } from "../../../core/services/api/get/Courses/GetCourseLevels";
+
 import { useLocation, useNavigate } from "react-router-dom";
 import { EditCourse } from "../../../core/services/api/put/Courses/EditCourse";
 import { CreateCourse } from "../../../core/services/api/post/Courses/CreateCourse";
+import { GetCreateCourse } from "../../../core/services/api/get/Courses/GetCreateCourse";
 const convertToUTC = (dateString) => {
   if (!dateString) return "";
   try {
@@ -40,7 +40,18 @@ const convertToUTC = (dateString) => {
     return "";
   }
 };
-
+const toJalali = (date) => {
+  if (!date) return "";
+  try {
+    return new DateObject({
+      date,
+    })
+      .convert(persian, persian_fa)
+      .format("YYYY/MM/DD");
+  } catch {
+    return "";
+  }
+};
 const Step1Schema = Yup.object().shape({
   Title: Yup.string().required("نام دوره لازم است"),
   GoogleTitle: Yup.string().required("نام گوگل دوره لازم است"),
@@ -77,13 +88,9 @@ const CourseWizardFormik = () => {
 
   const [photoPreview, setPhotoPreview] = useState(null);
 
-  const { data: Teachers = [], isPending: pendingTeachers } = useQuery({
-    queryKey: ["GETALLTEACHERS"],
-    queryFn: () => GetAllTeachers(),
-  });
-  const { data: Levels = [], isPending: pendingLevels } = useQuery({
-    queryKey: ["GETALLLEVELS"],
-    queryFn: () => GetCourseLevels(),
+  const { data: CreateData = {}, isPending: pendingCreateData } = useQuery({
+    queryKey: ["GETCREATE"],
+    queryFn: () => GetCreateCourse(),
   });
   const { mutate: Create, isPending } = useMutation({
     mutationKey: ["CREATECOURSE"],
@@ -98,7 +105,7 @@ const CourseWizardFormik = () => {
     mutationKey: ["UPDATECOURSE"],
     mutationFn: (formData) => EditCourse(formData),
     onSuccess: (data) => {
-      toast.success(data.message);
+      toast.success("دوره با موفقیت ویرایش شد 🤩");
       navigate(`/courses/view/${firstData.courseId}`);
     },
     onError: (err) => toast.error(err.response?.data?.message),
@@ -131,13 +138,13 @@ const CourseWizardFormik = () => {
                   GoogleTitle: isEdit ? firstData.googleTitle : "",
                   Describe: isEdit ? firstData.describe : "",
                   MiniDescribe: isEdit ? firstData.miniDescribe : "",
-                  StartTime: isEdit ? firstData.startTime : "",
-                  TeacherId: isEdit ? firstData.teacherId : 0,
-                  EndTime: isEdit ? firstData.endTime : "",
+                  StartTime: isEdit ? toJalali(firstData.startTime) : "",
+                  TeacherId: isEdit ? firstData.teacherId : "",
+                  EndTime: isEdit ? toJalali(firstData.endTime) : "",
                   Capacity: isEdit ? firstData.capacity : 0,
                   Cost: isEdit ? firstData.cost : 0,
-                  CourseLvlId: isEdit ? firstData.courseLvlId : 0,
-                  ImageAddress: isEdit ? firstData.imageAddress : null,
+                  CourseLvlId: isEdit ? firstData.courseLvlId : "",
+                  ImageAddress: isEdit ? firstData.imageAddress : "",
                 }}
                 validationSchema={currentSchema}
                 enableReinitialize={false}
@@ -199,7 +206,7 @@ const CourseWizardFormik = () => {
                             isInvalid={!!errors.GoogleTitle}
                           />
                           <Form.Control.Feedback type="invalid">
-                            {errors.Title}
+                            {errors.GoogleTitle}
                           </Form.Control.Feedback>
                         </Form.Group>
 
@@ -295,17 +302,17 @@ const CourseWizardFormik = () => {
                                 }
                                 isInvalid={!!errors.TeacherId}
                               >
-                                <option value="">انتخاب کنید...</option>
-                                {pendingTeachers
-                                  ? "درحال بارگزاری"
-                                  : Teachers.map((item, index) => (
-                                      <option
-                                        key={index}
-                                        value={item.teacherId}
-                                      >
-                                        {item.fullName}
-                                      </option>
-                                    ))}
+                                {pendingCreateData ? (
+                                  <option>درحال بارگزاری...</option>
+                                ) : CreateData?.teachers?.length > 0 ? (
+                                  CreateData.teachers.map((item, index) => (
+                                    <option key={index} value={item.teacherId}>
+                                      {item.fullName}
+                                    </option>
+                                  ))
+                                ) : (
+                                  <option>استادی یافت نشد</option>
+                                )}
                               </Form.Select>
                               <Form.Control.Feedback type="invalid">
                                 {errors.TeacherId}
@@ -352,28 +359,26 @@ const CourseWizardFormik = () => {
                           <Form.Label>سطح دوره</Form.Label>
                           <Form.Select
                             value={values.CourseLvlId}
-                            onChange={(e) =>
+                            onChange={(e) => {
                               setFieldValue(
                                 "CourseLvlId",
                                 parseInt(e.target.value)
-                              )
-                            }
+                              );
+                            }}
                             isInvalid={!!errors.CourseLvlId}
                           >
                             <option value="">انتخاب کنید...</option>
-                            {pendingLevels
-                              ? "درحال بارگذاری"
-                              : Levels.map((items, index) => (
-                                  <option
-                                    onClick={() =>
-                                      setLevelName(items.levelName)
-                                    }
-                                    key={index + 1}
-                                    value={items.id}
-                                  >
-                                    {items.levelName}
-                                  </option>
-                                ))}
+                            {pendingCreateData ? (
+                              <option>درحال بارگزاری...</option>
+                            ) : CreateData?.courseLevelDtos?.length > 0 ? (
+                              CreateData.courseLevelDtos.map((item, index) => (
+                                <option key={index} value={item.id}>
+                                  {item.levelName}
+                                </option>
+                              ))
+                            ) : (
+                              <option>استادی یافت نشد</option>
+                            )}
                           </Form.Select>
                           <Form.Control.Feedback type="invalid">
                             {errors.CourseLvlId}
@@ -387,20 +392,9 @@ const CourseWizardFormik = () => {
                         <h5 className="mb-3 text-center">انتخاب عکس دوره</h5>
                         <Form.Group className="text-center">
                           <div className="mb-3">
-                            {photoPreview ? (
+                            {values.ImageAddress ? (
                               <Image
-                                src={photoPreview}
-                                roundedCircle
-                                style={{
-                                  width: 200,
-                                  height: 200,
-                                  objectFit: "cover",
-                                  border: "3px solid #ddd",
-                                }}
-                              />
-                            ) : isEdit ? (
-                              <Image
-                                src={firstData.imageAddress}
+                                src={photoPreview || values.ImageAddress || ""}
                                 roundedCircle
                                 style={{
                                   width: 200,
@@ -428,7 +422,7 @@ const CourseWizardFormik = () => {
                             )}
                           </div>
 
-                          <Form.Control
+                          {/* <Form.Control
                             type="file"
                             accept="image/*"
                             onChange={(e) => {
@@ -441,21 +435,21 @@ const CourseWizardFormik = () => {
                           />
                           <Form.Control.Feedback type="invalid">
                             {errors.ImageAddress}
-                          </Form.Control.Feedback>
+                          </Form.Control.Feedback> */}
                         </Form.Group>
                       </>
                     )}
 
                     {step === 5 && (
                       <>
-                        <h5 className="text-center mb-3">
+                        <h5 className="text-center mb-1">
                           پیش‌نمایش نهایی دوره
                         </h5>
                         <Card className="p-3 shadow-sm text-center">
-                          <div className="mb-3">
-                            {photoPreview ? (
+                          <div className="mb-2">
+                            {values.ImageAddress !== "" ? (
                               <Image
-                                src={photoPreview}
+                                src={photoPreview || values.ImageAddress || ""}
                                 roundedCircle
                                 style={{
                                   width: 200,

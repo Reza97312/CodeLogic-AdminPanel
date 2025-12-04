@@ -22,6 +22,8 @@ import CoursesUserList from "../../components/Courses/CourseView/view/CourseUser
 import CreateCourse from "../../pages/CourseManagement/CreateCourse/CreateCourse";
 import CourseGroups from "../../pages/CourseManagement/CourseGroups/CourseGroups";
 import path from "path";
+import ReservedCourses from "../../pages/CourseManagement/ReservedCourse/ReservedCourses";
+
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -128,6 +130,10 @@ const Routes = [
   {
     path: "/courses/groups",
     element: <CourseGroups />,
+  },
+  {
+    path: "/courses/reserves",
+    element: <ReservedCourses />,
   },
   {
     path: "/user-homeworks",

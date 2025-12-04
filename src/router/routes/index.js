@@ -6,10 +6,10 @@ import BlankLayout from "@layouts/BlankLayout";
 import VerticalLayout from "@src/layouts/VerticalLayout";
 import HorizontalLayout from "@src/layouts/HorizontalLayout";
 import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper";
-
 import NewsList from "../../pages/NewsManagement/NewsList/NewsList";
 import NewsDetail from "../../pages/NewsManagement/NewsDetail/NewsDetail";
 import CreateNews from "../../pages/NewsManagement/CreateNews/CreateNews";
+import UserHomeWorks from '../../pages/UserHomeWorks/UserHomeWorks'
 
 // ** Route Components
 import PublicRoute from "@components/routes/PublicRoute";
@@ -21,6 +21,7 @@ import CourseView from "../../pages/CourseManagement/CourseView/CourseView";
 import CoursesUserList from "../../components/Courses/CourseView/view/CourseUsersList/CoursesUserList";
 import CreateCourse from "../../pages/CourseManagement/CreateCourse/CreateCourse";
 import CourseGroups from "../../pages/CourseManagement/CourseGroups/CourseGroups";
+import path from "path";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -127,6 +128,10 @@ const Routes = [
   {
     path: "/courses/groups",
     element: <CourseGroups />,
+  },
+  {
+    path: "/user-homeworks",
+    element: <UserHomeWorks/>
   },
   {
     path: "*",

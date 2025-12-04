@@ -107,35 +107,18 @@ const CustomHeader = ({store,toggleSidebar,handlePerPage,rowsPerPage,handleFilte
               type="text"
               value={searchTerm}
               onChange={(e) => {handleFilter(e.target.value); handleChange(e)}}
-              placeholder="نام خبر..."
+              placeholder="نام تسک..."
             />
           </button>
 
           <div className="d-flex align-items-center table-header-actions">
-            <UncontrolledDropdown className="me-1">
-              <DropdownToggle color="secondary" caret outline>
-                <Share className="font-small-4 me-50" />
-                <span className="align-middle">وضعیت</span>
-              </DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem className="w-100">
-                  <Printer className="font-small-4 me-50" />
-                  <span className="align-middle">فعال</span>
-                </DropdownItem>
-                <DropdownItem className="w-100">
-                  <Grid className="font-small-4 me-50" />
-                  <span className="align-middle">غیرفعال</span>
-                </DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
-
-            {/* <Button
+            <Button
               className="add-new-user"
               color="primary"
               onClick={toggleSidebar}
             >
-              اضافه کردن خبر
-            </Button> */}
+              اضافه کردن تسک
+            </Button>
           </div>
         </Col>
       </Row>

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import getUserHomeWorks from '../../core/services/api/get/getUserHomeWorks'
+import getUserHomeWorks from '../../core/services/api/get/UserHomeWorks/getUserHomeWorks'
 import { Fragment, useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import { columns } from "./columns";

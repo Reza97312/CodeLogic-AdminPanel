@@ -1,4 +1,4 @@
-import Http from "../../../interceptor/interceptor.js";
+import Http from "../../../../interceptor/interceptor.js";
 
 const getUserHomeWorks = async (params) => {
   try {

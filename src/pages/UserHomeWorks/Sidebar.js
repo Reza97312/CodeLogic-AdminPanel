@@ -1,30 +1,23 @@
-// ** React Import
 import { useState } from "react";
-
-// ** Custom Components
 import Sidebar from "@components/sidebar";
-
-// ** Utils
 import { selectThemeColors } from "@utils";
-
-// ** Third Party Components
 import Select from "react-select";
 import classnames from "classnames";
 import { useForm, Controller } from "react-hook-form";
-
-// ** Reactstrap Imports
 import { Button, Label, FormText, Form, Input } from "reactstrap";
-
-// ** Store & Actions
 import { addUser } from "./store";
 import { useDispatch } from "react-redux";
+import { addUserHomeWorks } from "../../core/services/api/post/UserHomeWorks/addUserHomeWorks";
+import { toast } from "react-toastify";
+
+
 
 const defaultValues = {
   email: "",
   contact: "",
   company: "",
-  fullName: "",
-  username: "",
+  homeWorkTitle: "",
+  homeWorkDescribe: "",
   country: null,
 };
 
@@ -62,15 +55,15 @@ const checkIsValid = (data) => {
 };
 
 const SidebarNewUsers = ({ open, toggleSidebar }) => {
-  // ** States
+
   const [data, setData] = useState(null);
   const [plan, setPlan] = useState("basic");
   const [role, setRole] = useState("subscriber");
 
-  // ** Store Vars
+
   const dispatch = useDispatch();
 
-  // ** Vars
+
   const {
     control,
     setValue,
@@ -79,8 +72,9 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
     formState: { errors },
   } = useForm({ defaultValues });
 
-  // ** Function to handle form submit
-  const onSubmit = (data) => {
+
+  const onSubmit = (data, {resetForm}) => {
+    addUserHomeWorks(data.homeWorkTitle, homeWorkDescribe, data.sessionId),
     setData(data);
     if (checkIsValid(data)) {
       toggleSidebar();
@@ -94,12 +88,15 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
           billing: "auto debit",
           company: data.company,
           contact: data.contact,
-          fullName: data.fullName,
-          username: data.username,
+          homeWorkTitle: data.homeWorkTitle,
+          homeWorkDescribe: data.homeWorkDescribe,
           country: data.country.value,
         })
       );
-    } else {
+      resetForm()
+      toast.success('تسک جدید افزوده شد')
+    } 
+    else{
       for (const key in data) {
         if (data[key] === null) {
           setError("country", {
@@ -127,7 +124,7 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
     <Sidebar
       size="lg"
       open={open}
-      title="کاربر جدید"
+      title="تسک جدید"
       headerClassName="mb-1"
       contentClassName="pt-0"
       toggleSidebar={toggleSidebar}
@@ -138,19 +135,18 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
           <Label
             style={{ fontSize: "17px" }}
             className="form-label"
-            for="userEmail"
+            for="homeWorkTitle"
           >
-            ایمیل <span className="text-danger ">*</span>
+            نام تسک <span className="text-danger">*</span>
           </Label>
           <Controller
-            name="email"
+            name="homeWorkTitle"
             control={control}
             render={({ field }) => (
               <Input
-                type="email"
-                id="userEmail"
-                placeholder="user@example.com"
-                invalid={errors.email && true}
+                id="homeWorkTitle"
+                placeholder="نام تسک"
+                invalid={errors.homeWorkTitle && true}
                 {...field}
               />
             )}
@@ -160,18 +156,18 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
           <Label
             style={{ fontSize: "17px" }}
             className="form-label"
-            for="contact"
+            for="homeWorkDescribe"
           >
-            شماره تلفن <span className="text-danger">*</span>
+            توضیحات تسک<span className="text-danger">*</span>
           </Label>
           <Controller
-            name="contact"
+            name="homeWorkDescribe"
             control={control}
             render={({ field }) => (
               <Input
-                id="contact"
-                placeholder="09xxxxxxxxx"
-                invalid={errors.contact && true}
+                id="homeWorkDescribe"
+                placeholder="توضیحات تسک"
+                invalid={errors.homeWorkDescribe && true}
                 {...field}
               />
             )}
@@ -181,91 +177,22 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
           <Label
             style={{ fontSize: "17px" }}
             className="form-label"
-            for="fullName"
+            for="sessionId"
           >
-            نام <span className="text-danger">*</span>
+            آیدی جلسه<span className="text-danger">*</span>
           </Label>
           <Controller
-            name="fullName"
+            name="sessionId"
             control={control}
             render={({ field }) => (
               <Input
-                id="fullName"
-                placeholder=" نام"
-                invalid={errors.fullName && true}
+                id="sessionId"
+                placeholder="آیدی جلسه"
+                invalid={errors.sessionId && true}
                 {...field}
               />
             )}
           />
-        </div>
-        <div className="mb-1">
-          <Label
-            style={{ fontSize: "17px" }}
-            className="form-label"
-            for="username"
-          >
-            نام خانوادگی <span className="text-danger">*</span>
-          </Label>
-          <Controller
-            name="username"
-            control={control}
-            render={({ field }) => (
-              <Input
-                id="username"
-                placeholder=" نام خانوادگی "
-                invalid={errors.username && true}
-                {...field}
-              />
-            )}
-          />
-        </div>
-        <div className="mb-1">
-          <Label
-            style={{ fontSize: "17px" }}
-            className="form-label"
-            for="username"
-          >
-            رمز عبور <span className="text-danger">*</span>
-          </Label>
-          <Controller
-            name="username"
-            control={control}
-            render={({ field }) => (
-              <Input
-                id="username"
-                placeholder=" رمز عبور "
-                invalid={errors.username && true}
-                {...field}
-              />
-            )}
-          />
-        </div>
-        <div className="mb-3 mt-1">
-          <p style={{ fontSize: "17px" }} className="form-label fw-bold mb-1">
-            نوع کاربر
-          </p>
-
-          <div className="form-check mb-1">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id="role-student"
-            />
-            <label className="form-check-label" htmlFor="role-student">
-              دانش‌آموز
-            </label>
-          </div>
-
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id="role-teacher"
-            />
-            <label className="form-check-label" htmlFor="role-teacher">
-              معلم
-            </label>
-          </div>
         </div>
         <Button type="submit" className="me-1" color="primary">
           تایید

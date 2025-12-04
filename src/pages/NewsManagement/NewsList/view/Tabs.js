@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import { Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap'
 import { User, Lock, Bookmark, Bell, Link } from 'react-feather'
-import UserProjectsList from './UserProjectsList'
+import NewsProjectsList from './NewsProjectsList'
 
 const UserTabs = ({ active, toggleTab, newsCommentsData}) => {
   return (
@@ -16,7 +16,7 @@ const UserTabs = ({ active, toggleTab, newsCommentsData}) => {
       </Nav>
       <TabContent activeTab={active}>
         <TabPane tabId='1'>
-          <UserProjectsList newsCommentsData={newsCommentsData}/>
+          <NewsProjectsList newsCommentsData={newsCommentsData}/>
         </TabPane>
       </TabContent>
     </Fragment>

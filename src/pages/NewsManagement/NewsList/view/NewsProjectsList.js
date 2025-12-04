@@ -1,37 +1,40 @@
+import { useQuery } from 'react-query'
 import { Card, CardHeader, Progress } from 'reactstrap'
 import { ChevronDown } from 'react-feather'
 import DataTable from 'react-data-table-component'
 import Avatar from '@components/avatar'
 import '@styles/react/libs/tables/react-dataTable-component.scss'
+import getUserWithId from '../../../../core/services/api/get/getUserWithId'
 
 
 
 export const columns = [
   {
+    name: 'کاربر',
+    selector: row => userData.name
+  },
+  {
     sortable: true,
-    minWidth: '300px',
-    name: 'Project',
+    minWidth: '200px',
+    name: 'عنوان',
     selector: row => row.title,
     cell: row => {
       return (
-        <div className='d-flex justify-content-left align-items-center'>
-          <div className='avatar-wrapper'>
-            <Avatar className='me-1' img={row.img} alt={row.title} imgWidth='32' />
-          </div>
-          <div className='d-flex flex-column'>
-            <span className='text-truncate fw-bolder'>{row.title}</span>
-            <small className='text-muted'>{row.subtitle}</small>
-          </div>
-        </div>
+        <span className='text-truncate fw-bolder'>{row.title}</span>
       )
     }
   },
   {
-    name: 'Total Tasks',
-    selector: row => row.totalTasks
+    name: 'متن',
+    selector: row => row.totalTasks,
+    cell: row => {
+      return (
+        <span>{row.describe}</span>
+      )
+    }
   },
   {
-    name: 'Progress',
+    name: 'پاسخ ها',
     selector: row => row.progress,
     sortable: true,
     cell: row => {
@@ -47,13 +50,14 @@ export const columns = [
       )
     }
   },
-  {
-    name: 'Hours',
-    selector: row => row.hours
-  }
 ]
 
-const UserProjectsList = ({newsCommentsData}) => {
+const NewsProjectsList = ({newsCommentsData}) => {
+
+  const { data: userData, isPending } = useQuery({
+    queryKey: ["GETUSERWITHID"],
+    queryFn: () => getUserWithId(id),
+  });
 
   return (
     <Card>
@@ -72,4 +76,4 @@ const UserProjectsList = ({newsCommentsData}) => {
   )
 }
 
-export default UserProjectsList
+export default NewsProjectsList

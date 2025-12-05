@@ -2,20 +2,7 @@
 import { useState, Fragment } from "react";
 import loading from "../../../assets/images/A/loading.gif";
 // ** Reactstrap Imports
-import {
-  Row,
-  Col,
-  Card,
-  Form,
-  CardBody,
-  Button,
-  Badge,
-  Modal,
-  Input,
-  Label,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import {Row, Col, Card, Form, CardBody, Button, Badge, Modal, Input, Label, ModalBody, ModalHeader} from "reactstrap";
 
 // ** Third Party Components
 import Swal from "sweetalert2";
@@ -33,6 +20,10 @@ import { selectThemeColors } from "@utils";
 // ** Styles
 import "@styles/react/libs/react-select/_react-select.scss";
 import { Sortable } from "sortablejs";
+
+import {PersianDateConverter} from '../../../utility/helper/PersianDateConverter'
+
+
 
 const roleColors = {
   editor: "light-info",
@@ -91,13 +82,13 @@ const NewsInfoCard = ({ selectedNews }) => {
 
   // ** render user img
   const renderUserImg = () => {
-    if (selectedNews !== null && selectedNews?.imageAddress) {
+    if (selectedNews !== null && selectedNews?.currentImageAddress) {
       return (
         <img
           height="230"
           width="300"
           alt="user-avatar"
-          src={selectedNews?.imageAddress || "-"}
+          src={selectedNews?.currentImageAddress || "-"}
           className="img-fluid rounded mt-1 mb-1"
         />
       );
@@ -216,17 +207,8 @@ const NewsInfoCard = ({ selectedNews }) => {
                 <MessageSquare className="font-medium-2" />
               </Badge>
               <div className="ms-75">
-                <h4 className="mb-0">{selectedNews?.courseCommentTotal}</h4>
+                <h4 className="mb-0">{selectedNews?.newsComment.length}</h4>
                 <small>تعداد کامنت</small>
-              </div>
-            </div>
-            <div className="d-flex align-items-start">
-              <Badge color="light-primary" className="rounded p-75">
-                <TrendingUp className="font-medium-2" />
-              </Badge>
-              <div className="ms-75">
-                <h4 className="mb-0">{selectedNews?.capacity || "-"}</h4>
-                <small>ظرفیت</small>
               </div>
             </div>
           </div>
@@ -236,11 +218,11 @@ const NewsInfoCard = ({ selectedNews }) => {
               <ul className="list-unstyled">
                 <li className="mb-75">
                   <span className="fw-bolder me-25">زمان شروع :</span>
-                  <span>{selectedNews?.insertDate}</span>
+                  <span>{PersianDateConverter(selectedNews?.insertDate)}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">آخرین تغییرات :</span>
-                  <span>{selectedNews?.updateDate}</span>
+                  <span>{PersianDateConverter(selectedNews?.updateDate)}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">عنوان گوگل :</span>
@@ -254,7 +236,7 @@ const NewsInfoCard = ({ selectedNews }) => {
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">توضیحات جزئی :</span>
-                  {/* <span>{selectedNews?.cost.toLocaleString()}تومان</span> */}
+                  <span>{selectedNews?.miniDescribe}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">توضیحات :</span>
@@ -262,11 +244,11 @@ const NewsInfoCard = ({ selectedNews }) => {
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">امتیاز :</span>
-                  <span>{selectedNews?.teacherName}</span>
+                  <span>{selectedNews?.newsRate.avg.toFixed(1)}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">لایک ها :</span>
-                  <span>{selectedNews?.teacherName}</span>
+                  <span>{selectedNews?.newsRate.count}</span>
                 </li>
               </ul>
             ) : null}

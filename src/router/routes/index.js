@@ -7,7 +7,7 @@ import VerticalLayout from "@src/layouts/VerticalLayout";
 import HorizontalLayout from "@src/layouts/HorizontalLayout";
 import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper";
 import NewsList from "../../pages/NewsManagement/NewsList/NewsList";
-import NewsDetail from "../../pages/NewsManagement/NewsDetail/NewsDetail";
+import NewsDetail from "../../pages/NewsManagement/NewsList/view";
 import CreateNews from "../../pages/NewsManagement/CreateNews/CreateNews";
 import UserHomeWorks from '../../pages/UserHomeWorks/UserHomeWorks'
 

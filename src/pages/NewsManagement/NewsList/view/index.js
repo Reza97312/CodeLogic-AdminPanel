@@ -1,29 +1,35 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import getAdminNewsComments from '../../../../core/services/api/get/getAdminNewsComments'
+import getAdminNewsComments from '../../../../core/services/api/get/News/getAdminNewsComments'
 import { Row, Col, Alert } from "reactstrap";
 import { useQuery } from "@tanstack/react-query";
 import "@styles/react/apps/app-users.scss";
-import getNews from "../../../../core/services/api/get/getNews";
+import getNewsDetail from "../../../../core/services/api/get/News/getNewsDetail";
 import NewsCardInfo from "../../../../components/news/NewsCardInfo/NewsCardInfo";
 import loading from "../../../../assets/images/A/loading.gif";
 import Tabs from "./Tabs";
 import store from "../store";
 
-const NewsView = () => {
+
+
+const NewsDetail = () => {
   
+
   const { id } = useParams();
-  const { data: newsData = {}, isPending } = useQuery({
-    queryKey: ["GETNEWS"],
-    queryFn: () => getNews(id),
+  const { data: selectedNews, isPending } = useQuery({
+    queryKey: ["GETNEWSDETAIL"],
+    queryFn: () => getNewsDetail(id),
   });
+
 
   const { data: newsCommentsData } = useQuery({
     queryKey: ["GETADMINNEWSCOMMENTS"],
     queryFn: () => getAdminNewsComments(id),
   });
 
+
   const [active, setActive] = useState("1");
+
 
   const toggleTab = (tab) => {
     if (active !== tab) {
@@ -31,14 +37,15 @@ const NewsView = () => {
     }
   };
 
-  return newsData ? (
+
+  return selectedNews ? (
     <div className="app-user-view">
       <Row>
         <Col xl="4" lg="5" xs={{ order: 1 }} md={{ order: 0, size: 5 }}>
           {isPending ? (
             <img className="mx-auto" src={loading} />
           ) : (
-            <NewsCardInfo selectedNews={newsData} />
+            <NewsCardInfo selectedNews={selectedNews.detailsNewsDto} />
           )}
         </Col>
         <Col xl="8" lg="7" xs={{ order: 0 }} md={{ order: 1, size: 7 }}>
@@ -61,4 +68,4 @@ const NewsView = () => {
     </Alert>
   );
 };
-export default NewsView;
+export default NewsDetail;

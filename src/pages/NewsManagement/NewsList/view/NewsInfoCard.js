@@ -58,7 +58,7 @@ const languageOptions = [
 
 const MySwal = withReactContent(Swal)
 
-const UserInfoCard = ({ selectedUser }) => {
+const NewsInfoCard = ({ selectedUser }) => {
   // ** State
   const [show, setShow] = useState(false)
 
@@ -420,4 +420,4 @@ const UserInfoCard = ({ selectedUser }) => {
   )
 }
 
-export default UserInfoCard
+export default NewsInfoCard

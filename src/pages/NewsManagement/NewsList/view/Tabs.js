@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import { Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap'
 import { User, Lock, Bookmark, Bell, Link } from 'react-feather'
-import NewsProjectsList from './NewsProjectsList'
+import NewsProjectsList from './NewsComments'
 
 const UserTabs = ({ active, toggleTab, newsCommentsData, id}) => {
   return (

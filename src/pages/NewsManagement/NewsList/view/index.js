@@ -5,7 +5,7 @@ import { Row, Col, Alert } from "reactstrap";
 import { useQuery } from "@tanstack/react-query";
 import "@styles/react/apps/app-users.scss";
 import getNewsDetail from "../../../../core/services/api/get/News/getNewsDetail";
-import NewsCardInfo from "../../../../components/news/NewsCardInfo/NewsCardInfo";
+import NewsCardInfo from "./NewsCardInfo";
 import loading from "../../../../assets/images/A/loading.gif";
 import Tabs from "./Tabs";
 import store from "../store";
@@ -59,10 +59,10 @@ const NewsDetail = () => {
     </div>
   ) : (
     <Alert color="danger">
-      <h4 className="alert-heading">User not found</h4>
+      <h4 className="alert-heading">خبر یافت نشد</h4>
       <div className="alert-body">
-        User with id: {id} doesn't exist. Check list of all Users:{" "}
-        <Link to="/apps/user/list">Users List</Link>
+        خبر با آیدی{id} یافت نشد، لطفا به لیست اخبار بازگردید 
+        <Link to="/news-list">لیست اخبار</Link>
       </div>
     </Alert>
   );

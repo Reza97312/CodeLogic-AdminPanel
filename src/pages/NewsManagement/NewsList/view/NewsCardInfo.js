@@ -1,6 +1,6 @@
 // ** React Imports
 import { useState, Fragment } from "react";
-import loading from "../../../assets/images/A/loading.gif";
+import loading from "../../../../assets/images/A/loading.gif";
 // ** Reactstrap Imports
 import {Row, Col, Card, Form, CardBody, Button, Badge, Modal, Input, Label, ModalBody, ModalHeader} from "reactstrap";
 
@@ -21,7 +21,7 @@ import { selectThemeColors } from "@utils";
 import "@styles/react/libs/react-select/_react-select.scss";
 import { Sortable } from "sortablejs";
 
-import {PersianDateConverter} from '../../../utility/helper/PersianDateConverter'
+import {PersianDateConverter} from '../../../../utility/helper/PersianDateConverter'
 
 
 

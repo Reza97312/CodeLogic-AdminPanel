@@ -7,7 +7,7 @@ import '@styles/react/libs/tables/react-dataTable-component.scss'
 import getUserWithId from '../../../../core/services/api/get/getUserWithId'
 
 
-const NewsProjectsList = ({newsCommentsData}) => {
+const NewsComments = ({newsCommentsData}) => {
 
   const { data: userData, isPending } = useQuery({
     queryKey: ["GETUSERWITHID"],
@@ -80,4 +80,4 @@ const NewsProjectsList = ({newsCommentsData}) => {
   )
 }
 
-export default NewsProjectsList
+export default NewsComments

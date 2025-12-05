@@ -106,7 +106,7 @@ const CustomHeader = ({store,toggleSidebar,handlePerPage,rowsPerPage,handleFilte
               type="text"
               value={searchTerm}
               onChange={(e) => {handleFilter(e.target.value); onChange(e.target.value); onSearchEnter(e.target.value)}}
-              placeholder="نام خبر..."
+              placeholder="نام خبر را وارد کنید..."
             />
           </div>
           <div className="d-flex align-items-center table-header-actions">

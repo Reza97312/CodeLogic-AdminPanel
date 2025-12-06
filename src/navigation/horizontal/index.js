@@ -1,5 +1,16 @@
-import {Mail, Home, Airplay, Circle, User, List, Paperclip, FilePlus, Archive, CheckSquare} from "react-feather";
-
+import {
+  Mail,
+  Home,
+  Airplay,
+  Circle,
+  User,
+  List,
+  Paperclip,
+  FilePlus,
+  Archive,
+  CheckSquare,
+  Calendar,
+} from "react-feather";
 
 export default [
   {
@@ -61,10 +72,36 @@ export default [
     icon: <User size={20} />,
     navLink: "/user-management",
   },
+
+  {
+    id: "schedual",
+    title: "مدیریت بازه های زمانی ",
+    icon: <Calendar size={12} />,
+    children: [
+      {
+        id: "teacherschedual",
+        icon: <Circle size={8} />,
+        title: "بازه زمانی شما",
+        navLink: "/courses-management",
+      },
+      {
+        id: "adminschedual",
+        icon: <Circle size={8} />,
+        title: "بازه زمانی ادمین",
+        navLink: "/courses/create",
+      },
+      {
+        id: "studentschedual",
+        icon: <Circle size={8} />,
+        title: "بازه زمانی کاربر",
+        navLink: "/courses/reserves",
+      },
+    ],
+  },
   {
     id: "userTasks",
     title: "تسک ها",
-    icon: <CheckSquare size={12}/>,
-    navLink: "/user-homeworks" 
-  }
+    icon: <CheckSquare size={12} />,
+    navLink: "/user-homeworks",
+  },
 ];

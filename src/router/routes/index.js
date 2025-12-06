@@ -9,7 +9,7 @@ import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper";
 import NewsList from "../../pages/NewsManagement/NewsList/NewsList";
 import NewsDetail from "../../pages/NewsManagement/NewsList/view";
 import CreateNews from "../../pages/NewsManagement/CreateNews/CreateNews";
-import UserHomeWorks from '../../pages/UserHomeWorks/UserHomeWorks'
+import UserHomeWorks from "../../pages/UserHomeWorks/UserHomeWorks";
 
 // ** Route Components
 import PublicRoute from "@components/routes/PublicRoute";
@@ -23,7 +23,6 @@ import CreateCourse from "../../pages/CourseManagement/CreateCourse/CreateCourse
 import CourseGroups from "../../pages/CourseManagement/CourseGroups/CourseGroups";
 import path from "path";
 import ReservedCourses from "../../pages/CourseManagement/ReservedCourse/ReservedCourses";
-
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -47,6 +46,13 @@ const UserManagement = lazy(() =>
 );
 const EditUser = lazy(() => import("../../pages/EditUser/EditUser"));
 const UserDetails = lazy(() => import("../../pages/UserManagement/view"));
+const StudentSchedual = lazy(() =>
+  import("../../pages/Schedual/StudentSchedual")
+);
+const TeacherSchedual = lazy(() =>
+  import("../../pages/Schedual/TeacherSchedual")
+);
+const AdminSchedual = lazy(() => import("../../pages/Schedual/AdminSchedual"));
 
 // ** Merge Routes
 const Routes = [
@@ -54,6 +60,18 @@ const Routes = [
     path: "/",
     index: true,
     element: <Navigate replace to={DefaultRoute} />,
+  },
+  {
+    path: "/schedual/admin",
+    element: <AdminSchedual />,
+  },
+  {
+    path: "/schedual/teacher",
+    element: <TeacherSchedual />,
+  },
+  {
+    path: "/schedual/student",
+    element: <StudentSchedual />,
   },
   {
     path: "/edituser/:id",
@@ -137,7 +155,7 @@ const Routes = [
   },
   {
     path: "/user-homeworks",
-    element: <UserHomeWorks/>
+    element: <UserHomeWorks />,
   },
   {
     path: "*",

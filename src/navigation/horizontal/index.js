@@ -7,6 +7,7 @@ import {
   Paperclip,
   FilePlus,
   Archive,
+  MessageSquare,
 } from "react-feather";
 
 export default [
@@ -69,10 +70,17 @@ export default [
     icon: <User size={20} />,
     navLink: "/user-management",
   },
+
+  {
+    id: "CM",
+    title: " مدیریت کامنت ها",
+    icon: <MessageSquare size={12} />,
+    navLink: "/CommentManagement",
+  },
   {
     id: "userTasks",
     title: "تسک ها",
-    icon: <Circle size={12}/>,
-    navLink: "/user-homeworks" 
-  }
+    icon: <Circle size={12} />,
+    navLink: "/user-homeworks",
+  },
 ];

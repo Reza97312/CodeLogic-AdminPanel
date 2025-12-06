@@ -18,7 +18,7 @@ const AcceptCmModal = ({ commentId, toggleEditModal, isOpen }) => {
     onSuccess: (data) => {
       toast.success(data.message);
       toggleEditModal(false);
-      queryClient.invalidateQueries(["GETCOURSECOMMENT"]);
+      queryClient.invalidateQueries(["GETCOURSECOMMENT", "GETALLCM"]);
     },
   });
   return (

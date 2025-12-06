@@ -17,7 +17,7 @@ const DeleteCmModal = ({ toggleDeleteModal, isOpen, commentId }) => {
     onSuccess: (data) => {
       toast.success(data.message);
       toggleDeleteModal(false);
-      queryClient.invalidateQueries(["GETCOURSECOMMENT"]);
+      queryClient.invalidateQueries(["GETCOURSECOMMENT", "GETALLCM"]);
     },
   });
   return (

@@ -9,7 +9,7 @@ import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper";
 import NewsList from "../../pages/NewsManagement/NewsList/NewsList";
 import NewsDetail from "../../pages/NewsManagement/NewsDetail/NewsDetail";
 import CreateNews from "../../pages/NewsManagement/CreateNews/CreateNews";
-import UserHomeWorks from '../../pages/UserHomeWorks/UserHomeWorks'
+import UserHomeWorks from "../../pages/UserHomeWorks/UserHomeWorks";
 
 // ** Route Components
 import PublicRoute from "@components/routes/PublicRoute";
@@ -23,7 +23,7 @@ import CreateCourse from "../../pages/CourseManagement/CreateCourse/CreateCourse
 import CourseGroups from "../../pages/CourseManagement/CourseGroups/CourseGroups";
 import path from "path";
 import ReservedCourses from "../../pages/CourseManagement/ReservedCourse/ReservedCourses";
-
+import CommentManagement from "../../pages/commentManagement/CommentManagement";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -137,7 +137,11 @@ const Routes = [
   },
   {
     path: "/user-homeworks",
-    element: <UserHomeWorks/>
+    element: <UserHomeWorks />,
+  },
+  {
+    path: "/CommentManagement",
+    element: <CommentManagement />,
   },
   {
     path: "*",

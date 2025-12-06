@@ -8,6 +8,7 @@ import {
   Paperclip,
   FilePlus,
   Archive,
+  CheckSquare,
   MessageSquare,
 } from "react-feather";
 
@@ -80,7 +81,7 @@ export default [
   {
     id: "userTasks",
     title: "تسک ها",
-    icon: <Circle size={12} />,
+    icon: <CheckSquare size={12} />,
     navLink: "/user-homeworks",
   },
 ];

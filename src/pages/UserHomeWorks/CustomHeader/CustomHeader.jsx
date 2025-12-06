@@ -90,10 +90,7 @@ const CustomHeader = ({store,toggleSidebar,handlePerPage,rowsPerPage,handleFilte
           xl="6"
           className="d-flex align-items-sm-center justify-content-xl-end justify-content-start flex-xl-nowrap flex-wrap flex-sm-row flex-column pe-xl-1 p-0 mt-xl-0 mt-1"
         >
-          <button 
-          onClick={(e) => {handleSearch(e.target.value)}} 
-          className="d-flex align-items-center mb-sm-0 mb-1 me-1 py-1 px-1"
-          style={{ border: "none", boxShadow: "none", backgroundColor: "#FFFFFF" }}>
+          <div className="d-flex align-items-center me-1">
             <label
               style={{ fontSize: "17px" }}
               className="mb-0 text-nowrap"
@@ -109,8 +106,7 @@ const CustomHeader = ({store,toggleSidebar,handlePerPage,rowsPerPage,handleFilte
               onChange={(e) => {handleFilter(e.target.value); handleChange(e)}}
               placeholder="نام تسک..."
             />
-          </button>
-
+          </div>
           <div className="d-flex align-items-center table-header-actions">
             <Button
               className="add-new-user"

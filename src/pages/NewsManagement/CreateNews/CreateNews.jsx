@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import Wizard from '../../../components/news/createNewsForm'
-import NewsDetails from '../../NewsManagement/NewsDetail/NewsDetail'
+import NewsDetail from '../../NewsManagement/NewsList/view'
 
 
 const WizardVertical = () => {
@@ -14,7 +14,7 @@ const WizardVertical = () => {
       id: 'account-details',
       title: 'Account Details',
       subtitle: 'Enter Your Account Details.',
-      content: <NewsDetails stepper={stepper} type='wizard-vertical' />
+      content: <NewsDetail stepper={stepper} type='wizard-vertical' />
     },
   ]
 

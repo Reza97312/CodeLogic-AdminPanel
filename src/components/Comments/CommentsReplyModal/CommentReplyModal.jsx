@@ -23,7 +23,11 @@ const CommentReplyModal = ({
   });
 
   return (
-    <Modal className="modal-lg" isOpen={isOpen} toggle={toggleReplyModal}>
+    <Modal
+      className=" modal-dialog-centered modal-lg"
+      isOpen={isOpen}
+      toggle={() => toggleReplyModal(false)}
+    >
       <ModalHeader>ریپلای ها</ModalHeader>
       <ModalBody>
         {isPending ? (

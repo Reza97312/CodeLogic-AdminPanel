@@ -10,6 +10,7 @@ import {
   UserPlus,
   Check,
   X,
+  Eye,
 } from "react-feather";
 
 import {
@@ -21,12 +22,12 @@ import {
 } from "reactstrap";
 import { toast } from "react-toastify";
 
-const renderCourseImage = (row) => {
-  if (row.user.currentPictureAddress) {
+const renderUserImage = (row) => {
+  if (row.pictureAddress) {
     return (
       <Avatar
         className="me-1"
-        img={row.user.currentPictureAddress}
+        img={row.pictureAddress}
         width="32"
         height="32"
       />
@@ -37,7 +38,7 @@ const renderCourseImage = (row) => {
       initials
       className="me-1"
       color="light-primary"
-      content={row.user.fName || "Course"}
+      content={row.userFullName || "Course"}
     />
   );
 };
@@ -45,7 +46,7 @@ const statusObj = {
   true: "light-success",
   false: "light-secondary",
 };
-export const CourseCommentsCol = ({
+export const CommentsReplyCol = ({
   toggleDeleteModal,
   handleCmId,
   toggleEditModal,
@@ -54,20 +55,23 @@ export const CourseCommentsCol = ({
     name: <span style={{ fontSize: "14px" }}>نام کاربر</span>,
     minWidth: "300px",
     cell: (row) => (
-      <div className="d-flex flex-column">
-        <span className="fw-bolder">{row.userFullName}</span>
+      <div className="d-flex align-items-center">
+        {renderUserImage(row)}
+        <div className="d-flex flex-column">
+          <span className="fw-bolder">{row.author}</span>
+        </div>
       </div>
     ),
   },
 
   {
-    name: <span style={{ fontSize: "14px" }}>عنوان کامنت</span>,
+    name: <span style={{ fontSize: "14px" }}>عنوان ریپلای</span>,
     minWidth: "150px",
-    cell: (row) => <span className="text-capitalize">{row.commentTitle}</span>,
+    cell: (row) => <span className="text-capitalize">{row.title}</span>,
   },
 
   {
-    name: <span style={{ fontSize: "14px" }}>متن کامنت</span>,
+    name: <span style={{ fontSize: "14px" }}>متن ریپلای</span>,
     minWidth: "150px",
     cell: (row) => (
       <div className="d-flex flex-column text-truncate">

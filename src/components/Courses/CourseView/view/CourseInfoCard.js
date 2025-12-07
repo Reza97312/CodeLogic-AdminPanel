@@ -26,7 +26,7 @@ import withReactContent from "sweetalert2-react-content";
 
 // ** Custom Components
 import Avatar from "@components/avatar";
-
+import DOMPurify from "dompurify";
 // ** Utils
 import { selectThemeColors } from "@utils";
 
@@ -184,7 +184,7 @@ const CourseInfoCard = ({ selectedCourse, toggleTechModal }) => {
       }
     });
   };
-
+  const cleaningDescribe = DOMPurify.sanitize(selectedCourse?.describe);
   return (
     <Fragment>
       <Card>
@@ -285,9 +285,14 @@ const CourseInfoCard = ({ selectedCourse, toggleTechModal }) => {
                   <span className="fw-bolder me-25">قیمت دوره :</span>
                   <span>{selectedCourse?.cost.toLocaleString()}تومان</span>
                 </li>
-                <li className="mb-75">
+                <li style={{ display: "flex", gap: "4px" }} className="mb-15">
                   <span className="fw-bolder me-25">توضیحات :</span>
-                  <span>{selectedCourse?.describe}</span>
+                  <span>
+                    <div
+                      style={{ display: "inline" }}
+                      dangerouslySetInnerHTML={{ __html: cleaningDescribe }}
+                    />
+                  </span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">نام استاد : </span>
@@ -298,13 +303,18 @@ const CourseInfoCard = ({ selectedCourse, toggleTechModal }) => {
           </div>
           <div
             className="d-flex justify-content-center  "
-            style={{ gap: "10px" }}
+            style={{ gap: "10px", marginTop: "20px" }}
           >
-            <Button onClick={() => setEditStatus(true)} color="warning">
+            <Button
+              style={{ lineHeight: "18px" }}
+              onClick={() => setEditStatus(true)}
+              color="warning"
+            >
               تغییر وضعیت دوره
             </Button>
             <Button
               color="primary"
+              style={{ lineHeight: "18px" }}
               onClick={() =>
                 navigate("/courses/create", {
                   state: {
@@ -316,7 +326,11 @@ const CourseInfoCard = ({ selectedCourse, toggleTechModal }) => {
             >
               ویرایش دوره
             </Button>
-            <Button onClick={() => toggleTechModal(true)} color="info">
+            <Button
+              style={{ lineHeight: "19px" }}
+              onClick={() => toggleTechModal(true)}
+              color="info"
+            >
               افزودن تکنولوژی
             </Button>
           </div>

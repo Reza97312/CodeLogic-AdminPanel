@@ -36,6 +36,7 @@ const CreateGroupModal = ({
   toggleCreateGroupModal,
   EditGroupData,
 }) => {
+  const queryClient = useQueryClient();
   const { mutate: CreateGroup } = useMutation({
     mutationKey: ["CREATEGROUP"],
     mutationFn: (payload) => CreateCourseG(payload),
@@ -64,8 +65,6 @@ const CreateGroupModal = ({
       queryClient.invalidateQueries(["COURSEGROUPS"]);
     },
   });
-
-  const queryClient = useQueryClient();
 
   return (
     <>

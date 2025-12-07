@@ -6,7 +6,7 @@ import bahr from "../assets/images/A/Bahr.png";
 //Template config options
 const themeConfig = {
   app: {
-    appName: "Bahr Academy",
+    appName: "آکادمی بحر",
     appLogoImage: bahr,
   },
   layout: {

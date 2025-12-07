@@ -72,7 +72,7 @@ const Login = () => {
               style={{ marginTop: "6px" }}
               className="brand-text text-primary ms-1"
             >
-              Bahr Academy
+              آکادمی بحر
             </h2>
           </div>
         </Link>

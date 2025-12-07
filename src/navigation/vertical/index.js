@@ -10,6 +10,7 @@ import {
   Archive,
   CheckSquare,
   MessageSquare,
+  Clipboard,
 } from "react-feather";
 
 export default [
@@ -30,6 +31,13 @@ export default [
         title: "لیست دوره ها",
         permissions: ["admin", "editor"],
         navLink: "/courses-management",
+      },
+      {
+        id: "CourseLevels",
+        icon: <Clipboard size={8} />,
+        title: "مدیریت سطح های دوره",
+        permissions: ["admin", "editor"],
+        navLink: "/CourseLevels",
       },
       {
         id: "createCourse",

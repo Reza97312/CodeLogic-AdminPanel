@@ -3,6 +3,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import Select from "react-select";
 import loading from "../../../assets/images/A/loading.gif";
+import CreateStatus from "./CreateStatus.jsx";
 import {
   Card,
   CardHeader,
@@ -53,6 +54,8 @@ const CourseStatus = ({ detailsData, isOpen, toggleStatus }) => {
       }
     },
   });
+  const [openCreateStatus, setOpenCreateStatus] = useState(false);
+  const toggleCreate = (val) => setOpenCreateStatus(val);
   return (
     <>
       <Modal
@@ -116,7 +119,12 @@ const CourseStatus = ({ detailsData, isOpen, toggleStatus }) => {
                     >
                       انصراف
                     </Button>
-
+                    <Button
+                      onClick={() => setOpenCreateStatus(true)}
+                      color="info"
+                    >
+                      ساخت وضعیت
+                    </Button>
                     <Button
                       color="primary"
                       type="submit"
@@ -136,6 +144,9 @@ const CourseStatus = ({ detailsData, isOpen, toggleStatus }) => {
           </div>
         </ModalBody>
       </Modal>
+      {openCreateStatus && (
+        <CreateStatus isOpen={openCreateStatus} toggle={toggleCreate} />
+      )}
     </>
   );
 };

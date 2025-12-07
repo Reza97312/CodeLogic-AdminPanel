@@ -16,6 +16,7 @@ import Select from "react-select";
 import { selectThemeColors } from "@utils";
 import { AddCourseTech } from "../../../core/services/api/post/Courses/AddCourseTech";
 import { toast } from "react-toastify";
+import CreateTechModal from "./CreateTechModal.jsx";
 const AddTechModal = ({ isOpen, toggleTechModal, initialData, courseId }) => {
   const queryClient = useQueryClient();
   const { data: techData = [] } = useQuery({
@@ -74,49 +75,56 @@ const AddTechModal = ({ isOpen, toggleTechModal, initialData, courseId }) => {
       toast.error(err.response?.data?.message);
     },
   });
-
+  const [openCreateTech, setOpenCreateTech] = useState(false);
+  const toggleCreate = (val) => setOpenCreateTech(val);
   return (
-    <Modal
-      isOpen={isOpen}
-      toggle={() => toggleTechModal(false)}
-      className="modal-dialog-centered"
-      style={{ maxWidth: "450px" }}
-    >
-      <ModalBody>
-        <p className="mb-1 pt-2 text-center fw-bold fs-5">
-          افزودن تکنولوژی به دوره
-        </p>
+    <>
+      <Modal
+        isOpen={isOpen}
+        toggle={() => toggleTechModal(false)}
+        className="modal-dialog-centered"
+        style={{ maxWidth: "450px" }}
+      >
+        <ModalBody>
+          <p className="mb-1 pt-2 text-center fw-bold fs-5">
+            افزودن تکنولوژی به دوره
+          </p>
 
-        <div className="mb-4">
-          <Label className="form-label fw-semibold">تکنولوژی ها</Label>
-          <Select
-            isMulti
-            options={techOptions}
-            className="react-select"
-            placeholder="تکنولوژی خود را انتخاب کنید..."
-            classNamePrefix="select"
-            value={selectedValue}
-            onChange={(val) => setSelectedValue(val)}
-            theme={selectThemeColors}
-            noOptionsMessage={() =>
-              selectedValue.length === techOptions.length
-                ? "تمام تکنولوژی موجود انتخاب شده‌اند"
-                : "هیچ گزینه‌ای موجود نیست"
-            }
-          />
-        </div>
-      </ModalBody>
-      <ModalFooter className="d-flex justify-content-between">
-        <Button
-          color="secondary"
-          outline
-          onClick={() => toggleTechModal(false)}
-        >
-          انصراف
-        </Button>
-        <Button onClick={() => AddTech()}>ارسال</Button>
-      </ModalFooter>
-    </Modal>
+          <div className="mb-4">
+            <Label className="form-label fw-semibold">تکنولوژی ها</Label>
+            <Select
+              isMulti
+              options={techOptions}
+              className="react-select"
+              placeholder="تکنولوژی خود را انتخاب کنید..."
+              classNamePrefix="select"
+              value={selectedValue}
+              onChange={(val) => setSelectedValue(val)}
+              theme={selectThemeColors}
+              noOptionsMessage={() =>
+                selectedValue.length === techOptions.length
+                  ? "تمام تکنولوژی موجود انتخاب شده‌اند"
+                  : "هیچ گزینه‌ای موجود نیست"
+              }
+            />
+          </div>
+        </ModalBody>
+        <ModalFooter className="d-flex justify-content-between">
+          <Button color="danger" onClick={() => toggleTechModal(false)}>
+            انصراف
+          </Button>
+          <Button color="info" onClick={() => setOpenCreateTech(true)}>
+            ساخت تکنولوژی
+          </Button>
+          <Button color="primary" onClick={() => AddTech()}>
+            ارسال
+          </Button>
+        </ModalFooter>
+      </Modal>
+      {openCreateTech && (
+        <CreateTechModal isOpen={openCreateTech} toggle={toggleCreate} />
+      )}
+    </>
   );
 };
 

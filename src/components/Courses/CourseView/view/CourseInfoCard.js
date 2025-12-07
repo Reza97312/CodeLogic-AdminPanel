@@ -285,7 +285,7 @@ const CourseInfoCard = ({ selectedCourse, toggleTechModal }) => {
                   <span className="fw-bolder me-25">قیمت دوره :</span>
                   <span>{selectedCourse?.cost.toLocaleString()}تومان</span>
                 </li>
-                <li style={{ display: "flex", gap: "4px" }} className="mb-15">
+                <li style={{ display: "flex", gap: "4px" }} className="mb-75">
                   <span className="fw-bolder me-25">توضیحات :</span>
                   <span>
                     <div
@@ -310,7 +310,7 @@ const CourseInfoCard = ({ selectedCourse, toggleTechModal }) => {
               onClick={() => setEditStatus(true)}
               color="warning"
             >
-              تغییر وضعیت دوره
+              مدیریت وضعیت دوره
             </Button>
             <Button
               color="primary"
@@ -331,7 +331,7 @@ const CourseInfoCard = ({ selectedCourse, toggleTechModal }) => {
               onClick={() => toggleTechModal(true)}
               color="info"
             >
-              افزودن تکنولوژی
+              مدیریت تکنولوژی دوره
             </Button>
           </div>
         </CardBody>

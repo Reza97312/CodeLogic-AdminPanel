@@ -84,7 +84,7 @@ const AddAssistanceModal = ({
             className="mb-1 pt-2 text-center fw-bold fs-5"
             style={{ letterSpacing: "0.5px" }}
           >
-            افزودن منتور
+            {EditData ? "ویرایش" : "افزودن"} منتور
           </p>
 
           <div className="mb-4">

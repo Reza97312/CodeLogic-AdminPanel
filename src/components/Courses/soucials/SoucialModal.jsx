@@ -74,7 +74,7 @@ const SoucialModal = ({ courseId, isOpen, toggleSocialModal, EditData }) => {
             className="mb-1 pt-2 text-center fw-bold fs-5"
             style={{ letterSpacing: "0.5px" }}
           >
-            ساخت گروه مجازی
+            {EditData ? "ویرایش" : "ساخت"} گروه مجازی
           </p>
 
           <div className="mb-4">

@@ -31,6 +31,13 @@ export default [
         navLink: "/courses-management",
       },
       {
+        id: "CourseLevels",
+        icon: <Clipboard size={8} />,
+        title: "مدیریت سطح های دوره",
+        permissions: ["admin", "editor"],
+        navLink: "/CourseLevels",
+      },
+      {
         id: "createCourse",
         icon: <FilePlus size={8} />,
         title: "ساخت دوره",

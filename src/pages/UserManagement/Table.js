@@ -180,7 +180,6 @@ const UsersList = ({ users = [], isPending, roles = [] }) => {
     },
   });
 
-  // States
   const [openModal, setOpenModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 

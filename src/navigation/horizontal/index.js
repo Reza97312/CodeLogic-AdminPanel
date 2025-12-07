@@ -1,8 +1,9 @@
 import {
   Mail,
   Home,
-  User,
+  Airplay,
   Circle,
+  User,
   List,
   Paperclip,
   FilePlus,
@@ -77,6 +78,31 @@ export default [
     title: " مدیریت کامنت ها",
     icon: <MessageSquare size={12} />,
     navLink: "/CommentManagement",
+  },
+  {
+    id: "schedual",
+    title: "مدیریت بازه های زمانی ",
+    icon: <Calendar size={12} />,
+    children: [
+      {
+        id: "teacherschedual",
+        icon: <Circle size={8} />,
+        title: "بازه زمانی شما",
+        navLink: "/courses-management",
+      },
+      {
+        id: "adminschedual",
+        icon: <Circle size={8} />,
+        title: "بازه زمانی ادمین",
+        navLink: "/courses/create",
+      },
+      {
+        id: "studentschedual",
+        icon: <Circle size={8} />,
+        title: "بازه زمانی کاربر",
+        navLink: "/courses/reserves",
+      },
+    ],
   },
   {
     id: "userTasks",

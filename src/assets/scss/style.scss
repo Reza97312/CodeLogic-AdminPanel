@@ -33,6 +33,9 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
   src: url("../Fonts/Estedad-Bold.woff2") format("woff2");
   font-weight: 700;
 }
+.font-toast {
+  font-family: Estedad !important;
+}
 .bs-stepper-content {
   max-height: 65vh;
   overflow-y: auto;
@@ -50,4 +53,14 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
     border-radius: 4px;
     border: 2px solid #f1f1f1;
   }
+}
+.btn-hover-fill.btn-outline-success:hover {
+  background-color: var(--bs-success) !important;
+  color: #fff !important;
+  border-color: var(--bs-success) !important;
+}
+.btn-hover-fillr.btn-outline-danger:hover {
+  background-color: var(--bs-danger) !important;
+  color: #fff !important;
+  border-color: var(--bs-danger) !important;
 }

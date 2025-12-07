@@ -48,6 +48,13 @@ const UserManagement = lazy(() =>
 );
 const EditUser = lazy(() => import("../../pages/EditUser/EditUser"));
 const UserDetails = lazy(() => import("../../pages/UserManagement/view"));
+const StudentSchedual = lazy(() =>
+  import("../../pages/Schedual/StudentSchedual")
+);
+const TeacherSchedual = lazy(() =>
+  import("../../pages/Schedual/TeacherSchedual")
+);
+const AdminSchedual = lazy(() => import("../../pages/Schedual/AdminSchedual"));
 
 // ** Merge Routes
 const Routes = [
@@ -55,6 +62,18 @@ const Routes = [
     path: "/",
     index: true,
     element: <Navigate replace to={DefaultRoute} />,
+  },
+  {
+    path: "/schedual/admin",
+    element: <AdminSchedual />,
+  },
+  {
+    path: "/schedual/teacher",
+    element: <TeacherSchedual />,
+  },
+  {
+    path: "/schedual/student",
+    element: <StudentSchedual />,
   },
   {
     path: "/edituser/:id",

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import getNews from '../../../core/services/api/get/News/getNews'
+import getListNewsCategory from '../../../core/services/api/get/News/getListNewsCategory'
 import { Fragment, useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import { columns } from "./columns";
@@ -44,10 +45,15 @@ const NewsList = () => {
       Query: searchQuery,
       SortType: "insertDate", SortingCol: sortingCol,
       newsCatregoryName: category
-    }),
+    })
   });
 
+  const {data: categoryData} = useQuery({
+    queryKey: ['GETLISTNEWSCATEGORY'],
+    queryFn: () => getListNewsCategory({
 
+    })
+  })
 
 
 
@@ -126,19 +132,16 @@ const NewsList = () => {
   }, [dispatch, store.data.length, sort, sortColumn, currentPage]);
 
   // ** User filter options
-  const roleOptions = [
-    { value: "", label: "دسته بندی را انتخاب کنید" },
-    { value: "admin", label: "Admin" },
-    { value: "author", label: "Author" },
-    { value: "editor", label: "Editor" },
-    { value: "maintainer", label: "Maintainer" },
-    { value: "subscriber", label: "Subscriber" },
-  ];
+  const roleOptions = categoryData?.map(item => ({
+    value: item.id,
+    label: item.categoryName
+  })) || [];
+
 
   const planOptions = [
     { value: "", label: "مرتب سازی" },
-    { value: "basic", label: "جدیدترین" },
-    { value: "company", label: "قدیمی ترین" },
+    { value: "ASC", label: "جدیدترین" },
+    { value: "DESC", label: "قدیمی ترین" },
   ];
 
   const statusOptions = [
@@ -310,7 +313,7 @@ const NewsList = () => {
                       currentPlan: currentPlan.value,
                     })
                   );
-                  handleSetCategory(catFilter)
+                  handleSetCategory(data.value)
                 }}
               />
             </Col>

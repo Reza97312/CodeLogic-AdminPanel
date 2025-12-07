@@ -10,6 +10,7 @@ import {
   Archive,
   CheckSquare,
   MessageSquare,
+  Calendar,
   Clipboard,
 } from "react-feather";
 
@@ -79,6 +80,32 @@ export default [
     title: "مدیریت کاربران",
     icon: <User size={20} />,
     navLink: "/user-management",
+  },
+
+  {
+    id: "schedual",
+    title: "مدیریت بازه های زمانی ",
+    icon: <Calendar size={12} />,
+    children: [
+      {
+        id: "teacherschedual",
+        icon: <Circle size={8} />,
+        title: "بازه زمانی شما",
+        navLink: "/schedual/teacher",
+      },
+      {
+        id: "adminschedual",
+        icon: <Circle size={8} />,
+        title: "بازه زمانی ادمین",
+        navLink: "/schedual/admin",
+      },
+      {
+        id: "studentschedual",
+        icon: <Circle size={8} />,
+        title: "بازه زمانی کاربر",
+        navLink: "/schedual/student",
+      },
+    ],
   },
   {
     id: "CM",

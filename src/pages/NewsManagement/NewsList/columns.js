@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Avatar from "@components/avatar";
 import { MoreVertical, FileText, Trash2 } from "react-feather";
 import { Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem,} from "reactstrap";
+import { PersianDateConverter } from "../../../utility/helper/PersianDateConverter";
 
 
 const renderImage = (row) => {
@@ -51,7 +52,7 @@ export const columns = ({ handleOpenModal, toggleDeleteModal, handleNewsId }) =>
     minWidth: "180px",
     sortable: true,
     selector: (row) => row.insertDate,
-    cell: (row) => <span>{row.insertDate.slice(0,10)}</span>,
+    cell: (row) => <span>{PersianDateConverter(row.insertDate)}</span>,
   },
   {
     name: <span style={{ fontSize: "14px" }}>وضعیت</span>,

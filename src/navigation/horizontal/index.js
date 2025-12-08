@@ -88,7 +88,7 @@ export default [
       {
         id: "teacherschedual",
         icon: <Circle size={8} />,
-        title: "بازه زمانی شما",
+        title: "بازه زمانی استاد",
         navLink: "/courses-management",
       },
       {

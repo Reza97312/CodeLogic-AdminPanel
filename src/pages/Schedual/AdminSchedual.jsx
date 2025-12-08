@@ -13,7 +13,7 @@ import {
   Row,
   CardBody,
 } from "reactstrap";
-import { ChevronDown } from "react-feather";
+import { ChevronDown, Search } from "react-feather";
 import DataTable from "react-data-table-component";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -29,6 +29,14 @@ import Lottie from "lottie-react";
 import "@amir04lm26/react-modern-calendar-date-picker/lib/DatePicker.css";
 import { Calendar } from "@amir04lm26/react-modern-calendar-date-picker";
 import infinity from "../../assets/images/icons/Infinity Loader.json";
+import { GetAllCourses } from "../../core/services/api/get/Courses/GetAllCourses";
+import img5 from "../../assets/images/icons/HTML5Course.png";
+import { GetCourseGroups } from "../../core/services/api/get/Courses/GetCourseGroups";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import DateObject from "react-date-object";
+import { AddSchedual } from "../../core/services/api/post/AddSchedual";
 
 const ShamsiCal = ({ onDateChange }) => {
   const [selectedDayRange, setSelectedDayRange] = useState({
@@ -85,125 +93,432 @@ const ShamsiCal = ({ onDateChange }) => {
   );
 };
 
-const AddSchedualModal = ({ modalOpen, toggleModal }) => {
+const CourseSelect = ({ isOpen, toggle, SelectCourse }) => {
+  const [searchText, setSearchText] = useState("");
+
+  const { data: coursesData, isLoading } = useQuery({
+    queryKey: ["GetAllCourses"],
+    queryFn: () => GetAllCourses({ RowsOfPage: 1000 }),
+  });
+
+  const coursesList = coursesData?.courseDtos || [];
+
+  const filteredCourses = useMemo(() => {
+    return coursesList.filter((course) =>
+      course.title.toLowerCase().includes(searchText.toLowerCase())
+    );
+  }, [coursesList, searchText]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 5;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchText]);
+
+  const paginatedCourses = filteredCourses.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  const handlePagination = (page) => {
+    setCurrentPage(page.selected + 1);
+  };
+
+  const columns = [
+    {
+      name: "تصویر",
+      center: true,
+      width: "25%",
+      cell: (row) => (
+        <div
+          style={{
+            width: "40px",
+            height: "40px",
+            overflow: "hidden",
+            borderRadius: "5px",
+          }}
+        >
+          {row.tumbImageAddress ? (
+            <img
+              src={row.tumbImageAddress}
+              style={{ width: "100%", height: "100%" }}
+            />
+          ) : (
+            <img
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              src={img5}
+            />
+          )}
+        </div>
+      ),
+      center: true,
+    },
+
+    {
+      name: "نام دوره",
+      selector: (row) => row.title,
+      sortable: true,
+      grow: 2,
+      center: true,
+      width: "25%",
+    },
+    {
+      name: "وضعیت",
+      width: "25%",
+
+      selector: (row) => row.active,
+      cell: (row) => (
+        <span
+          style={{ borderRadius: "9999px", padding: "10px" }}
+          className={
+            row.active
+              ? "badge bg-success-subtle text-success"
+              : "badge bg-danger-subtle text-danger"
+          }
+        >
+          {row.active ? "فعال" : "غیرفعال"}
+        </span>
+      ),
+      center: true,
+    },
+    {
+      name: "عملیات",
+      width: "25%",
+
+      cell: (row) => (
+        <Button
+          color="primary"
+          size="sm"
+          onClick={() => {
+            SelectCourse(row);
+            toggle();
+          }}
+        >
+          انتخاب
+        </Button>
+      ),
+      center: true,
+    },
+  ];
+
   return (
     <Modal
-      isOpen={modalOpen}
-      toggle={toggleModal}
+      isOpen={isOpen}
+      toggle={toggle}
+      size="lg"
       className="modal-dialog-centered"
     >
-      <ModalHeader toggle={toggleModal}>افزودن بازه زمانی جدید</ModalHeader>
+      <ModalHeader toggle={toggle}>دوره را انتخاب کنید</ModalHeader>
       <ModalBody>
-        <Form>
-          <FormGroup className="d-flex justify-content-center gap-4">
-            <FormGroup check inline>
-              <Input
-                type="radio"
-                id="manualAdd"
-                name="addType"
-                defaultChecked
+        <div className="mb-3 position-relative">
+          <Input
+            placeholder="جستجو..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ paddingLeft: "30px" }}
+          />
+          <Search
+            size={15}
+            style={{
+              position: "absolute",
+              left: "10px",
+              top: "12px",
+              color: "#aaa",
+            }}
+          />
+        </div>
+        <div></div>
+        <DataTable
+          data={paginatedCourses}
+          columns={columns}
+          className="react-dataTable"
+          noDataComponent={
+            <div className="d-flex flex-column justify-content-center align-items-center text-center">
+              <Lottie
+                style={{
+                  width: "200px",
+                  height: "200px",
+                  marginBottom: "20px",
+                }}
+                animationData={empty}
               />
-              <Label check for="manualAdd">
-                افزودن دستی
-              </Label>
-            </FormGroup>
-            <FormGroup check inline>
-              <Input type="radio" id="autoAdd" name="addType" />
-              <Label check for="autoAdd">
-                افزودن اتوماتیک
-              </Label>
-            </FormGroup>
-          </FormGroup>
+              <p> دوره‌ای یافت نشد</p>
+            </div>
+          }
+          progressPending={isLoading}
+          noHeader
+        />
 
-          <Row>
-            <Col md={6}>
-              <FormGroup>
-                <Label for="courseSelect">انتخاب دوره</Label>
-                <Input type="select" id="courseSelect" defaultValue="test2">
-                  <option value="test2">test2</option>
-                  <option value="test3">test3</option>
-                </Input>
-              </FormGroup>
-            </Col>
-            <Col md={6}>
-              <FormGroup>
-                <Label for="courseGroup">گروه دوره</Label>
-                <Input type="select" id="courseGroup">
-                  <option>کد کد</option>
-                  <option>گروه ب</option>
-                </Input>
-              </FormGroup>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col md={6}>
-              <FormGroup>
-                <Label for="startDate">تاریخ شروع</Label>
-                <Input type="text" id="startDate" />
-              </FormGroup>
-            </Col>
-            <Col md={6}>
-              <FormGroup>
-                <Label for="weeklyClasses">تعداد کلاس در هفته</Label>
-                <Input type="number" id="weeklyClasses" defaultValue="2" />
-              </FormGroup>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col md={6}>
-              <FormGroup>
-                <Label for="startTime">ساعت شروع</Label>
-                <Input type="number" id="startTime" defaultValue="13" />
-              </FormGroup>
-            </Col>
-            <Col md={6}>
-              <FormGroup>
-                <Label for="endTime">ساعت پایان</Label>
-                <Input type="number" id="endTime" defaultValue="13" />
-              </FormGroup>
-            </Col>
-          </Row>
-
-          <Row className="mt-2 mb-3 align-items-center">
-            <Col md={6}>
-              <FormGroup>
-                <Label for="totalClasses">تعداد کل کلاس‌ها</Label>
-                <Input type="number" id="totalClasses" defaultValue="3" />
-              </FormGroup>
-            </Col>
-
-            <Col md={6} className="d-flex justify-content-around">
-              <FormGroup switch>
-                <Input
-                  type="switch"
-                  id="scheduling"
-                  name="scheduling"
-                  defaultChecked
-                />
-                <Label check for="scheduling">
-                  ثبت برگزاری
-                </Label>
-              </FormGroup>
-              <FormGroup switch>
-                <Input type="switch" defaultChecked />
-                <Label check>وضعیت حضور و غیاب</Label>
-              </FormGroup>
-            </Col>
-          </Row>
-
-          <div className="d-flex justify-content-end gap-2 mt-3">
-            <Button color="secondary" onClick={toggleModal} outline>
-              پاک کردن فیلد
-            </Button>
-            <Button color="primary" onClick={toggleModal}>
-              ثبت
-            </Button>
-          </div>
-        </Form>
+        {filteredCourses.length > 0 && (
+          <ReactPaginate
+            previousLabel={""}
+            nextLabel={""}
+            pageCount={Math.ceil(filteredCourses.length / rowsPerPage)}
+            activeClassName="active"
+            forcePage={currentPage - 1}
+            onPageChange={(page) => handlePagination(page)}
+            pageClassName={"page-item"}
+            nextLinkClassName={"page-link"}
+            nextClassName={"page-item next"}
+            previousClassName={"page-item prev"}
+            previousLinkClassName={"page-link"}
+            pageLinkClassName={"page-link"}
+            containerClassName={
+              "pagination react-paginate justify-content-center my-2 pe-1"
+            }
+          />
+        )}
       </ModalBody>
     </Modal>
+  );
+};
+
+const AddSchedualModal = ({ modalOpen, toggleModal }) => {
+  const queryClient = useQueryClient();
+
+  const [courseSelect, setCourseSelect] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState();
+  const [startDate, setStartDate] = useState(null);
+  const [weeklyClasses, setWeeklyClasses] = useState(2);
+  const [startTime, setStartTime] = useState(13);
+  const [endTime, setEndTime] = useState(14);
+  const [totalClasses, setTotalClasses] = useState(3);
+
+  const toggleCourseSelect = () => setCourseSelect(!courseSelect);
+
+  const handleCourseSelect = (course) => {
+    setSelectedCourse(course);
+    toast.info(` دوره ${course.title} انتخاب شد`);
+  };
+
+  const { data: courseGroupsData, isLoading: isLoadingGroups } = useQuery({
+    queryKey: [
+      "GetCourseGroups",
+      selectedCourse?.courseId,
+      selectedCourse?.teacher?.id,
+    ],
+    queryFn: () =>
+      GetCourseGroups({
+        course: selectedCourse.courseId,
+        teacher: selectedCourse.teacher.id,
+      }),
+
+    enabled: !!selectedCourse?.courseId && !!selectedCourse?.teacher?.id,
+  });
+
+  const courseGroups = courseGroupsData || [];
+
+  const addSchedualMutation = useMutation({
+    mutationFn: ({ payload, courseId }) => AddSchedual(payload, courseId),
+    onSuccess: () => {
+      toast.success("بازه زمانی با موفقیت اضافه شد");
+      queryClient.invalidateQueries(["GetAdminSchedual"]);
+      toggleModal();
+    },
+    onError: (error) => {
+      console.error(error);
+      const message =
+        error?.response?.data?.message || "مشکلی در ثبت بازه زمانی رخ داد";
+      toast.error(message);
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!selectedCourse?.courseId || !selectedGroup || !startDate) {
+      toast.warn("لطفا دوره، گروه و تاریخ شروع را به طور کامل انتخاب کنید");
+      return;
+    }
+
+    const formattedStartDate = startDate;
+
+    const payload = {
+      courseGroupId: selectedGroup,
+      startDate: formattedStartDate,
+      startTime: `${startTime}:00`,
+      endTime: `${endTime}:00`,
+      weekNumber: totalClasses,
+      rowEffect: weeklyClasses,
+    };
+
+    const courseId = selectedCourse.courseId;
+
+    addSchedualMutation.mutate({ payload, courseId });
+  };
+
+  return (
+    <>
+      <Modal
+        isOpen={modalOpen}
+        toggle={toggleModal}
+        className="modal-dialog-centered"
+      >
+        <ModalHeader toggle={toggleModal}>افزودن بازه زمانی جدید</ModalHeader>
+        <ModalBody>
+          <Form onSubmit={handleSubmit}>
+            <Row>
+              <Col md={6}>
+                <FormGroup>
+                  <Label for="courseSelect">انتخاب دوره</Label>
+                  <Input
+                    type="text"
+                    id="courseSelect"
+                    value={selectedCourse ? selectedCourse.title : ""}
+                    placeholder="دوره را انتخاب کنید"
+                    readOnly
+                    onClick={toggleCourseSelect}
+                    style={{
+                      cursor: "pointer",
+                      backgroundColor: "#fff",
+                      color: "black",
+                    }}
+                  />
+
+                  <input
+                    type="hidden"
+                    value={selectedCourse ? selectedCourse.courseId : ""}
+                  />
+                </FormGroup>
+              </Col>
+              <Col md={6}>
+                <FormGroup>
+                  <Label for="courseGroup">گروه دوره</Label>
+                  <Input
+                    type="select"
+                    id="courseGroup"
+                    value={selectedGroup}
+                    onChange={(e) => setSelectedGroup(e.target.value)}
+                    disabled={!selectedCourse || isLoadingGroups}
+                  >
+                    <option value="" disabled>
+                      {isLoadingGroups
+                        ? "درحال بارگذاری..."
+                        : selectedCourse
+                        ? "یک گروه را انتخاب کنید"
+                        : "ابتدا دوره را انتخاب کنید"}
+                    </option>
+
+                    {courseGroups.map((group) => (
+                      <option key={group.id} value={group.id}>
+                        {group.groupName}
+                      </option>
+                    ))}
+                  </Input>
+                </FormGroup>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col md={6}>
+                <FormGroup>
+                  <Label for="startDate">تاریخ شروع</Label>
+                  <DatePicker
+                    calendar={persian}
+                    locale={persian_fa}
+                    value={
+                      startDate
+                        ? new DateObject({
+                            date: startDate,
+                            calendar: persian,
+                            locale: persian_fa,
+                          })
+                        : null
+                    }
+                    onChange={(date) => {
+                      setStartDate(date ? date.toDate().toISOString() : null);
+                    }}
+                    placeholder="تاریخ شروع را انتخاب کنید"
+                    containerClassName="w-100"
+                    inputClass="form-control w-100 cursor-pointer"
+                    style={{
+                      width: "100%",
+                    }}
+                  />
+                </FormGroup>
+              </Col>
+              <Col md={6}>
+                <FormGroup>
+                  <Label for="weeklyClasses">تعداد کلاس در هفته</Label>
+                  <Input
+                    type="number"
+                    id="weeklyClasses"
+                    value={weeklyClasses}
+                    onChange={(e) => setWeeklyClasses(parseInt(e.target.value))}
+                    disabled={addSchedualMutation.isLoading}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col md={6}>
+                <FormGroup>
+                  <Label for="startTime">ساعت شروع</Label>
+                  <Input
+                    type="number"
+                    id="startTime"
+                    value={startTime}
+                    onChange={(e) => setStartTime(parseInt(e.target.value))}
+                    disabled={addSchedualMutation.isLoading}
+                  />
+                </FormGroup>
+              </Col>
+              <Col md={6}>
+                <FormGroup>
+                  <Label for="endTime">ساعت پایان</Label>
+                  <Input
+                    type="number"
+                    id="endTime"
+                    value={endTime}
+                    onChange={(e) => setEndTime(parseInt(e.target.value))}
+                    disabled={addSchedualMutation.isLoading}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+
+            <Row className="mt-2 mb-3 align-items-center">
+              <Col md={6}>
+                <FormGroup>
+                  <Label for="totalClasses">تعداد کل کلاس‌ها</Label>
+                  <Input
+                    type="number"
+                    id="totalClasses"
+                    value={totalClasses}
+                    onChange={(e) => setTotalClasses(parseInt(e.target.value))}
+                    disabled={addSchedualMutation.isLoading}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+
+            <div className="d-flex justify-content-between gap-2 mt-3">
+              <Button color="secondary" onClick={toggleModal} outline>
+                انصراف
+              </Button>
+              <Button
+                color="primary"
+                type="submit"
+                disabled={addSchedualMutation.isLoading}
+              >
+                {addSchedualMutation.isLoading
+                  ? "درحال ثبت..."
+                  : "ثبت بازه زمانی"}
+              </Button>
+            </div>
+          </Form>
+        </ModalBody>
+      </Modal>
+
+      <CourseSelect
+        isOpen={courseSelect}
+        toggle={toggleCourseSelect}
+        SelectCourse={handleCourseSelect}
+      />
+    </>
   );
 };
 

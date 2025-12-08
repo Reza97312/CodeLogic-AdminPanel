@@ -64,3 +64,8 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
   color: #fff !important;
   border-color: var(--bs-danger) !important;
 }
+.btn-hover-fill3.btn-outline-warning:hover {
+  background-color: var(--bs-warning) !important;
+  color: #fff !important;
+  border-color: var(--bs-warning) !important;
+}

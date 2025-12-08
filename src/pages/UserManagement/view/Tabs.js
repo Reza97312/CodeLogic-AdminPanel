@@ -65,7 +65,7 @@ const UserTabs = ({ active, toggleTab, user }) => {
           <UserMyCourses />
         </TabPane>
         <TabPane tabId="2">
-          <UserReservedCourses />
+          <UserReservedCourses user={user} />
         </TabPane>
         <TabPane tabId="3">
           <UserComments />

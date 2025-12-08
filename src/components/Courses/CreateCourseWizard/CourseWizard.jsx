@@ -64,6 +64,7 @@ const Step2Schema = Yup.object().shape({
   StartTime: Yup.string().required("تاریخ شروع لازم است"),
   EndTime: Yup.string().required("تاریخ پایان لازم است"),
   TeacherId: Yup.number().required("انتخاب استاد  لازم است"),
+  TremId: Yup.string().required("انتخاب ترم لازم است"),
 });
 
 const Step3Schema = Yup.object().shape({
@@ -146,6 +147,7 @@ const CourseWizardFormik = () => {
                   Cost: isEdit ? firstData.cost : 0,
                   CourseLvlId: isEdit ? firstData.courseLvlId : "",
                   Image: isEdit ? firstData.image : "",
+                  TremId: isEdit ? "4oOXCqCN6AohOma8za4q6" : "",
                 }}
                 validationSchema={currentSchema}
                 enableReinitialize={false}
@@ -172,7 +174,7 @@ const CourseWizardFormik = () => {
                   fd.append("Cost", parseInt(values.Cost));
                   fd.append("CourseLvlId", values.CourseLvlId);
                   fd.append("TeacherId", parseInt(values.TeacherId));
-
+                  fd.append("TremId", values.TremId);
                   fd.append("Image", values.Image);
 
                   {
@@ -310,7 +312,7 @@ const CourseWizardFormik = () => {
                             </Col>
                           </Row>
                           <Row>
-                            <Col xl="4" md="6" xs="12">
+                            <Col md="6">
                               <Form.Group>
                                 <Form.Label>انتخاب استاد</Form.Label>
                                 <Form.Select
@@ -341,6 +343,34 @@ const CourseWizardFormik = () => {
                                 </Form.Select>
                                 <Form.Control.Feedback type="invalid">
                                   {errors.TeacherId}
+                                </Form.Control.Feedback>
+                              </Form.Group>
+                            </Col>
+                            <Col md="6">
+                              <Form.Group>
+                                <Form.Label>انتخاب ترم</Form.Label>
+                                <Form.Select
+                                  value={values.TremId}
+                                  onChange={(e) =>
+                                    setFieldValue("TremId", e.target.value)
+                                  }
+                                  isInvalid={!!errors.TremId}
+                                >
+                                  <option value="">انتخاب کنید</option>
+                                  {pendingCreateData ? (
+                                    <option>درحال بارگزاری...</option>
+                                  ) : CreateData?.termDtos?.length > 0 ? (
+                                    CreateData.termDtos.map((item, index) => (
+                                      <option key={index} value={item.id}>
+                                        {item.termName}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option>استادی یافت نشد</option>
+                                  )}
+                                </Form.Select>
+                                <Form.Control.Feedback type="invalid">
+                                  {errors.TremId}
                                 </Form.Control.Feedback>
                               </Form.Group>
                             </Col>

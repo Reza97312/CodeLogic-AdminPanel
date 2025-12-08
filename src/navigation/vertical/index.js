@@ -12,6 +12,7 @@ import {
   MessageSquare,
   Calendar,
   Clipboard,
+  Hash,
 } from "react-feather";
 
 export default [
@@ -118,5 +119,11 @@ export default [
     title: "تسک ها",
     icon: <CheckSquare size={12} />,
     navLink: "/user-homeworks",
+  },
+  {
+    id: "term",
+    title: " ترم ها",
+    icon: <Hash size={12} />,
+    navLink: "/terms",
   },
 ];

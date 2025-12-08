@@ -25,6 +25,7 @@ import path from "path";
 import ReservedCourses from "../../pages/CourseManagement/ReservedCourse/ReservedCourses";
 import CommentManagement from "../../pages/commentManagement/CommentManagement";
 import CourseLevels from "../../pages/CourseManagement/CourseLevels/CourseLevels";
+import TermManagement from "../../pages/TermManagement/TermManagement";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -166,6 +167,10 @@ const Routes = [
   {
     path: "/CourseLevels",
     element: <CourseLevels />,
+  },
+  {
+    path: "/terms",
+    element: <TermManagement />,
   },
   {
     path: "*",

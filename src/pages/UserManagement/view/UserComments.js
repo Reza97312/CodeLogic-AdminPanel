@@ -26,7 +26,6 @@ import {
 import DataTable from "react-data-table-component";
 import Avatar from "@components/avatar";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import ReactPaginate from "react-paginate";

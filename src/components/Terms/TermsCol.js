@@ -56,7 +56,7 @@ export const TermsCol = ({ handleEdit, toggleCreate, toggleTime }) => [
     name: <span style={{ fontSize: "14px" }}>وضعیت </span>,
     minWidth: "150px",
     cell: (row) => (
-      <Badge color={statusObj[row.expire]} pill>
+      <Badge color={row.expire ? "danger" : "success"} pill>
         {row.expire ? "منقضی شده" : "منقضی نشده"}
       </Badge>
     ),

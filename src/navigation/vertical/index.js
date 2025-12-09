@@ -90,12 +90,6 @@ export default [
     icon: <Calendar size={12} />,
     children: [
       {
-        id: "teacherschedual",
-        icon: <Circle size={8} />,
-        title: "بازه زمانی شما",
-        navLink: "/schedual/teacher",
-      },
-      {
         id: "adminschedual",
         icon: <Circle size={8} />,
         title: "بازه زمانی ادمین",
@@ -106,6 +100,12 @@ export default [
         icon: <Circle size={8} />,
         title: "بازه زمانی کاربر",
         navLink: "/schedual/student",
+      },
+      {
+        id: "teacherschedual",
+        icon: <Circle size={8} />,
+        title: "بازه زمانی استاد",
+        navLink: "/schedual/teacher",
       },
     ],
   },
@@ -132,5 +132,10 @@ export default [
     title: " ساختمان ها",
     icon: <Globe size={12} />,
     navLink: "/buildings",
+
+    id: "department",
+    title: "دپارتمنت ها",
+    icon: <User size={20} />,
+    navLink: "/department",
   },
 ];

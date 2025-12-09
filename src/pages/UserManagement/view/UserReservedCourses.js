@@ -19,23 +19,18 @@ import {
   RefreshCcw,
   User,
   Activity,
+  Book,
 } from "react-feather";
 import DataTable from "react-data-table-component";
 import Avatar from "@components/avatar";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
-
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import ReactPaginate from "react-paginate";
-import { GetMyReservedCourse } from "../../../core/services/api/get/GetMyReservedCourse";
+import empty from "../../../assets/images/icons/empty.json";
+import Lottie from "lottie-react";
 
-const UserReservedCourses = () => {
-  const { data } = useQuery({
-    queryKey: ["GetMyReservedCourse"],
-    queryFn: () => GetMyReservedCourse(),
-  });
-
-  const rescourses = data ?? [];
+const UserReservedCourses = ({ user }) => {
+  const rescourses = user?.courseReserve ?? [];
 
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 7;
@@ -65,31 +60,18 @@ const UserReservedCourses = () => {
   const columns = [
     {
       sortable: true,
-      minWidth: "180px",
+
       name: "نام دوره",
       selector: (row) => row.courseName,
       cell: (row) => {
         return (
           <div className="d-flex justify-content-left align-items-center">
-            <div className="avatar-wrapper">
-              <Avatar
-                className="me-1"
-                img={row.image}
-                alt={row.courseName}
-                imgWidth="32"
-              />
-            </div>
             <div className="d-flex flex-column">
               <span className="text-truncate fw-bolder">{row.courseName}</span>
             </div>
           </div>
         );
       },
-    },
-    {
-      name: "نام استاد ",
-      selector: (row) => row.teacher,
-      center: true,
     },
 
     {
@@ -107,6 +89,20 @@ const UserReservedCourses = () => {
       },
     },
 
+    {
+      name: "تاریخ رزرو دوره",
+      selector: (row) => row.reserverDate,
+      sortable: true,
+      cell: (row) => {
+        return (
+          <div className="d-flex flex-column w-100">
+            <small className="mb-1">
+              {new Date(row.reserverDate).toLocaleDateString("fa-IR")}
+            </small>
+          </div>
+        );
+      },
+    },
     {
       name: "وضعیت دوره",
       selector: (row) => row.accept,
@@ -136,9 +132,26 @@ const UserReservedCourses = () => {
     },
   ];
 
+  if (rescourses.length === 0) {
+    return (
+      <div className="text-center d-flex flex-column justify-content-center align-items-center ">
+        <Lottie
+          style={{
+            width: "200px",
+            height: "200px",
+            marginBottom: "30px",
+            marginTop: "100px",
+          }}
+          animationData={empty}
+        />
+        <h5>هیچ دوره رزرو شده‌ای یافت نشد</h5>
+      </div>
+    );
+  }
+
   return (
     <Card>
-      <CardHeader tag="h4">دوره های تایید شده</CardHeader>
+      <CardHeader tag="h4">دوره های رزرو شده</CardHeader>
       <div className="react-dataTable user-view-account-projects">
         <DataTable
           noHeader
@@ -174,7 +187,7 @@ const UserReservedCourses = () => {
 
               <ModalBody style={{ padding: "1rem" }}>
                 <RCard className="shadow-none border-0 m-0">
-                  <div className="text-center mb-2">
+                  <div className="text-center ">
                     <div
                       style={{
                         width: "80%",
@@ -183,15 +196,10 @@ const UserReservedCourses = () => {
                         margin: "0 auto",
                       }}
                     >
-                      <CardImg
-                        src={selectedCourse.image}
-                        alt={selectedCourse.courseName}
-                        style={{
-                          width: "100%",
-                          height: "140px",
-                          objectFit: "cover",
-                        }}
-                      />
+                      <p className="text-secondary fw-bold mb-1">
+                        <Book size={14} style={{ marginInlineEnd: "6px" }} />
+                        نام دوره :
+                      </p>
                     </div>
                   </div>
 
@@ -249,15 +257,20 @@ const UserReservedCourses = () => {
                       </div>
                       <div className="col-4">
                         <h6 className="text-secondary fw-bold mb-1">
-                          <User size={14} style={{ marginInlineEnd: "6px" }} />
-                          استاد:
+                          <Calendar
+                            size={14}
+                            style={{ marginInlineEnd: "6px" }}
+                          />
+                          تاریخ رزرو:
                         </h6>
                         <Badge
                           style={{ padding: "8px" }}
                           pill
                           className="bg-light-info text-info mb-1"
                         >
-                          {selectedCourse.teacher}
+                          {new Date(
+                            selectedCourse.reserverDate
+                          ).toLocaleDateString("fa-IR")}
                         </Badge>
                       </div>
                     </div>

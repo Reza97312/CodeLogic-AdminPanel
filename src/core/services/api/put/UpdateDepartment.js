@@ -1,7 +1,8 @@
 import Http from "../../../interceptor/interceptor";
-const GetAdminSchedual = async () => {
+
+const UpdateDepartment = async (payload) => {
   try {
-    const result = await Http.get("/Schedual/GetAdminScheduals");
+    const result = await Http.put("/Department", payload);
     return result;
   } catch (error) {
     console.log(error);
@@ -9,4 +10,4 @@ const GetAdminSchedual = async () => {
   }
 };
 
-export default GetAdminSchedual;
+export default UpdateDepartment;

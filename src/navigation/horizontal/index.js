@@ -12,6 +12,7 @@ import {
   CheckSquare,
   Calendar,
   Hash,
+  Globe,
 } from "react-feather";
 
 export default [
@@ -124,5 +125,11 @@ export default [
     title: " ترم ها",
     icon: <Hash size={12} />,
     navLink: "/terms",
+  },
+  {
+    id: "buildings",
+    title: " ساختمان ها",
+    icon: <Globe size={12} />,
+    navLink: "/buildings",
   },
 ];

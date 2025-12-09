@@ -26,6 +26,7 @@ import ReservedCourses from "../../pages/CourseManagement/ReservedCourse/Reserve
 import CommentManagement from "../../pages/commentManagement/CommentManagement";
 import CourseLevels from "../../pages/CourseManagement/CourseLevels/CourseLevels";
 import TermManagement from "../../pages/TermManagement/TermManagement";
+import BuildingManagement from "../../pages/Buildings/BuildingManagement";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -171,6 +172,10 @@ const Routes = [
   {
     path: "/terms",
     element: <TermManagement />,
+  },
+  {
+    path: "/buildings",
+    element: <BuildingManagement />,
   },
   {
     path: "*",

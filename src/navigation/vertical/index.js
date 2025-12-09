@@ -111,4 +111,10 @@ export default [
     icon: <CheckSquare size={12} />,
     navLink: "/user-homeworks",
   },
+  {
+    id: "department",
+    title: "دپارتمنت ها",
+    icon: <User size={20} />,
+    navLink: "/department",
+  },
 ];

@@ -197,7 +197,7 @@ const CourseSelect = ({ isOpen, toggle, SelectUser }) => {
       size="lg"
       className="modal-dialog-centered"
     >
-      <ModalHeader toggle={toggle}>دوره را انتخاب کنید</ModalHeader>
+      <ModalHeader toggle={toggle}>کاربر را انتخاب کنید</ModalHeader>
       <ModalBody>
         <div className="mb-3 position-relative">
           <Input
@@ -231,7 +231,7 @@ const CourseSelect = ({ isOpen, toggle, SelectUser }) => {
                 }}
                 animationData={empty}
               />
-              <p> دوره‌ای یافت نشد</p>
+              <p> کاربری یافت نشد</p>
             </div>
           }
           progressPending={isLoading}

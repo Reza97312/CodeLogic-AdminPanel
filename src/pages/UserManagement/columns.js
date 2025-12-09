@@ -21,6 +21,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  UncontrolledTooltip,
 } from "reactstrap";
 const renderClient = (row) => {
   const stateNum = Math.floor(Math.random() * 6),
@@ -52,11 +53,10 @@ const renderClient = (row) => {
 
 const renderRole = (row) => {
   const roleObj = {
-    student: { class: "text-primary", icon: User },
-    teacher: { class: "text-danger", icon: Book },
-    admin: { class: "text-success", icon: Eye },
-    administrator: { class: "text-info", icon: Edit2 },
-    superadmin: { class: "text-warning", icon: Key },
+    student: { class: "text-primary", icon: User, name: "دانشجو" },
+    teacher: { class: "text-danger", icon: Book, name: "استاد" },
+    admin: { class: "text-success", icon: Eye, name: "ادمین" },
+    superadmin: { class: "text-warning", icon: Key, name: "سوپر ادمین" },
   };
 
   const rolesArray = row.roles
@@ -65,12 +65,32 @@ const renderRole = (row) => {
     ? row.userRoles.split(",").map((r) => r.trim().toLowerCase())
     : [];
 
+  const rowId = row.id;
+
   return (
     <div className="d-flex align-items-center gap-1">
-      {rolesArray.map((role) => {
-        const RoleIcon = roleObj[role] ? roleObj[role].icon : User;
-        const roleClass = roleObj[role] ? roleObj[role].class : "";
-        return <RoleIcon key={role} size={18} className={`${roleClass}`} />;
+      {rolesArray.map((role, index) => {
+        const roleData = roleObj[role] || { class: "", icon: User, name: role };
+        const RoleIcon = roleData.icon;
+        const roleClass = roleData.class;
+        const roleName = roleData.name;
+
+        const targetId = `role-tooltip-${rowId}-${role}-${index}`;
+
+        return (
+          <>
+            <RoleIcon
+              key={role}
+              size={18}
+              className={roleClass}
+              id={targetId}
+            />
+
+            <UncontrolledTooltip placement="top" target={targetId}>
+              {roleName}
+            </UncontrolledTooltip>
+          </>
+        );
       })}
     </div>
   );

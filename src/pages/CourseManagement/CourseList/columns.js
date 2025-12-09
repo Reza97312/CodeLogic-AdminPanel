@@ -117,6 +117,7 @@ export const columns = ({
 
         <DropdownMenu>
           <DropdownItem
+            style={{ width: "100%" }}
             tag={Link}
             to={`/courses/view/${row.courseId}`}
             onClick={() => store.dispatch(getUser(row.id))}
@@ -125,11 +126,12 @@ export const columns = ({
             <span className="align-middle">جزئیات دوره</span>
           </DropdownItem>
 
-          <DropdownItem>
+          <DropdownItem style={{ width: "100%" }}>
             <Archive size={14} className="me-50" />
             <span className="align-middle">غیر منقضی کردن </span>
           </DropdownItem>
           <DropdownItem
+            style={{ width: "100%" }}
             onClick={() => {
               toggleActiveModal(true);
               getActiveData(row);
@@ -140,6 +142,7 @@ export const columns = ({
           </DropdownItem>
 
           <DropdownItem
+            style={{ width: "100%" }}
             onClick={() =>
               deleteCourse({
                 CourseActive: row.active,

@@ -93,6 +93,7 @@ export const ReservedCourseCol = ({
 
         <DropdownMenu>
           <DropdownItem
+            style={{ width: "100%" }}
             onClick={() => {
               toggleAcceptModal(true);
               handleAcceptData({
@@ -106,6 +107,7 @@ export const ReservedCourseCol = ({
           </DropdownItem>
 
           <DropdownItem
+            style={{ width: "100%" }}
             onClick={() => {
               toggleDeleteModal(true);
               handleAcceptData({ reserveId: row.id });

@@ -41,6 +41,7 @@ import { toast } from "react-toastify";
 import { TermsCol } from "./TermsCol";
 import CreateTermModal from "./CreateTerm";
 import TermTimeModal from "./CreateTermTime";
+import TermDetailsModal from "./TermsDetail";
 
 const TermsTable = ({ allTerms }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -60,6 +61,8 @@ const TermsTable = ({ allTerms }) => {
     setSort(sortDirection);
     setSortColumn(column.sortField);
   };
+  const [openDetailModal, setOpenDetailModal] = useState(false);
+  const toggleDetail = (bul) => setOpenDetailModal(bul);
 
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -75,6 +78,7 @@ const TermsTable = ({ allTerms }) => {
     handleEdit,
     toggleCreate,
     toggleTime,
+    toggleDetail,
   });
   const CustomPagination = () => {
     const count = Math.ceil((allTerms.length || 0) / rowsPerPage);
@@ -151,6 +155,13 @@ const TermsTable = ({ allTerms }) => {
           isOpen={openCreateTime}
           toggle={toggleTime}
           editData={editData}
+        />
+      )}
+      {openDetailModal && (
+        <TermDetailsModal
+          isOpen={openDetailModal}
+          toggle={toggleDetail}
+          id={editData.id}
         />
       )}
     </Fragment>

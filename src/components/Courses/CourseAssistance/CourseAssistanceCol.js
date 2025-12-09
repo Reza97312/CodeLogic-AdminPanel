@@ -76,6 +76,7 @@ export const CourseAssistanceCol = ({ toggleEdit, toggleAssistanceModal }) => [
 
         <DropdownMenu>
           <DropdownItem
+            style={{ width: "100%" }}
             onClick={() => {
               toggleEdit(row);
               toggleAssistanceModal(true);

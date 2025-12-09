@@ -127,6 +127,7 @@ export const GroupsCols = ({
           </DropdownItem> */}
 
           <DropdownItem
+            style={{ width: "100%" }}
             onClick={() => {
               handleEditModal(row);
               toggleCreateGroupModal(true);
@@ -137,6 +138,7 @@ export const GroupsCols = ({
           </DropdownItem>
 
           <DropdownItem
+            style={{ width: "100%" }}
             onClick={() => {
               toggleDeleteModal(true);
               getGroupId(row.id);

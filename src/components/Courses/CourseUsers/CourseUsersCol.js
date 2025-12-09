@@ -106,7 +106,11 @@ export const CourseUsersCol = ({ handleOpenModal, toggleSidebar }) => [
         </DropdownToggle>
 
         <DropdownMenu>
-          <DropdownItem tag={Link} to={`/userdetails/${row.user.id}`}>
+          <DropdownItem
+            style={{ width: "100%" }}
+            tag={Link}
+            to={`/userdetails/${row.user.id}`}
+          >
             <FileText size={14} className="me-50" />
             <span className="align-middle">جزئیات کاربر</span>
           </DropdownItem>

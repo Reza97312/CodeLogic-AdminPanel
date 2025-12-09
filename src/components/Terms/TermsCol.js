@@ -30,7 +30,12 @@ const statusObj = {
   true: "light-success",
   false: "light-secondary",
 };
-export const TermsCol = ({ handleEdit, toggleCreate, toggleTime }) => [
+export const TermsCol = ({
+  handleEdit,
+  toggleCreate,
+  toggleTime,
+  toggleDetail,
+}) => [
   {
     name: <span style={{ fontSize: "14px" }}>نام ترم</span>,
     minWidth: "300px",
@@ -88,6 +93,15 @@ export const TermsCol = ({ handleEdit, toggleCreate, toggleTime }) => [
             style={{ width: "100%" }}
           >
             <span className="align-middle">افزودن زمان برای ترم</span>
+          </DropdownItem>
+          <DropdownItem
+            onClick={() => {
+              toggleDetail(true);
+              handleEdit(row);
+            }}
+            style={{ width: "100%" }}
+          >
+            <span className="align-middle">جزییات ترم</span>
           </DropdownItem>
         </DropdownMenu>
       </UncontrolledDropdown>

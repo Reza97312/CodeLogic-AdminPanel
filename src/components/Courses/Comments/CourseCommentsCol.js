@@ -100,6 +100,7 @@ export const CourseCommentsCol = ({
             ""
           ) : (
             <DropdownItem
+              style={{ width: "100%" }}
               onClick={() => {
                 toggleEditModal(true);
                 handleCmId(row.id);
@@ -111,6 +112,7 @@ export const CourseCommentsCol = ({
           )}
 
           <DropdownItem
+            style={{ width: "100%" }}
             onClick={() => {
               toggleDeleteModal(true);
               handleCmId(row.id);

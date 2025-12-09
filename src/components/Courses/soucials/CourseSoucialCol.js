@@ -72,6 +72,7 @@ export const CourseSocialCol = ({ toggleEdit, toggleSocialModal }) => [
 
         <DropdownMenu>
           <DropdownItem
+            style={{ width: "100%" }}
             onClick={() => {
               toggleEdit(row);
               toggleSocialModal(true);

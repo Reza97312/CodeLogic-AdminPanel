@@ -120,6 +120,7 @@ const AddAssistanceModal = ({
                           ? "درحال بارگزاری"
                           : userData.map((item, index) => (
                               <option key={index} value={item.id}>
+                                {!item.fName && !item.lName ? "بدون اسم " : ""}
                                 {item.fName}
                                 {item.lName}
                               </option>

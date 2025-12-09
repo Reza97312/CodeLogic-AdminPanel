@@ -116,7 +116,7 @@ const CreateGroupModal = ({
                       </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group className="mb-3">
-                      <Form.Label>ظرفیت دوره</Form.Label>
+                      <Form.Label>ظرفیت گروه</Form.Label>
                       <Form.Control
                         type="number"
                         value={values.GroupCapacity}

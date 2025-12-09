@@ -19,6 +19,9 @@ import {
   DollarSign,
   Edit,
   Search,
+  File,
+  Hash,
+  Clipboard,
 } from "react-feather";
 import Avatar from "@components/avatar";
 import DataTable from "react-data-table-component";
@@ -33,6 +36,8 @@ import img5 from "../../assets/images/icons/HTML5Course.png";
 import GetBuliding from "../../core/services/api/get/GetBuliding";
 import { toast } from "react-toastify";
 import AddDepartment from "../../core/services/api/post/AddDepartment";
+import UpdateDepartment from "../../core/services/api/put/UpdateDepartment";
+import GetDepartmentDetail from "../../core/services/api/get/GetDepartmentDetail";
 
 const BulidSelect = ({ isOpen, toggle, SelectCourse }) => {
   const [searchText, setSearchText] = useState("");
@@ -196,6 +201,180 @@ const BulidSelect = ({ isOpen, toggle, SelectCourse }) => {
   );
 };
 
+const EditModal = ({ isOpen, toggle, currentDep, refetch }) => {
+  const [depName, setDepName] = useState("");
+  const [selectedBuilding, setSelectedBuilding] = useState(null);
+  const [isBuildSelectOpen, setIsBuildSelectOpen] = useState(false);
+
+  useEffect(() => {
+    if (currentDep) {
+      setDepName(currentDep.depName || "");
+
+      if (currentDep.building) {
+        setSelectedBuilding(currentDep.building);
+      } else {
+        setSelectedBuilding({
+          buildingName: currentDep.buildingName,
+          id: currentDep.buildingId,
+        });
+      }
+    }
+  }, [currentDep, isOpen]);
+
+  const updateMutation = useMutation({
+    mutationFn: UpdateDepartment,
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success("دپارتمان با موفقیت ویرایش شد");
+      }
+      refetch();
+      toggle();
+    },
+    onError: (err) => {
+      toast.error("خطا در ویرایش دپارتمان");
+      console.log(err);
+    },
+  });
+
+  const handleSubmit = () => {
+    if (!depName || !selectedBuilding) {
+      toast.warn("لطفا نام دپارتمان و ساختمان را انتخاب کنید");
+      return;
+    }
+
+    const payload = {
+      id: currentDep.id,
+      depName: depName,
+      buildingId: selectedBuilding.id,
+    };
+
+    updateMutation.mutate(payload);
+  };
+
+  const handleSelectBuilding = (building) => {
+    setSelectedBuilding(building);
+    setIsBuildSelectOpen(false);
+  };
+
+  return (
+    <>
+      <Modal
+        isOpen={isOpen}
+        toggle={toggle}
+        centered
+        style={{ maxWidth: "480px", width: "90%" }}
+      >
+        <ModalHeader toggle={toggle} className="border-0 p-2 pb-2">
+          ویرایش دپارتمان
+        </ModalHeader>
+
+        <ModalBody style={{ padding: "2rem" }}>
+          <RCard className="shadow-none border-0 m-0">
+            <FormGroup className="mb-3">
+              <Label for="editDepartmentName">نام دپارتمان:</Label>
+              <Input
+                type="text"
+                id="editDepartmentName"
+                placeholder="نام دپارتمان را وارد کنید..."
+                value={depName}
+                onChange={(e) => setDepName(e.target.value)}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <Label for="editSelectBuilding">انتخاب ساختمان:</Label>
+              <Input
+                readOnly
+                id="editSelectBuilding"
+                onClick={() => setIsBuildSelectOpen(true)}
+                value={
+                  selectedBuilding
+                    ? selectedBuilding.buildingName
+                    : "ساختمانی انتخاب نشده"
+                }
+                style={{ cursor: "pointer" }}
+              />
+            </FormGroup>
+          </RCard>
+        </ModalBody>
+        <ModalFooter className="d-flex justify-content-between align-items-center">
+          <Button color="secondary" onClick={toggle}>
+            انصراف
+          </Button>
+
+          <Button
+            color="primary"
+            onClick={handleSubmit}
+            disabled={updateMutation.isPending}
+          >
+            {updateMutation.isPending ? "در حال ویرایش..." : "ثبت تغییرات"}
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      <BulidSelect
+        isOpen={isBuildSelectOpen}
+        toggle={() => setIsBuildSelectOpen(!isBuildSelectOpen)}
+        SelectCourse={handleSelectBuilding}
+      />
+    </>
+  );
+};
+
+const DetailModal = ({ isOpen, toggle, departmentId }) => {
+  const { data: detailData, isLoading } = useQuery({
+    queryKey: ["GetDepartmentDetail", departmentId],
+    queryFn: () => GetDepartmentDetail(departmentId),
+    enabled: !!departmentId,
+  });
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      toggle={toggle}
+      size="sm"
+      className="modal-dialog-centered"
+    >
+      <ModalHeader toggle={toggle} className="border-0 pb-2">
+        جزئیات دپارتمان
+      </ModalHeader>
+      <ModalBody>
+        <CardBody className="px-2 mt-2">
+          <div className="row g-2 mb-2 small justify-content-around text-center">
+            <div className="col-4">
+              <h6 className="text-secondary fw-bold mb-1 text-nowrap">
+                <Clipboard size={14} style={{ marginInlineEnd: "6px" }} />
+                نام دپارتمان :
+              </h6>
+              <Badge
+                style={{ padding: "10px", fontSize: "13px" }}
+                pill
+                className="bg-light-info text-info mb-1"
+              >
+                {detailData?.name}
+              </Badge>
+            </div>
+
+            <div className="col-4">
+              <h6 className="text-secondary fw-bold mb-1 text-nowrap">
+                <Hash size={14} style={{ marginInlineEnd: "6px" }} />
+                شناسه دپارتمان :
+              </h6>
+              <Badge
+                style={{ padding: "10px", fontSize: "13px" }}
+                pill
+                className="bg-light-info text-info mb-1"
+              >
+                {detailData?.id}#
+              </Badge>
+            </div>
+          </div>
+        </CardBody>
+      </ModalBody>
+    </Modal>
+  );
+};
+
 const Department = () => {
   const { data } = useQuery({
     queryKey: ["GetDepartment"],
@@ -221,8 +400,32 @@ const Department = () => {
   const [depName, setDepName] = useState("");
   const [isBuildSelectOpen, setIsBuildSelectOpen] = useState(false);
   const [selectedBuilding, setSelectedBuilding] = useState(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingDep, setEditingDep] = useState(null);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [DepartmentId, setDepartmentId] = useState(null);
 
   const queryClient = useQueryClient();
+
+  const handleOpenDetailModal = (id) => {
+    setDepartmentId(id);
+    setDetailModalOpen(true);
+  };
+
+  const handleCloseDetailModal = () => {
+    setDetailModalOpen(false);
+    setDepartmentId(null);
+  };
+
+  const handleOpenEditModal = (row) => {
+    setEditingDep(row);
+    setEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setEditModalOpen(false);
+    setEditingDep(null);
+  };
 
   const addMutation = useMutation({
     mutationFn: AddDepartment,
@@ -346,7 +549,22 @@ const Department = () => {
     {
       name: "اقدام",
       width: "14.2%",
-      cell: (row) => <Edit size={18} className="cursor-pointer" />,
+      cell: (row) => (
+        <div>
+          <Edit
+            style={{ marginLeft: "5px" }}
+            size={18}
+            onClick={() => handleOpenEditModal(row)}
+            className="cursor-pointer"
+          />
+          <File
+            size={18}
+            className="cursor-pointer"
+            style={{ marginRight: "5px" }}
+            onClick={() => handleOpenDetailModal(row.id)}
+          />
+        </div>
+      ),
       center: true,
     },
   ];
@@ -460,6 +678,19 @@ const Department = () => {
           isOpen={isBuildSelectOpen}
           toggle={handleCloseBuildSelectModal}
           SelectCourse={handleSelectBuilding}
+        />
+
+        <EditModal
+          isOpen={editModalOpen}
+          toggle={handleCloseEditModal}
+          currentDep={editingDep}
+          refetch={() => queryClient.invalidateQueries(["GetDepartment"])}
+        />
+
+        <DetailModal
+          isOpen={detailModalOpen}
+          toggle={handleCloseDetailModal}
+          departmentId={DepartmentId}
         />
 
         {department.length > 0 && (

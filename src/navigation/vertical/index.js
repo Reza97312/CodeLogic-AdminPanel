@@ -80,12 +80,6 @@ export default [
     icon: <Calendar size={12} />,
     children: [
       {
-        id: "teacherschedual",
-        icon: <Circle size={8} />,
-        title: "بازه زمانی استاد",
-        navLink: "/schedual/teacher",
-      },
-      {
         id: "adminschedual",
         icon: <Circle size={8} />,
         title: "بازه زمانی ادمین",
@@ -96,6 +90,12 @@ export default [
         icon: <Circle size={8} />,
         title: "بازه زمانی کاربر",
         navLink: "/schedual/student",
+      },
+      {
+        id: "teacherschedual",
+        icon: <Circle size={8} />,
+        title: "بازه زمانی استاد",
+        navLink: "/schedual/teacher",
       },
     ],
   },

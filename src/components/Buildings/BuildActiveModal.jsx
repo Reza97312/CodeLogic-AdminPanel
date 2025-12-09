@@ -60,7 +60,7 @@ const BuildActiveModal = ({ isOpen, toggle, editData }) => {
               </ModalBody>
               <ModalFooter>
                 <Button type="submit" color="primary">
-                  ارسال
+                  {isPending ? "درحال ارسال" : "ارسال"}
                 </Button>
                 <Button color="danger" onClick={() => toggle(false)}>
                   انصراف

@@ -27,6 +27,7 @@ import CommentManagement from "../../pages/commentManagement/CommentManagement";
 import CourseLevels from "../../pages/CourseManagement/CourseLevels/CourseLevels";
 import TermManagement from "../../pages/TermManagement/TermManagement";
 import BuildingManagement from "../../pages/Buildings/BuildingManagement";
+import TasksManagement from "../../pages/TasksManageMent/TasksManagement";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -176,6 +177,10 @@ const Routes = [
   {
     path: "/buildings",
     element: <BuildingManagement />,
+  },
+  {
+    path: "/tasks",
+    element: <TasksManagement />,
   },
   {
     path: "*",

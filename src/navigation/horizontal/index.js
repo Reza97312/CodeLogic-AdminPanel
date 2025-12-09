@@ -13,6 +13,7 @@ import {
   Calendar,
   Hash,
   Globe,
+  CheckCircle,
 } from "react-feather";
 
 export default [
@@ -54,6 +55,13 @@ export default [
         title: "مدیریت لیست رزرو ها",
         permissions: ["admin", "editor"],
         navLink: "/courses/reserves",
+      },
+      {
+        id: "tasks",
+        icon: <CheckCircle size={8} />,
+        title: "مدیریت تسک ها",
+        permissions: ["admin", "editor"],
+        navLink: "/tasks",
       },
     ],
   },

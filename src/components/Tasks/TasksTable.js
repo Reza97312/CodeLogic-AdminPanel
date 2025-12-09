@@ -31,11 +31,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
-import { BuildingCol } from "./BuildingCols";
-import MapModal from "./MapModal";
-import BuildActiveModal from "./BuildActiveModal";
-
-const BuildingTable = ({ buildingData }) => {
+import { TasksCol } from "./TasksCol.js";
+import CreateTask from "./CreateTask.jsx";
+import TaskDetailsModal from "./TaskDetailsModal.jsx";
+const TasksTable = ({ taskData }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -53,32 +52,29 @@ const BuildingTable = ({ buildingData }) => {
     setSearchTerm(val);
     setCurrentPage(1);
   };
-
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentData = taskData?.slice(startIndex, endIndex);
   const handleSort = (column, sortDirection) => {
     setSort(sortDirection);
     setSortColumn(column.sortField);
   };
-
-  const startIndex = (currentPage - 1) * rowsPerPage;
-  const endIndex = startIndex + rowsPerPage;
-  const currentData = buildingData?.slice(startIndex, endIndex);
-  /// location /////
-  const [openMap, setOpenMap] = useState(false);
-  const toggleMap = (bool) => setOpenMap(bool);
-  //// edit ///
-  const [editData, setEditData] = useState("");
+  //// create and update task ////
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const toggleCreate = (bool) => setOpenCreateModal(bool);
+  const [editData, setEditData] = useState(null);
   const handleEdit = (vals) => setEditData(vals);
-  /// activate ///
-  const [openActive, setOpenActive] = useState(false);
-  const toggleActive = (boool) => setOpenActive(boool);
+  ///// task details ////
+  const [openDetailModal, setOpenDetailModal] = useState(false);
+  const toggleDetail = (boool) => setOpenDetailModal(boool);
 
-  const tableColumns = BuildingCol({
-    toggleMap,
+  const tableColumns = TasksCol({
+    toggleCreate,
     handleEdit,
-    toggleActive,
+    toggleDetail,
   });
   const CustomPagination = () => {
-    const count = Math.ceil((buildingData?.length || 0) / rowsPerPage);
+    const count = Math.ceil((taskData?.length || 0) / rowsPerPage);
 
     return (
       <ReactPaginate
@@ -102,7 +98,20 @@ const BuildingTable = ({ buildingData }) => {
   return (
     <Fragment>
       <Card className="overflow-hidden">
-        <CardHeader tag="h4">مدیریت ساختمان ها</CardHeader>
+        <CardHeader tag="h4">
+          مدیریت تسک ها
+          <div>
+            <Button
+              onClick={() => {
+                setOpenCreateModal(true);
+                setEditData(null);
+              }}
+              color="primary"
+            >
+              افرودن تسک
+            </Button>
+          </div>
+        </CardHeader>
         <div className="react-dataTable">
           <DataTable
             noHeader
@@ -117,16 +126,22 @@ const BuildingTable = ({ buildingData }) => {
           />
         </div>
       </Card>
-      {openMap && <MapModal isOpen={openMap} toggle={toggleMap} />}
-      {openActive && (
-        <BuildActiveModal
-          isOpen={openActive}
-          toggle={toggleActive}
+      {openCreateModal && (
+        <CreateTask
+          toggle={toggleCreate}
+          isOpen={openCreateModal}
           editData={editData}
+        />
+      )}
+      {openDetailModal && (
+        <TaskDetailsModal
+          isOpen={openDetailModal}
+          toggle={toggleDetail}
+          id={editData.id}
         />
       )}
     </Fragment>
   );
 };
 
-export default BuildingTable;
+export default TasksTable;

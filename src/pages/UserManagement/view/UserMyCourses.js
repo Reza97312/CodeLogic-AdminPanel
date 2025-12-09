@@ -25,6 +25,8 @@ import GetMyCourses from "../../../core/services/api/get/GetMyCourses";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import ReactPaginate from "react-paginate";
+import Lottie from "lottie-react";
+import empty from "../../../assets/images/icons/empty.json";
 
 const UserMyCourses = () => {
   const params = {
@@ -145,6 +147,23 @@ const UserMyCourses = () => {
       center: true,
     },
   ];
+
+  if (courses.length === 0) {
+    return (
+      <div className="text-center d-flex flex-column justify-content-center align-items-center ">
+        <Lottie
+          style={{
+            width: "200px",
+            height: "200px",
+            marginBottom: "30px",
+            marginTop: "100px",
+          }}
+          animationData={empty}
+        />
+        <h5>هیچ دوره ای یافت نشد</h5>
+      </div>
+    );
+  }
 
   return (
     <Card>

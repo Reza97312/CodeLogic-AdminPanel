@@ -6,6 +6,7 @@ import {
   CardBody,
   CardImg,
   ModalHeader,
+  Button,
   Badge,
 } from "reactstrap";
 import {
@@ -25,19 +26,63 @@ import {
 import DataTable from "react-data-table-component";
 import Avatar from "@components/avatar";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
-
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import ReactPaginate from "react-paginate";
 import { GetMyCourseComment } from "../../../core/services/api/get/GetMyCourseComment";
+import { useParams } from "react-router-dom";
+import Lottie from "lottie-react";
+import empty from "../../../assets/images/icons/empty.json";
+import { AcceptCm } from "../../../core/services/api/post/Courses/AcceptCm";
+import { toast } from "react-toastify";
+import { DeleteCourseCm } from "../../../core/services/api/delete/Courses/DeleteCourseCm";
 
 const UserComments = () => {
+  const queryClient = useQueryClient();
+  const { id } = useParams();
   const { data } = useQuery({
-    queryKey: ["GetMyCourseComment"],
-    queryFn: () => GetMyCourseComment(),
+    queryKey: ["GetMyCourseComment", id],
+    queryFn: () => GetMyCourseComment({ userId: id, RowsOfPage: 1000 }),
   });
 
-  const comment = data?.myCommentsDtos ?? [];
+  const comment = data?.comments ?? [];
+
+  const acceptComment = useMutation({
+    mutationFn: AcceptCm,
+    onSuccess: () => {
+      toast.success("کامنت با موفقیت تایید شد");
+
+      queryClient.invalidateQueries(["GetMyCourseComment"]);
+    },
+    onError: () => {
+      toast.error("خطا در تایید کامنت");
+    },
+  });
+
+  const handleAccept = (row) => {
+    if (row.accept) {
+      toast.info("این کامنت قبلا تایید شده است");
+      return;
+    }
+
+    acceptComment.mutate(row.id);
+  };
+
+  const deleteComment = useMutation({
+    mutationFn: DeleteCourseCm,
+    onSuccess: () => {
+      toast.success("کامنت با موفقیت حذف شد");
+
+      queryClient.invalidateQueries(["GetMyCourseComment"]);
+    },
+    onError: () => {
+      toast.error("خطا در حذف کامنت");
+    },
+  });
+
+  const handleDelete = (rowId) => {
+    deleteComment.mutate(rowId);
+  };
 
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 7;
@@ -67,24 +112,14 @@ const UserComments = () => {
   const columns = [
     {
       sortable: true,
-      minWidth: "180px",
+      width: "13%",
       name: "نام دوره",
-      selector: (row) => row.course.title,
+      selector: (row) => row.courseTitle,
       cell: (row) => {
         return (
           <div className="d-flex justify-content-left align-items-center">
-            <div className="avatar-wrapper">
-              <Avatar
-                className="me-1"
-                img={row.course.imageAddress}
-                alt={row.course.title}
-                imgWidth="32"
-              />
-            </div>
             <div className="d-flex flex-column">
-              <span className="text-truncate fw-bolder">
-                {row.course.title}
-              </span>
+              <span className="text-truncate fw-bolder">{row.courseTitle}</span>
             </div>
           </div>
         );
@@ -92,12 +127,16 @@ const UserComments = () => {
     },
     {
       name: "عنوان کامنت  ",
+      width: "15%",
+
       selector: (row) => row.title,
       center: true,
     },
 
     {
       name: "متن کامنت",
+      width: "16%",
+
       selector: (row) => row.describe,
       sortable: true,
       cell: (row) => {
@@ -114,6 +153,8 @@ const UserComments = () => {
 
     {
       name: "وضعیت ",
+      width: "11%",
+
       selector: (row) => row.accept,
       cell: (row) => {
         const isAccept = row.accept === true;
@@ -129,7 +170,9 @@ const UserComments = () => {
       },
     },
     {
-      name: "اقدام",
+      name: "مشاهده",
+      width: "9%",
+
       cell: (row) => (
         <Eye
           size={18}
@@ -139,11 +182,67 @@ const UserComments = () => {
       ),
       center: true,
     },
+    {
+      name: "اقدام",
+      width: "36%",
+
+      cell: (row) => (
+        <div className="  d-flex justify-content-between align-items-center gap-1">
+          <Button
+            outline
+            color={row.accept ? "" : "success"}
+            className="text-nowrap btn-hover-fill"
+            style={{ fontSize: "10px" }}
+            size="sm"
+            onClick={() => handleAccept(row)}
+          >
+            {row.accept ? "تایید شده" : "تایید کردن"}
+          </Button>
+          <Button
+            outline
+            color="danger"
+            className="text-nowrap btn-hover-fillr"
+            style={{ fontSize: "10px" }}
+            size="sm"
+            onClick={() => handleDelete(row.id)}
+          >
+            حذف کردن
+          </Button>
+          <Button
+            outline
+            color="warning"
+            className="text-nowrap btn-hover-fill3"
+            style={{ fontSize: "10px" }}
+            size="sm"
+          >
+            رد کردن
+          </Button>
+        </div>
+      ),
+      center: true,
+    },
   ];
+
+  if (comment.length === 0) {
+    return (
+      <div className="text-center d-flex flex-column justify-content-center align-items-center ">
+        <Lottie
+          style={{
+            width: "200px",
+            height: "200px",
+            marginBottom: "30px",
+            marginTop: "100px",
+          }}
+          animationData={empty}
+        />
+        <h5>هیچ کامنتی یافت نشد</h5>
+      </div>
+    );
+  }
 
   return (
     <Card>
-      <CardHeader tag="h4">دوره های تایید شده</CardHeader>
+      <CardHeader tag="h4">کامنت ها </CardHeader>
       <div className="react-dataTable user-view-account-projects">
         <DataTable
           noHeader

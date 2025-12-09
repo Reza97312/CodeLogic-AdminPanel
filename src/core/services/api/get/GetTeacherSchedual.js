@@ -1,7 +1,7 @@
 import Http from "../../../interceptor/interceptor";
-const GetAdminSchedual = async () => {
+const GetTeacherSchedual = async () => {
   try {
-    const result = await Http.get("/Schedual/GetAdminScheduals");
+    const result = await Http.get("/Schedual/GetTeacherScheduals");
     return result;
   } catch (error) {
     console.log(error);
@@ -9,4 +9,4 @@ const GetAdminSchedual = async () => {
   }
 };
 
-export default GetAdminSchedual;
+export default GetTeacherSchedual;

@@ -1,7 +1,8 @@
 import Http from "../../../interceptor/interceptor";
-const GetDepartment = async () => {
+
+const AddClassRoom = async (payload) => {
   try {
-    const result = await Http.get("/Department");
+    const result = await Http.post("/ClassRoom", payload);
     return result;
   } catch (error) {
     console.log(error);
@@ -9,4 +10,4 @@ const GetDepartment = async () => {
   }
 };
 
-export default GetDepartment;
+export default AddClassRoom;

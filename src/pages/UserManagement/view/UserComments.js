@@ -171,7 +171,7 @@ const UserComments = () => {
     },
     {
       name: "مشاهده",
-      width: "9%",
+      width: "15%",
 
       cell: (row) => (
         <Eye
@@ -184,7 +184,7 @@ const UserComments = () => {
     },
     {
       name: "اقدام",
-      width: "36%",
+      width: "30%",
 
       cell: (row) => (
         <div className="  d-flex justify-content-between align-items-center gap-1">
@@ -207,15 +207,6 @@ const UserComments = () => {
             onClick={() => handleDelete(row.id)}
           >
             حذف کردن
-          </Button>
-          <Button
-            outline
-            color="warning"
-            className="text-nowrap btn-hover-fill3"
-            style={{ fontSize: "10px" }}
-            size="sm"
-          >
-            رد کردن
           </Button>
         </div>
       ),

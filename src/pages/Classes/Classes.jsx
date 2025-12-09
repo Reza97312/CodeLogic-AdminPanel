@@ -38,6 +38,10 @@ import { toast } from "react-toastify";
 import AddDepartment from "../../core/services/api/post/AddDepartment";
 import UpdateDepartment from "../../core/services/api/put/UpdateDepartment";
 import GetDepartmentDetail from "../../core/services/api/get/GetDepartmentDetail";
+import GetClassRoom from "../../core/services/api/get/GetClassRoom";
+import GetClassRoomDetails from "../../core/services/api/get/GetClassRoomDetails";
+import UpdateClassRoom from "../../core/services/api/put/UpdateClassRoom";
+import AddClassRoom from "../../core/services/api/post/AddClassRoom";
 import infinity from "../../assets/images/icons/Infinity Loader.json";
 
 const BulidSelect = ({ isOpen, toggle, SelectCourse }) => {
@@ -203,13 +207,15 @@ const BulidSelect = ({ isOpen, toggle, SelectCourse }) => {
 };
 
 const EditModal = ({ isOpen, toggle, currentDep, refetch }) => {
-  const [depName, setDepName] = useState("");
+  const [className, setClassName] = useState("");
+  const [capacity, setCapacity] = useState("");
   const [selectedBuilding, setSelectedBuilding] = useState(null);
   const [isBuildSelectOpen, setIsBuildSelectOpen] = useState(false);
 
   useEffect(() => {
     if (currentDep) {
-      setDepName(currentDep.depName || "");
+      setClassName(currentDep.classRoomName);
+      setCapacity(currentDep.capacity);
 
       if (currentDep.building) {
         setSelectedBuilding(currentDep.building);
@@ -223,29 +229,30 @@ const EditModal = ({ isOpen, toggle, currentDep, refetch }) => {
   }, [currentDep, isOpen]);
 
   const updateMutation = useMutation({
-    mutationFn: UpdateDepartment,
+    mutationFn: UpdateClassRoom,
     onSuccess: (data) => {
       if (data.success) {
-        toast.success("دپارتمان با موفقیت ویرایش شد");
+        toast.success("کلاس با موفقیت ویرایش شد");
       }
       refetch();
       toggle();
     },
     onError: (err) => {
-      toast.error("خطا در ویرایش دپارتمان");
+      toast.error("خطا در ویرایش کلاس");
       console.log(err);
     },
   });
 
   const handleSubmit = () => {
-    if (!depName || !selectedBuilding) {
-      toast.warn("لطفا نام دپارتمان و ساختمان را انتخاب کنید");
+    if (!className || !capacity || !selectedBuilding) {
+      toast.warn("لطفا نام کلاس، ظرفیت و ساختمان را انتخاب کنید");
       return;
     }
 
     const payload = {
       id: currentDep.id,
-      depName: depName,
+      classRoomName: className,
+      capacity: parseInt(capacity, 10),
       buildingId: selectedBuilding.id,
     };
 
@@ -266,19 +273,29 @@ const EditModal = ({ isOpen, toggle, currentDep, refetch }) => {
         style={{ maxWidth: "480px", width: "90%" }}
       >
         <ModalHeader toggle={toggle} className="border-0 p-2 pb-2">
-          ویرایش دپارتمان
+          ویرایش کلاس
         </ModalHeader>
 
         <ModalBody style={{ padding: "2rem" }}>
           <RCard className="shadow-none border-0 m-0">
             <FormGroup className="mb-3">
-              <Label for="editDepartmentName">نام دپارتمان:</Label>
+              <Label for="editClassName">نام کلاس:</Label>
               <Input
                 type="text"
-                id="editDepartmentName"
-                placeholder="نام دپارتمان را وارد کنید..."
-                value={depName}
-                onChange={(e) => setDepName(e.target.value)}
+                id="editClassName"
+                placeholder="نام کلاس را وارد کنید..."
+                value={className}
+                onChange={(e) => setClassName(e.target.value)}
+              />
+            </FormGroup>
+            <FormGroup className="mb-3">
+              <Label for="editCapacity">ظرفیت:</Label>
+              <Input
+                type="number"
+                id="editCapacity"
+                placeholder="ظرفیت کلاس را وارد کنید..."
+                value={capacity}
+                onChange={(e) => setCapacity(e.target.value)}
               />
             </FormGroup>
 
@@ -322,11 +339,11 @@ const EditModal = ({ isOpen, toggle, currentDep, refetch }) => {
   );
 };
 
-const DetailModal = ({ isOpen, toggle, departmentId }) => {
+const DetailModal = ({ isOpen, toggle, classroomid }) => {
   const { data: detailData, isLoading } = useQuery({
-    queryKey: ["GetDepartmentDetail", departmentId],
-    queryFn: () => GetDepartmentDetail(departmentId),
-    enabled: !!departmentId,
+    queryKey: ["GetClassRoomDetails", classroomid],
+    queryFn: () => GetClassRoomDetails(classroomid),
+    enabled: !!classroomid,
   });
 
   return (
@@ -337,7 +354,7 @@ const DetailModal = ({ isOpen, toggle, departmentId }) => {
       className="modal-dialog-centered"
     >
       <ModalHeader toggle={toggle} className="border-0 pb-2">
-        جزئیات دپارتمان
+        جزئیات کلاس
       </ModalHeader>
       <ModalBody>
         <CardBody className="px-2 mt-2">
@@ -345,28 +362,28 @@ const DetailModal = ({ isOpen, toggle, departmentId }) => {
             <div className="col-4">
               <h6 className="text-secondary fw-bold mb-1 text-nowrap">
                 <Clipboard size={14} style={{ marginInlineEnd: "6px" }} />
-                نام دپارتمان :
+                نام کلاس :
               </h6>
               <Badge
                 style={{ padding: "10px", fontSize: "13px" }}
                 pill
                 className="bg-light-info text-info mb-1"
               >
-                {detailData?.name}
+                {detailData?.classRoomName}
               </Badge>
             </div>
 
             <div className="col-4">
               <h6 className="text-secondary fw-bold mb-1 text-nowrap">
-                <Hash size={14} style={{ marginInlineEnd: "6px" }} />
-                شناسه دپارتمان :
+                <Users size={14} style={{ marginInlineEnd: "6px" }} />
+                ظرفیت کلاس :
               </h6>
               <Badge
                 style={{ padding: "10px", fontSize: "13px" }}
                 pill
                 className="bg-light-info text-info mb-1"
               >
-                {detailData?.id}#
+                {detailData?.capacity} نفر
               </Badge>
             </div>
           </div>
@@ -376,13 +393,13 @@ const DetailModal = ({ isOpen, toggle, departmentId }) => {
   );
 };
 
-const Department = () => {
+const Classes = () => {
   const { data, isLoading } = useQuery({
-    queryKey: ["GetDepartment"],
-    queryFn: () => GetDepartment(),
+    queryKey: ["GetClassRoom"],
+    queryFn: () => GetClassRoom(),
   });
 
-  const department = data ?? [];
+  const classes = data ?? [];
 
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 7;
@@ -391,31 +408,32 @@ const Department = () => {
     setCurrentPage(page.selected + 1);
   };
 
-  const paginatedData = department.slice(
+  const paginatedData = classes.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
 
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [depName, setDepName] = useState("");
+  const [className, setClassName] = useState("");
+  const [capacity, setCapacity] = useState("");
   const [isBuildSelectOpen, setIsBuildSelectOpen] = useState(false);
   const [selectedBuilding, setSelectedBuilding] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingDep, setEditingDep] = useState(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
-  const [DepartmentId, setDepartmentId] = useState(null);
+  const [Classroomid, setClassroomid] = useState(null);
 
   const queryClient = useQueryClient();
 
   const handleOpenDetailModal = (id) => {
-    setDepartmentId(id);
+    setClassroomid(id);
     setDetailModalOpen(true);
   };
 
   const handleCloseDetailModal = () => {
     setDetailModalOpen(false);
-    setDepartmentId(null);
+    setClassroomid(null);
   };
 
   const handleOpenEditModal = (row) => {
@@ -429,35 +447,37 @@ const Department = () => {
   };
 
   const addMutation = useMutation({
-    mutationFn: AddDepartment,
+    mutationFn: AddClassRoom,
     onSuccess: () => {
-      toast.success("دپارتمان با موفقیت اضافه شد");
-      queryClient.invalidateQueries(["GetDepartment"]);
+      toast.success("کلاس با موفقیت اضافه شد");
+      queryClient.invalidateQueries(["GetClassRoom"]);
       handleCloseModal();
     },
     onError: (err) => {
-      toast.error("خطا در ثبت دپارتمان");
+      toast.error("خطا در ثبت کلاس");
       console.log(err);
     },
   });
 
   const handleOpenModal = () => {
     setSelectedCourse(true);
-    setDepName("");
+    setClassName("");
+    setCapacity("");
     setSelectedBuilding(null);
     setModalOpen(true);
   };
 
   const handleSubmit = () => {
-    if (!depName || !selectedBuilding) {
-      toast.warn("لطفا نام دپارتمان و ساختمان را انتخاب کنید");
+    if (!className || !capacity || !selectedBuilding) {
+      toast.warn("لطفا نام کلاس، ظرفیت و ساختمان را انتخاب کنید");
       return;
     }
 
     const payload = {
-      depName: depName,
-      buildingId: selectedBuilding.id,
       id: 0,
+      classRoomName: className,
+      capacity: parseInt(capacity, 10),
+      buildingId: selectedBuilding.id,
     };
 
     addMutation.mutate(payload);
@@ -467,6 +487,8 @@ const Department = () => {
     setModalOpen(false);
     setSelectedCourse(null);
     setSelectedBuilding(null);
+    setClassName("");
+    setCapacity("");
   };
 
   const handleOpenBuildSelectModal = () => {
@@ -485,15 +507,17 @@ const Department = () => {
   const columns = [
     {
       sortable: true,
-      width: "14.2%",
-      name: "نام دپارتمان",
+      width: "12.5%",
+      name: "نام کلاس",
       center: true,
-      selector: (row) => row.depName,
+      selector: (row) => row.classRoomName,
       cell: (row) => {
         return (
           <div className="d-flex justify-content-left align-items-center">
             <div className="d-flex flex-column">
-              <span className="text-truncate fw-bolder">{row.depName}</span>
+              <span className="text-truncate fw-bolder">
+                {row.classRoomName}
+              </span>
             </div>
           </div>
         );
@@ -501,13 +525,13 @@ const Department = () => {
     },
     {
       name: " نام ساختمان ",
-      width: "14.2%",
-      selector: (row) => `${row.buildingName}  `,
+      width: "12.5%",
+      selector: (row) => `${row.building.buildingName}  `,
       center: true,
     },
     {
       name: "طول جغرافیایی ساختمان  ",
-      width: "14.2%",
+      width: "12.5%",
       selector: (row) =>
         row.building.longitude.slice(
           0,
@@ -517,20 +541,26 @@ const Department = () => {
     },
     {
       name: "عرض جغرافیایی ساختمان",
-      width: "14.2%",
+      width: "12.5%",
       selector: (row) =>
         row.building.latitude.slice(0, row.building.latitude.indexOf(".") + 2),
       center: true,
     },
     {
       name: "طبقه ساختمان",
-      width: "14.2%",
-      selector: (row) => ` طبقه ${row.building.floor}  `,
+      width: "12.5%",
+      selector: (row) => ` طبقه  ${row.building.floor}  `,
+      center: true,
+    },
+    {
+      name: "ظرفیت کلاس ",
+      width: "12.5%",
+      selector: (row) => `${row.capacity} نفر `,
       center: true,
     },
     {
       name: "وضعیت ساختمان",
-      width: "14.2%",
+      width: "12.5%",
       center: true,
       selector: (row) => row.building.active,
       cell: (row) => {
@@ -549,7 +579,7 @@ const Department = () => {
 
     {
       name: "اقدام",
-      width: "14.2%",
+      width: "12.5%",
       cell: (row) => (
         <div>
           <Edit
@@ -579,7 +609,7 @@ const Department = () => {
     );
   }
 
-  if (department.length === 0) {
+  if (classes.length === 0) {
     return (
       <div className="text-center d-flex flex-column justify-content-center align-items-center ">
         <Lottie
@@ -603,10 +633,10 @@ const Department = () => {
           style={{ padding: "0 30px" }}
           className="d-flex justify-content-between align-items-center w-100"
         >
-          <p> دپارتمان ها</p>
+          <p> کلاس ها</p>
           <Button onClick={handleOpenModal} color="primary">
             {" "}
-            افزودن دپارتمان{" "}
+            افزودن کلاس{" "}
           </Button>
         </div>
       </CardHeader>
@@ -635,19 +665,30 @@ const Department = () => {
                 toggle={handleCloseModal}
                 className="border-0 p-2 pb-2"
               >
-                اضافه کردن دپارتمان
+                اضافه کردن کلاس
               </ModalHeader>
 
               <ModalBody style={{ padding: "2rem" }}>
                 <RCard className="shadow-none border-0 m-0">
                   <FormGroup className="mb-3">
-                    <Label for="departmentName">نام دپارتمان:</Label>
+                    <Label for="departmentName">نام کلاس:</Label>
                     <Input
                       type="text"
                       id="departmentName"
-                      placeholder="نام دپارتمان را وارد کنید..."
-                      value={depName}
-                      onChange={(e) => setDepName(e.target.value)}
+                      placeholder="نام کلاس را وارد کنید..."
+                      value={className}
+                      onChange={(e) => setClassName(e.target.value)}
+                    />
+                  </FormGroup>
+
+                  <FormGroup className="mb-3">
+                    <Label for="capacity">ظرفیت کلاس:</Label>
+                    <Input
+                      type="number"
+                      id="capacity"
+                      placeholder="ظرفیت کلاس را وارد کنید..."
+                      value={capacity}
+                      onChange={(e) => setCapacity(e.target.value)}
                     />
                   </FormGroup>
 
@@ -700,14 +741,14 @@ const Department = () => {
         <DetailModal
           isOpen={detailModalOpen}
           toggle={handleCloseDetailModal}
-          departmentId={DepartmentId}
+          classroomid={Classroomid}
         />
 
-        {department.length > 0 && (
+        {classes.length > 0 && (
           <ReactPaginate
             previousLabel={""}
             nextLabel={""}
-            pageCount={Math.ceil(department.length / rowsPerPage)}
+            pageCount={Math.ceil(classes.length / rowsPerPage)}
             activeClassName="active"
             forcePage={currentPage - 1}
             onPageChange={(page) => handlePagination(page)}
@@ -727,4 +768,4 @@ const Department = () => {
   );
 };
 
-export default Department;
+export default Classes;

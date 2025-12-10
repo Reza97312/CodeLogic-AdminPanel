@@ -1,7 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { GetAllBuildings } from "../../core/services/api/get/Buildings/GetAllBuildings";
-import loading from "../../assets/images/A/loading.gif";
 import BuildingTable from "../../components/Buildings/BuildingsTable.js";
 import Lottie from "lottie-react";
 import infinity from "../../assets/images/icons/Infinity Loader.json";

@@ -24,7 +24,7 @@ const renderCourseImage = (row) => {
       initials
       className="me-1"
       color="light-primary"
-      content={row.user.fName || "Course"}
+      content={row.user.fName}
     />
   );
 };

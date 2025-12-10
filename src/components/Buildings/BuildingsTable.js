@@ -66,12 +66,6 @@ const Maplif = ({ setNewBuilding, newBuilding }) => {
       }));
     },
   });
-
-  return markerPosition ? (
-    <Marker position={markerPosition}>
-      <Popup>موقعیت جدید ساختمان</Popup>
-    </Marker>
-  ) : null;
 };
 
 const BuildingTable = ({ buildingData }) => {

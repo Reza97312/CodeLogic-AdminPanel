@@ -17,6 +17,8 @@ const statusObj = {
   false: "light-danger",
 };
 
+
+
 export const columns = ({ handleOpenModal, toggleDeleteModal, handleNewsId }) => [
   {
     name: <span style={{ fontSize: "14px" }}>خبر</span>,

@@ -56,6 +56,22 @@ const NewsList = () => {
   })
 
 
+  const [openDeleteModal, setOpenDeleteModal] = useState(false)
+  const toggleDeleteModal = (value) => {
+    setOpenDeleteModal(value)
+  }
+
+
+  const [newsId, setNewsId] = useState()
+  const handleNewsId = (id) => {
+    setNewsId(id)
+  }
+
+
+  const onDeleteNews = async (fileId) => {
+    await deleteNews(fileId)
+  }
+
 
 
 
@@ -97,21 +113,6 @@ const NewsList = () => {
     setSelectedUser(row);
     setOpenModal(true);
   };
-
-
-  const [openDeleteModal, setOpenDeleteModal] = useState(false)
-  const toggleDeleteModal = (value) => {
-    setOpenDeleteModal(value)
-  }
-  const [newsId, setNewsId] = useState()
-  const handleNewsId = (id) => {
-    setNewsId(id)
-  }
-
-
-
-
-
 
 
   // ** Get data on mount

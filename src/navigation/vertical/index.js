@@ -16,6 +16,7 @@ import {
   Globe,
   Check,
   CheckCircle,
+  Box,
 } from "react-feather";
 
 export default [
@@ -141,10 +142,17 @@ export default [
     title: " ساختمان ها",
     icon: <Globe size={12} />,
     navLink: "/buildings",
-
+  },
+  {
     id: "department",
-    title: "دپارتمنت ها",
+    title: "دپارتمان ها",
     icon: <User size={20} />,
     navLink: "/department",
+  },
+  {
+    id: "classes",
+    title: "کلاس ها",
+    icon: <Box size={20} />,
+    navLink: "/classes",
   },
 ];

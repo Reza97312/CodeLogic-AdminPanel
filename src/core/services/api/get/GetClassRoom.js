@@ -1,7 +1,7 @@
 import Http from "../../../interceptor/interceptor";
-const GetDepartment = async () => {
+const GetClassRoom = async () => {
   try {
-    const result = await Http.get("/Department");
+    const result = await Http.get("/ClassRoom");
     return result;
   } catch (error) {
     console.log(error);
@@ -9,4 +9,4 @@ const GetDepartment = async () => {
   }
 };
 
-export default GetDepartment;
+export default GetClassRoom;

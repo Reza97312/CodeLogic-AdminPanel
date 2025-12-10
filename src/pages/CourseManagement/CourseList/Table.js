@@ -40,6 +40,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { DeleteCourse } from "../../../core/services/api/delete/Courses/DeleteCourse";
 import { toast } from "react-toastify";
 import SetActivateCourse from "../../../components/Courses/SetActivateCourse/SetActivateCourse";
+import ChangeExpireModal from "../../../components/Courses/ChangeExpireModal/ChangeExpireModal";
 
 const CustomHeader = ({
   toggleSidebar,
@@ -156,8 +157,14 @@ const UsersList = () => {
     setSort(sortDirection);
     setSortColumn(column.sortField);
   };
+  const [openExpire, setOpenExpire] = useState(false);
+  const toggleExpire = (bool) => setOpenExpire(bool);
+  const [editData, setEditData] = useState("");
+  const handleEdit = (dt) => setEditData(dt);
 
   const tableColumns = columns({
+    toggleExpire,
+    handleEdit,
     deleteCourse,
     getActiveData,
     toggleActiveModal,
@@ -225,6 +232,13 @@ const UsersList = () => {
           isOpen={OpenActiveModal}
           activeData={activeData}
           toggleActiveModal={toggleActiveModal}
+        />
+      )}
+      {openExpire && (
+        <ChangeExpireModal
+          isOpen={openExpire}
+          toggle={toggleExpire}
+          editData={editData}
         />
       )}
     </Fragment>

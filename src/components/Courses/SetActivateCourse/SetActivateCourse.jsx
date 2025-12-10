@@ -54,14 +54,10 @@ const SetActivateCourse = ({ activeData, toggleActiveModal, isOpen }) => {
         className="modal-dialog-centered"
         style={{ maxWidth: "600px" }}
       >
+        <ModalHeader toggle={() => toggleActiveModal(false)}>
+          <h3> فعال / غیرفعال کردن دوره</h3>
+        </ModalHeader>
         <ModalBody>
-          <p
-            className="mb-1 pt-2 text-center fw-bold fs-5"
-            style={{ letterSpacing: "0.5px" }}
-          >
-            فعال / غیرفعال کردن دوره
-          </p>
-
           <div className="mb-4">
             <Formik
               initialValues={{

@@ -11,7 +11,8 @@ const WizardModern = ({ initialData, allRoles }) => {
   const ref = useRef(null);
 
   const [stepper, setStepper] = useState(null);
-
+  const [payload, setPayload] = useState({});
+  const handlePayload = (vals) => setPayload((prev) => ({ ...prev, ...vals }));
   const steps = [
     {
       id: "Security",
@@ -23,6 +24,7 @@ const WizardModern = ({ initialData, allRoles }) => {
           stepper={stepper}
           type="wizard-modern"
           initialData={initialData}
+          handlePayload={handlePayload}
         />
       ),
     },
@@ -36,6 +38,7 @@ const WizardModern = ({ initialData, allRoles }) => {
           stepper={stepper}
           type="wizard-modern"
           initialData={initialData}
+          handlePayload={handlePayload}
         />
       ),
     },
@@ -49,6 +52,7 @@ const WizardModern = ({ initialData, allRoles }) => {
           stepper={stepper}
           type="wizard-modern"
           initialData={initialData}
+          handlePayload={handlePayload}
         />
       ),
     },
@@ -62,6 +66,7 @@ const WizardModern = ({ initialData, allRoles }) => {
           stepper={stepper}
           type="wizard-modern"
           initialData={initialData}
+          handlePayload={handlePayload}
         />
       ),
     },
@@ -76,6 +81,7 @@ const WizardModern = ({ initialData, allRoles }) => {
           type="wizard-modern"
           initialData={initialData}
           allRoles={allRoles}
+          handlePayload={handlePayload}
         />
       ),
     },
@@ -89,6 +95,7 @@ const WizardModern = ({ initialData, allRoles }) => {
           stepper={stepper}
           type="wizard-modern"
           initialData={initialData}
+          payload={payload}
         />
       ),
     },

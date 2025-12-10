@@ -3,6 +3,7 @@ import Http from "../../../interceptor/interceptor.js";
 const GetUserDetails = async (userId) => {
   try {
     const result = await Http.get(`/User/UserDetails/${userId}`);
+    console.log(result);
 
     return result;
   } catch (error) {

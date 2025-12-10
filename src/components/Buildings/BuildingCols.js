@@ -1,18 +1,5 @@
-import { Link } from "react-router-dom";
 import Avatar from "@components/avatar";
-import { store } from "@store/store";
-
-import {
-  MoreVertical,
-  FileText,
-  Trash2,
-  Archive,
-  UserPlus,
-  Check,
-  X,
-  Eye,
-} from "react-feather";
-
+import { MoreVertical, Eye, File } from "react-feather";
 import {
   Badge,
   UncontrolledDropdown,
@@ -45,7 +32,15 @@ const statusObj = {
   true: "light-success",
   false: "light-secondary",
 };
-export const BuildingCol = ({ toggleMap, handleEdit, toggleActive }) => [
+export const BuildingCol = ({
+  toggleMap,
+  handleEdit,
+  toggleActive,
+  toggleDetail,
+  handleDetail,
+  handleMap,
+  toggleEdit,
+}) => [
   {
     name: <span style={{ fontSize: "14px" }}>نام ساختمان </span>,
     minWidth: "300px",
@@ -75,7 +70,10 @@ export const BuildingCol = ({ toggleMap, handleEdit, toggleActive }) => [
     minWidth: "150px",
     cell: (row) => (
       <span
-        onClick={() => toggleMap(true)}
+        onClick={() => {
+          handleMap(row);
+          toggleMap(true);
+        }}
         style={{ cursor: "pointer", marginRight: "5px" }}
       >
         <Eye />
@@ -85,28 +83,46 @@ export const BuildingCol = ({ toggleMap, handleEdit, toggleActive }) => [
   {
     name: <span style={{ fontSize: "14px" }}>اقدامات</span>,
     minWidth: "120px",
+    center: true,
     cell: (row) => (
-      <UncontrolledDropdown>
-        <DropdownToggle tag="div" className="btn btn-sm">
-          <MoreVertical size={14} className="cursor-pointer" />
-        </DropdownToggle>
+      <div className="d-flex justify-content-between">
+        <UncontrolledDropdown>
+          <DropdownToggle tag="div" className="btn btn-sm">
+            <MoreVertical size={14} className="cursor-pointer" />
+          </DropdownToggle>
 
-        <DropdownMenu>
-          <DropdownItem style={{ width: "100%" }}>
-            <span className="align-middle">ویرایش ساختمان</span>
-          </DropdownItem>
+          <DropdownMenu>
+            <DropdownItem
+              onClick={() => {
+                toggleEdit(true);
+                handleEdit(row);
+              }}
+              style={{ width: "100%" }}
+            >
+              <span className="align-middle">ویرایش ساختمان</span>
+            </DropdownItem>
 
-          <DropdownItem
-            onClick={() => {
-              toggleActive(true);
-              handleEdit(row);
-            }}
-            style={{ width: "100%" }}
-          >
-            <span className="align-middle">ویرایش وضعیت</span>
-          </DropdownItem>
-        </DropdownMenu>
-      </UncontrolledDropdown>
+            <DropdownItem
+              onClick={() => {
+                toggleActive(true);
+                handleEdit(row);
+              }}
+              style={{ width: "100%" }}
+            >
+              <span className="align-middle">ویرایش وضعیت</span>
+            </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
+        <span
+          onClick={() => {
+            handleDetail(row);
+            toggleDetail(true);
+          }}
+          style={{ cursor: "pointer" }}
+        >
+          <File size={18} />
+        </span>
+      </div>
     ),
   },
 ];

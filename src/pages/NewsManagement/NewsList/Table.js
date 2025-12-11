@@ -16,6 +16,9 @@ import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import CustomHeader from './CustomHeader/CustomHeader'
 import {deleteNews} from '../../../core/services/api/delete/deleteNews'
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
+import { editNews } from "../../../core/services/api/put/News/editNews";
 
 
 const NewsList = () => {
@@ -56,6 +59,20 @@ const NewsList = () => {
   })
 
 
+
+
+
+  const onSubmit = (values, {resetForm}) => {
+    editNews(values.id, values.slideNumber, values.currentImgAd, values.active, values.title, values.googleTitle, values.googleDescribe,
+      values.miniDescribe, values.describe, values.keyword, values.isSlider, values.newsCategoryId, values.image 
+    )
+    resetForm()
+  }
+
+
+
+
+
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const toggleDeleteModal = (value) => {
     setOpenDeleteModal(value)
@@ -68,9 +85,17 @@ const NewsList = () => {
   }
 
 
+  const queryClient = useQueryClient()
   const onDeleteNews = async (fileId) => {
     await deleteNews(fileId)
+    toast.success('خبر با موفقیت حذف شد')
+    queryClient.invalidateQueries(['GETLISTNEWSCATEGORY'])
   }
+
+
+
+
+
 
 
 
@@ -413,16 +438,13 @@ const NewsList = () => {
         isOpen={openModal}
         toggle={() => setOpenModal(false)}
         className="modal-dialog-centered"
-        style={{ maxWidth: "600px" }}
-      >
+        style={{ maxWidth: "600px" }}>
         <ModalBody>
           <p
             className="mb-1 pt-2 text-center fw-bold fs-5"
-            style={{ letterSpacing: "0.5px" }}
-          >
+            style={{ letterSpacing: "0.5px" }}>
             ویرایش نقش کاربر
           </p>
-
           <p
             className="mb-2 text-center text-muted"
             style={{ fontSize: "0.95rem" }}
@@ -523,8 +545,8 @@ const NewsList = () => {
               انصراف
             </Button>
             <Button 
-            onClick={(row) => {
-              deleteNews(newsId)
+            onClick={() => {
+              onDeleteNews(newsId)
               setOpenDeleteModal(false)
             }}
             color="primary">
@@ -532,6 +554,89 @@ const NewsList = () => {
             </Button>
           </div>
         </div>
+      </Modal>
+      <Modal>
+        <ModalHeader>
+          <h3>ویرایش خبر</h3>
+        </ModalHeader>
+        <ModalBody>
+            <Form className="d-flex flex-column" onSubmit={onSubmit}>
+              <div className="d-flex gap-4">
+                <div>
+                  <label for="id">آیدی خبر را وارد کنید</label>
+                  <input name="id" type="text"/>
+                </div>
+                <div>
+                  <label for="slideNumber">شماره اسلاید را وارد کنید</label>
+                  <input name="slideNumber" type="text"/>
+                </div>
+              </div>
+              <div className="d-flex gap-4">
+                <div>
+                  <label for="currentImgAd">عکس اول را انتخاب کنید</label>
+                  <input name="currentImgAd" type="file"/>
+                </div>
+                <div>
+                  <label for="currentImgAdTumb">عکس دوم را انتخاب کنید</label>
+                  <input name="currentImgAdTumb" type="file"/>
+                </div>
+              </div>
+              <div className="d-flex gap-4">
+                <div>
+                  <label for="active">آیا فعال است؟</label>
+                  <input name="active" type="checkbox"/>
+                </div>
+                <div>
+                  <label for="title">عنوان خبر را وارد کنید</label>
+                  <input name="title" type="text"/>
+                </div>
+              </div>
+              <div className="d-flex gap-4">
+                <div>
+                  <label for="googleTitle">عنوان گوگل</label>
+                  <input name="googleTitle" type="text"/>
+                </div>
+                <div>
+                  <label for="googleDescribe">توضیحات گوگل</label>
+                  <input name="googleDescribe" type="text"/>
+                </div>
+              </div>
+              <div className="d-flex gap-4">
+                <div>
+                  <label for="miniDescribe">توضیحات کوتاه</label>
+                  <input name="miniDescribe" type="text"/>
+                </div>
+                <div>
+                  <label for="describe">توضیحات</label>
+                  <input name="describe" type="text"/>
+                </div>
+              </div>
+              <div className="d-flex gap-4">
+                <div>
+                  <label for="keyword">کلمه کلیدی را وارد کنید</label>
+                  <input name="keyword" type="text"/>
+                </div>
+                <div>
+                  <label for="isSlider">اسلایدر</label>
+                  <input name="isSlider" type="checkbox"/>
+                </div>
+              </div>
+              <div className="d-flex gap-4">
+                <div>
+                  <label for="newsCategoryId">آیدی دسته بندی خبر را وارد کنید</label>
+                  <input name="newsCategoryId" type="text"/>
+                </div>
+                <div>
+                  <label for="image">عکس</label>
+                  <input name="image" type="file"/>
+                </div>
+              </div>
+            </Form>
+        </ModalBody>
+        <ModalFooter>
+          <Button></Button>
+          <Button></Button>
+        </ModalFooter>
       </Modal>
     </Fragment>
   );

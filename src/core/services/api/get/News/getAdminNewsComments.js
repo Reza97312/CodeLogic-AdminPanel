@@ -1,6 +1,6 @@
 import Http from '../../../../interceptor/interceptor';
 
-const getNews = async (id) => {
+const getAdminNewsComments = async (id) => {
     try {
         const result = await Http.get(`/News/GetAdminNewsComments?NewsId=${id}`);
         return result;
@@ -9,4 +9,4 @@ const getNews = async (id) => {
     }
 };
 
-export default getNews;
+export default getAdminNewsComments;

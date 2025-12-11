@@ -1,6 +1,6 @@
 import Http from '../../../../interceptor/interceptor';
 
-const getNewsDetail = async () => {
+const getNews = async () => {
     try {
         const result = await Http.get('/News');
         return result;
@@ -9,4 +9,4 @@ const getNewsDetail = async () => {
     }
 };
 
-export default getNewsDetail;
+export default getNews;

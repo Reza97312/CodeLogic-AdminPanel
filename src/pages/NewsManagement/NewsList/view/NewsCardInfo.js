@@ -1,26 +1,15 @@
-// ** React Imports
 import { useState, Fragment } from "react";
 import loading from "../../../../assets/images/A/loading.gif";
-// ** Reactstrap Imports
 import {Row, Col, Card, Form, CardBody, Button, Badge, Modal, Input, Label, ModalBody, ModalHeader} from "reactstrap";
-
-// ** Third Party Components
 import Swal from "sweetalert2";
 import Select from "react-select";
 import { Check, Briefcase, X, MessageSquare, TrendingUp } from "react-feather";
 import { useForm, Controller } from "react-hook-form";
 import withReactContent from "sweetalert2-react-content";
-
-// ** Custom Components
 import Avatar from "@components/avatar";
-
-// ** Utils
 import { selectThemeColors } from "@utils";
-
-// ** Styles
 import "@styles/react/libs/react-select/_react-select.scss";
 import { Sortable } from "sortablejs";
-
 import {PersianDateConverter} from '../../../../utility/helper/PersianDateConverter'
 
 
@@ -253,14 +242,14 @@ const NewsInfoCard = ({ selectedNews }) => {
               </ul>
             ) : null}
           </div>
-          <div className="d-flex justify-content-center pt-2">
+          {/* <div className="d-flex justify-content-center pt-2">
             <Button color="primary" onClick={() => setShow(true)}>
               ویرایش خبر
             </Button>
-          </div>
+          </div> */}
         </CardBody>
       </Card>
-      <Modal
+      {/* <Modal
         isOpen={show}
         toggle={() => setShow(!show)}
         className="modal-dialog-centered modal-lg"
@@ -456,7 +445,7 @@ const NewsInfoCard = ({ selectedNews }) => {
             </Row>
           </Form>
         </ModalBody>
-      </Modal>
+      </Modal> */}
     </Fragment>
   );
 };

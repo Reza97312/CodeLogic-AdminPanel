@@ -43,6 +43,8 @@ const statusObj = {
   false: "light-secondary",
 };
 export const columns = ({
+  toggleExpire,
+  handleEdit,
   getActiveData,
   handleOpenModal,
   toggleSidebar,
@@ -126,7 +128,13 @@ export const columns = ({
             <span className="align-middle">جزئیات دوره</span>
           </DropdownItem>
 
-          <DropdownItem style={{ width: "100%" }}>
+          <DropdownItem
+            onClick={() => {
+              handleEdit(row);
+              toggleExpire(true);
+            }}
+            style={{ width: "100%" }}
+          >
             <Archive size={14} className="me-50" />
             <span className="align-middle">غیر منقضی کردن </span>
           </DropdownItem>

@@ -65,11 +65,14 @@ const renderRole = (row) => {
     ? row.userRoles.split(",").map((r) => r.trim().toLowerCase())
     : [];
 
+  const limit = rolesArray.slice(0, 4);
+  const more = rolesArray.length > 4;
+
   const rowId = row.id;
 
   return (
     <div className="d-flex align-items-center gap-1">
-      {rolesArray.map((role, index) => {
+      {limit.map((role, index) => {
         const roleData = roleObj[role] || { class: "", icon: User, name: role };
         const RoleIcon = roleData.icon;
         const roleClass = roleData.class;
@@ -92,6 +95,15 @@ const renderRole = (row) => {
           </>
         );
       })}
+
+      {more && (
+        <span
+          className="fw-bold text-nowrap"
+          title={rolesArray.slice(4).join(", ")}
+        >
+          ...
+        </span>
+      )}
     </div>
   );
 };

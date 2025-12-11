@@ -23,17 +23,11 @@ const EditUser = () => {
     queryFn: () => GetAllUser(),
     staleTime: Infinity,
   });
-
   let allRolesOptions = [];
-  if (
-    allUsersData &&
-    allUsersData.listUser &&
-    allUsersData.listUser.length > 0
-  ) {
-    const rolesArray = allUsersData.listUser[0].roles;
-    allRolesOptions = rolesArray.map((roleName) => ({
-      value: roleName,
-      label: roleName,
+  if (allUsersData && allUsersData.roles && allUsersData.roles.length > 0) {
+    allRolesOptions = allUsersData.roles.map((role) => ({
+      value: role.id,
+      label: role.name,
     }));
   }
 

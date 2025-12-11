@@ -1,7 +1,7 @@
 import http from "../../../../interceptor/interceptor.js";
-export const EditCourseSoucials = async (payload) => {
+export const EditCourseExpire = async (payload) => {
   try {
-    const result = await http.put("/CourseSocialGroup", payload);
+    const result = await http.put("/Course/SetExpireCourse", payload);
     console.log(result);
 
     return result;

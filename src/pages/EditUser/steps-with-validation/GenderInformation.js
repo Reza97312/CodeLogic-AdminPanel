@@ -9,186 +9,191 @@ import { useForm, Controller } from "react-hook-form";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Form, Label, Input, Row, Col, Button, FormFeedback } from "reactstrap";
+import { Formik } from "formik";
 
 const Gender = (genderApi) => {
   if (genderApi === true) return "male";
   if (genderApi === false) return "female";
   return "";
 };
-
-const DefValue = (userData) => {
-  return {
-    birthday: userData.birthDay,
-    gender: Gender(userData.gender),
-    linkdin: userData.linkdinProfile,
-    telegram: userData.telegramLink,
-  };
-};
-
 const birthdayPlaceholder = "تاریخ تولد خود را وارد کنید...";
 
-const GenderInformation = ({ stepper, initialData }) => {
-  const initialDefValues = DefValue(initialData);
-
-  const SignupSchema = yup.object().shape({
-    birthday: yup.string().required("تاریخ تولد الزامی است"),
-    gender: yup.string().required("انتخاب جنسیت الزامی است"),
-    linkdin: yup.string().required("  لینک خود را وارد کنید   "),
-    telegram: yup.string().required("   لینک خود را وارد کنید  "),
-  });
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: initialDefValues,
-    resolver: yupResolver(SignupSchema),
-  });
-
-  const onSubmit = () => {
-    if (isObjEmpty(errors)) {
-      stepper.next();
+const GenderInformation = ({ stepper, initialData, handlePayload }) => {
+  const convertToUTC = (dateString) => {
+    if (!dateString) return "";
+    try {
+      const date = new DateObject({
+        date: dateString,
+        format: "YYYY/MM/DD",
+        calendar: persian,
+        locale: persian_fa,
+      });
+      return date.toDate().toISOString();
+    } catch (err) {
+      console.error("Invalid date:", dateString);
+      return "";
     }
   };
+  const toJalali = (date) => {
+    if (!date) return "";
+    try {
+      return new DateObject({
+        date,
+      })
+        .convert(persian, persian_fa)
+        .format("YYYY/MM/DD");
+    } catch {
+      return "";
+    }
+  };
+  const SignupSchema = yup.object().shape({
+    birthDay: yup.string().required("تاریخ تولد الزامی است"),
+    gender: yup.string().required("انتخاب جنسیت الزامی است"),
+    linkdinProfile: yup.string().required("  لینک خود را وارد کنید   "),
+    telegramLink: yup.string().required("   لینک خود را وارد کنید  "),
+  });
 
   return (
     <Fragment>
       <div className="content-header mb-5">
         <h5 className="mb-0">اطلاعات جنسیتی و لینک </h5>
       </div>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Row>
-          <Col md="6" className="mb-4">
-            <Label className="form-label" for="birthday">
-              تاریخ تولد
-            </Label>
+      <Formik
+        initialValues={{
+          birthDay: initialData?.birthDay || "",
+          gender: Gender(initialData?.gender || false),
+          linkdinProfile: initialData?.linkdinProfile || "",
+          telegramLink: initialData?.telegramLink || "",
+        }}
+        validationSchema={SignupSchema}
+        onSubmit={(values) => {
+          console.log(values);
+          handlePayload(values);
+          stepper.next();
+        }}
+      >
+        {({ values, errors, touched, setFieldValue, handleSubmit }) => (
+          <Form onSubmit={handleSubmit}>
+            <Row>
+              <Col md="6" className="mb-5">
+                <Label className="form-label" for="gender">
+                  جنسیت
+                </Label>
 
-            <div className={errors.birthday ? "is-invalid" : ""}>
-              <Controller
-                control={control}
-                id="birthday"
-                name="birthday"
-                render={({ field }) => (
+                <Input
+                  value={values.gender}
+                  onChange={(e) =>
+                    setFieldValue("gender", e.target.value === "true")
+                  }
+                  type="select"
+                  invalid={!!errors.gender && touched.gender}
+                >
+                  <option value="">جنسیت خود را انتخاب کنید...</option>
+                  <option value="true">مرد</option>
+                  <option value="false">زن</option>
+                </Input>
+
+                {errors.gender && (
+                  <FormFeedback>{errors.gender.message}</FormFeedback>
+                )}
+              </Col>
+              <Col md="6" className="mb-4">
+                <Label className="form-label" for="birthday">
+                  تاریخ تولد
+                </Label>
+
+                <div className={errors.birthDay ? "is-invalid" : ""}>
                   <DatePicker
+                    value={toJalali(values.birthDay)}
+                    inputClass="form-control"
+                    onChange={(d) => {
+                      console.log(
+                        "birthDay",
+                        convertToUTC(d.format("YYYY/MM/DD"))
+                      );
+
+                      setFieldValue(
+                        "birthDay",
+                        convertToUTC(d?.format("YYYY/MM/DD"))
+                      );
+                    }}
                     calendar={persian}
                     locale={persian_fa}
-                    {...field}
-                    containerClassName="w-100"
-                    inputClass={`form-control w-100 cursor-pointer ${
-                      errors.birthday ? "is-invalid" : ""
-                    }`}
-                    value={
-                      field.value
-                        ? new DateObject({
-                            date: field.value,
-                            calendar: persian,
-                            locale: persian_fa,
-                          })
-                        : null
-                    }
-                    onChange={(date) => {
-                      field.onChange(date ? date.toDate().toISOString() : null);
-                    }}
-                    placeholder={birthdayPlaceholder}
                   />
+                </div>
+
+                {errors.birthDay && (
+                  <FormFeedback className="d-block">
+                    {errors.birthDay.message}
+                  </FormFeedback>
                 )}
-              />
-            </div>
+              </Col>
+            </Row>
+            <Row>
+              <div className="form-password-toggle col-md-6 mb-5">
+                <Label className="form-label" for="linkdinProfile">
+                  لینک پروفایل لینکدین
+                </Label>
 
-            {errors.birthday && (
-              <FormFeedback className="d-block">
-                {errors.birthday.message}
-              </FormFeedback>
-            )}
-          </Col>
-
-          <Col md="6" className="mb-5">
-            <Label className="form-label" for="gender">
-              جنسیت
-            </Label>
-            <Controller
-              name="gender"
-              control={control}
-              render={({ field }) => (
-                <Input type="select" {...field} invalid={errors.gender && true}>
-                  <option value="">جنسیت خود را انتخاب کنید...</option>
-                  <option value="male">مرد</option>
-                  <option value="female">زن</option>
-                </Input>
-              )}
-            />
-            {errors.gender && (
-              <FormFeedback>{errors.gender.message}</FormFeedback>
-            )}
-          </Col>
-        </Row>
-        <Row>
-          <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="linkdin">
-              لینک پروفایل لینکدین
-            </Label>
-            <Controller
-              id="linkdin"
-              name="linkdin"
-              control={control}
-              render={({ field }) => (
                 <Input
-                  type="text"
                   placeholder="لینک خود را وارد کنید..."
-                  invalid={errors.linkdin && true}
-                  {...field}
+                  value={values.linkdinProfile}
+                  onChange={(e) =>
+                    setFieldValue("linkdinProfile", e.target.value)
+                  }
+                  invalid={!!errors.linkdinProfile && touched.linkdinProfile}
                 />
-              )}
-            />
-            {errors.linkdin && (
-              <FormFeedback>{errors.linkdin.message}</FormFeedback>
-            )}
-          </div>
-          <div className="form-password-toggle col-md-6 mb-5">
-            <Label className="form-label" for="telegram">
-              لینک تلگرام
-            </Label>
-            <Controller
-              control={control}
-              id="telegram"
-              name="telegram"
-              render={({ field }) => (
+
+                {errors.linkdinProfile && (
+                  <FormFeedback>{errors.linkdinProfile.message}</FormFeedback>
+                )}
+              </div>
+              <div className="form-password-toggle col-md-6 mb-5">
+                <Label className="form-label" for="telegramLink">
+                  لینک تلگرام
+                </Label>
                 <Input
-                  type="text"
                   placeholder="لینک خود را انتخاب کنید..."
-                  invalid={errors.telegram && true}
-                  {...field}
+                  value={values.telegramLink}
+                  onChange={(e) =>
+                    setFieldValue("telegramLink", e.target.value)
+                  }
+                  invalid={!!errors.telegramLink && touched.telegramLink}
                 />
-              )}
-            />
-            {errors.telegram && (
-              <FormFeedback>{errors.telegram.message}</FormFeedback>
-            )}
-          </div>
-        </Row>
-        <div className="d-flex justify-content-between mt-5">
-          <Button
-            color="secondary"
-            className="btn-prev"
-            outline
-            onClick={() => stepper.previous()}
-          >
-            <ArrowLeft
-              size={14}
-              className="align-middle me-sm-25 me-0"
-            ></ArrowLeft>
-            <span className="align-middle d-sm-inline-block d-none">قبلی</span>
-          </Button>
-          <Button type="submit" color="primary" className="btn-next">
-            <span className="align-middle d-sm-inline-block d-none">بعدی</span>
-            <ArrowRight
-              size={14}
-              className="align-middle ms-sm-25 ms-0"
-            ></ArrowRight>
-          </Button>
-        </div>
-      </Form>
+
+                {errors.telegram && (
+                  <FormFeedback>{errors.telegramLink.message}</FormFeedback>
+                )}
+              </div>
+            </Row>
+            <div className="d-flex justify-content-between mt-5">
+              <Button
+                color="secondary"
+                className="btn-prev"
+                outline
+                onClick={() => stepper.previous()}
+              >
+                <ArrowLeft
+                  size={14}
+                  className="align-middle me-sm-25 me-0"
+                ></ArrowLeft>
+                <span className="align-middle d-sm-inline-block d-none">
+                  قبلی
+                </span>
+              </Button>
+              <Button type="submit" color="primary" className="btn-next">
+                <span className="align-middle d-sm-inline-block d-none">
+                  بعدی
+                </span>
+                <ArrowRight
+                  size={14}
+                  className="align-middle ms-sm-25 ms-0"
+                ></ArrowRight>
+              </Button>
+            </div>
+          </Form>
+        )}
+      </Formik>
     </Fragment>
   );
 };

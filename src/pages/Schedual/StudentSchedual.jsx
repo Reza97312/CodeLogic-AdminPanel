@@ -504,7 +504,7 @@ const StudentSchedual = () => {
             <h4 tag="h4" className="mb-0">
               {selectedCourse
                 ? ` بازه زمانی کاربر: ${selectedCourse.fName} ${selectedCourse.lName}`
-                : "لطفاً کاربر را انتخاب کنید"}
+                : "لطفا کاربر را انتخاب کنید"}
             </h4>
             <div className="d-flex justify-content-between gap-2">
               <Input
@@ -521,7 +521,7 @@ const StudentSchedual = () => {
                 <option value="notactive"> غیرفعال </option>
               </Input>
               <Button color="primary" onClick={toggleCourseSelect}>
-                افزودن کاربر
+                انتخاب کاربر
               </Button>
             </div>
           </CardHeader>
@@ -581,7 +581,7 @@ const StudentSchedual = () => {
                   animationData={firstload}
                 />
                 <h5 className="text-secondary">
-                  لطفاً برای مشاهده بازه‌های زمانی، ابتدا یک کاربر را انتخاب
+                  لطفا برای مشاهده بازه‌های زمانی، ابتدا یک کاربر را انتخاب
                   کنید.
                 </h5>
               </div>

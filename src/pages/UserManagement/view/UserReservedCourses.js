@@ -1,4 +1,11 @@
-import { Card, CardHeader } from "reactstrap";
+import {
+  Card,
+  CardHeader,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledDropdown,
+} from "reactstrap";
 import {
   Modal,
   ModalBody,
@@ -20,6 +27,9 @@ import {
   User,
   Activity,
   Book,
+  Archive,
+  Trash2,
+  MoreVertical,
 } from "react-feather";
 import DataTable from "react-data-table-component";
 import Avatar from "@components/avatar";
@@ -28,6 +38,8 @@ import { useState } from "react";
 import ReactPaginate from "react-paginate";
 import empty from "../../../assets/images/icons/empty.json";
 import Lottie from "lottie-react";
+import AcceptReserveModal from "../../../components/Courses/ReservedCourses/AcceptReserveModal";
+import DeleteReserveModal from "../../../components/Courses/ReservedCourses/DeleteReserveModal";
 
 const UserReservedCourses = ({ user }) => {
   const rescourses = user?.courseReserve ?? [];
@@ -56,7 +68,13 @@ const UserReservedCourses = ({ user }) => {
     setModalOpen(false);
     setSelectedCourse(null);
   };
+  const [openAcceptModal, setOpenAcceptModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [editData, setEditData] = useState(null);
+  const toggleAcceptModal = (bool) => setOpenAcceptModal(bool);
+  const toggleDeleteModal = (boool) => setOpenDeleteModal(boool);
 
+  useState;
   const columns = [
     {
       sortable: true,
@@ -130,6 +148,41 @@ const UserReservedCourses = ({ user }) => {
       ),
       center: true,
     },
+    {
+      name: <span style={{ fontSize: "14px" }}>اقدامات</span>,
+      minWidth: "120px",
+      cell: (row) => (
+        <UncontrolledDropdown>
+          <DropdownToggle tag="div" className="btn btn-sm">
+            <MoreVertical size={14} className="cursor-pointer" />
+          </DropdownToggle>
+
+          <DropdownMenu>
+            <DropdownItem
+              onClick={() => {
+                setOpenAcceptModal(true);
+                setEditData({ courseId: row.courseId, studentId: row.userId });
+              }}
+              style={{ width: "100%" }}
+            >
+              <Archive size={14} className="me-50" />
+              <span className="align-middle">تایید رزرو</span>
+            </DropdownItem>
+
+            <DropdownItem
+              onClick={() => {
+                setOpenDeleteModal(true);
+                setEditData({ reserveId: row.id });
+              }}
+              style={{ width: "100%" }}
+            >
+              <Trash2 size={14} className="me-50" />
+              <span className="align-middle">حذف</span>
+            </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
+      ),
+    },
   ];
 
   if (rescourses.length === 0) {
@@ -150,158 +203,175 @@ const UserReservedCourses = ({ user }) => {
   }
 
   return (
-    <Card>
-      <CardHeader tag="h4">دوره های رزرو شده</CardHeader>
-      <div className="react-dataTable user-view-account-projects">
-        <DataTable
-          noHeader
-          responsive={false}
-          columns={columns}
-          data={paginatedData}
-          className="react-dataTable"
-          sortIcon={<ChevronDown size={10} />}
-        />
-
-        <Modal
-          isOpen={modalOpen}
-          toggle={handleCloseModal}
-          centered
-          style={{
-            maxWidth: "480px",
-            width: "90%",
-          }}
-        >
-          {selectedCourse && (
-            <>
-              <ModalHeader
-                toggle={handleCloseModal}
-                className="border-0 p-2 pb-0"
-                close={
-                  <X
-                    size={16}
-                    onClick={handleCloseModal}
-                    className="cursor-pointer"
-                  />
-                }
-              />
-
-              <ModalBody style={{ padding: "1rem" }}>
-                <RCard className="shadow-none border-0 m-0">
-                  <div className="text-center ">
-                    <div
-                      style={{
-                        width: "80%",
-                        borderRadius: "8px",
-                        overflow: "hidden",
-                        margin: "0 auto",
-                      }}
-                    >
-                      <p className="text-secondary fw-bold mb-1">
-                        <Book size={14} style={{ marginInlineEnd: "6px" }} />
-                        نام دوره :
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="text-center ">
-                    <Badge
-                      color="light-primary"
-                      pill
-                      className="fw-bolder p-1 px-2 text-truncate"
-                      style={{ maxWidth: "80%" }}
-                    >
-                      {selectedCourse.courseName}
-                    </Badge>
-                  </div>
-
-                  <CardBody className="px-2 mt-2">
-                    <div className="row g-2 mb-2 small justify-content-between text-center">
-                      <div className="col-4">
-                        <h6 className="text-secondary fw-bold mb-1">
-                          <Calendar
-                            size={14}
-                            style={{ marginInlineEnd: "6px" }}
-                          />
-                          تاریخ ثبت:
-                        </h6>
-                        <Badge
-                          style={{ padding: "8px" }}
-                          pill
-                          className="bg-light-info text-info mb-1"
-                        >
-                          {new Date(
-                            selectedCourse.insertDate
-                          ).toLocaleDateString("fa-IR")}
-                        </Badge>
-                      </div>
-
-                      <div className="col-4">
-                        <h6 className="text-secondary fw-bold mb-1">
-                          <Activity
-                            size={14}
-                            style={{ marginInlineEnd: "6px" }}
-                          />
-                          وضعیت:
-                        </h6>
-                        <Badge
-                          style={{ padding: "8px" }}
-                          pill
-                          className={`mb-1 ${
-                            selectedCourse.accept
-                              ? "bg-light-success text-success"
-                              : "bg-light-danger text-danger"
-                          }`}
-                        >
-                          {selectedCourse.accept ? "تایید شده" : "تایید نشده"}
-                        </Badge>
-                      </div>
-                      <div className="col-4">
-                        <h6 className="text-secondary fw-bold mb-1">
-                          <Calendar
-                            size={14}
-                            style={{ marginInlineEnd: "6px" }}
-                          />
-                          تاریخ رزرو:
-                        </h6>
-                        <Badge
-                          style={{ padding: "8px" }}
-                          pill
-                          className="bg-light-info text-info mb-1"
-                        >
-                          {new Date(
-                            selectedCourse.reserverDate
-                          ).toLocaleDateString("fa-IR")}
-                        </Badge>
-                      </div>
-                    </div>
-                  </CardBody>
-                </RCard>
-              </ModalBody>
-            </>
-          )}
-        </Modal>
-
-        {rescourses.length > 0 && (
-          <ReactPaginate
-            previousLabel={""}
-            nextLabel={""}
-            pageCount={Math.ceil(rescourses.length / rowsPerPage)}
-            activeClassName="active"
-            forcePage={currentPage - 1}
-            onPageChange={(page) => handlePagination(page)}
-            pageClassName={"page-item"}
-            nextLinkClassName={"page-link"}
-            nextClassName={"page-item next"}
-            previousClassName={"page-item prev"}
-            previousLinkClassName={"page-link"}
-            pageLinkClassName={"page-link"}
-            containerClassName={
-              "pagination react-paginate justify-content-end my-2 pe-1"
-            }
+    <>
+      <Card>
+        <CardHeader tag="h4">دوره های رزرو شده</CardHeader>
+        <div className="react-dataTable user-view-account-projects">
+          <DataTable
+            noHeader
+            responsive={false}
+            columns={columns}
+            data={paginatedData}
+            className="react-dataTable"
+            sortIcon={<ChevronDown size={10} />}
           />
-        )}
-      </div>
-    </Card>
+
+          <Modal
+            isOpen={modalOpen}
+            toggle={handleCloseModal}
+            centered
+            style={{
+              maxWidth: "480px",
+              width: "90%",
+            }}
+          >
+            {selectedCourse && (
+              <>
+                <ModalHeader
+                  toggle={handleCloseModal}
+                  className="border-0 p-2 pb-0"
+                  close={
+                    <X
+                      size={16}
+                      onClick={handleCloseModal}
+                      className="cursor-pointer"
+                    />
+                  }
+                />
+
+                <ModalBody style={{ padding: "1rem" }}>
+                  <RCard className="shadow-none border-0 m-0">
+                    <div className="text-center ">
+                      <div
+                        style={{
+                          width: "80%",
+                          borderRadius: "8px",
+                          overflow: "hidden",
+                          margin: "0 auto",
+                        }}
+                      >
+                        <p className="text-secondary fw-bold mb-1">
+                          <Book size={14} style={{ marginInlineEnd: "6px" }} />
+                          نام دوره :
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="text-center ">
+                      <Badge
+                        color="light-primary"
+                        pill
+                        className="fw-bolder p-1 px-2 text-truncate"
+                        style={{ maxWidth: "80%" }}
+                      >
+                        {selectedCourse.courseName}
+                      </Badge>
+                    </div>
+
+                    <CardBody className="px-2 mt-2">
+                      <div className="row g-2 mb-2 small justify-content-between text-center">
+                        <div className="col-4">
+                          <h6 className="text-secondary fw-bold mb-1">
+                            <Calendar
+                              size={14}
+                              style={{ marginInlineEnd: "6px" }}
+                            />
+                            تاریخ ثبت:
+                          </h6>
+                          <Badge
+                            style={{ padding: "8px" }}
+                            pill
+                            className="bg-light-info text-info mb-1"
+                          >
+                            {new Date(
+                              selectedCourse.insertDate
+                            ).toLocaleDateString("fa-IR")}
+                          </Badge>
+                        </div>
+
+                        <div className="col-4">
+                          <h6 className="text-secondary fw-bold mb-1">
+                            <Activity
+                              size={14}
+                              style={{ marginInlineEnd: "6px" }}
+                            />
+                            وضعیت:
+                          </h6>
+                          <Badge
+                            style={{ padding: "8px" }}
+                            pill
+                            className={`mb-1 ${
+                              selectedCourse.accept
+                                ? "bg-light-success text-success"
+                                : "bg-light-danger text-danger"
+                            }`}
+                          >
+                            {selectedCourse.accept ? "تایید شده" : "تایید نشده"}
+                          </Badge>
+                        </div>
+                        <div className="col-4">
+                          <h6 className="text-secondary fw-bold mb-1">
+                            <Calendar
+                              size={14}
+                              style={{ marginInlineEnd: "6px" }}
+                            />
+                            تاریخ رزرو:
+                          </h6>
+                          <Badge
+                            style={{ padding: "8px" }}
+                            pill
+                            className="bg-light-info text-info mb-1"
+                          >
+                            {new Date(
+                              selectedCourse.reserverDate
+                            ).toLocaleDateString("fa-IR")}
+                          </Badge>
+                        </div>
+                      </div>
+                    </CardBody>
+                  </RCard>
+                </ModalBody>
+              </>
+            )}
+          </Modal>
+
+          {rescourses.length > 0 && (
+            <ReactPaginate
+              previousLabel={""}
+              nextLabel={""}
+              pageCount={Math.ceil(rescourses.length / rowsPerPage)}
+              activeClassName="active"
+              forcePage={currentPage - 1}
+              onPageChange={(page) => handlePagination(page)}
+              pageClassName={"page-item"}
+              nextLinkClassName={"page-link"}
+              nextClassName={"page-item next"}
+              previousClassName={"page-item prev"}
+              previousLinkClassName={"page-link"}
+              pageLinkClassName={"page-link"}
+              containerClassName={
+                "pagination react-paginate justify-content-end my-2 pe-1"
+              }
+            />
+          )}
+        </div>
+      </Card>
+      {openAcceptModal && (
+        <AcceptReserveModal
+          isOpen={openAcceptModal}
+          toggleAcceptModal={toggleAcceptModal}
+          courseId={editData.courseId}
+          studentId={editData.studentId}
+        />
+      )}
+      {openDeleteModal && (
+        <DeleteReserveModal
+          isOpen={openDeleteModal}
+          toggleDeleteModal={toggleDeleteModal}
+          reserveId={editData.reserveId}
+        />
+      )}
+    </>
   );
 };
 

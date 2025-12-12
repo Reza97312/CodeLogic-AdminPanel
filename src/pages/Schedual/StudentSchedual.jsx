@@ -521,7 +521,7 @@ const StudentSchedual = () => {
                 <option value="notactive"> غیرفعال </option>
               </Input>
               <Button color="primary" onClick={toggleCourseSelect}>
-                افزودن کاربر
+                انتخاب کاربر
               </Button>
             </div>
           </CardHeader>

@@ -6,8 +6,6 @@ import BlankLayout from "@layouts/BlankLayout";
 import VerticalLayout from "@src/layouts/VerticalLayout";
 import HorizontalLayout from "@src/layouts/HorizontalLayout";
 import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper";
-import NewsList from "../../pages/NewsManagement/NewsList/NewsList";
-import NewsDetail from "../../pages/NewsManagement/NewsList/view";
 import CreateNews from "../../pages/NewsManagement/CreateNews/CreateNews";
 import UserHomeWorks from "../../pages/UserHomeWorks/UserHomeWorks";
 
@@ -28,6 +26,9 @@ import CourseLevels from "../../pages/CourseManagement/CourseLevels/CourseLevels
 import TermManagement from "../../pages/TermManagement/TermManagement";
 import BuildingManagement from "../../pages/Buildings/BuildingManagement";
 import TasksManagement from "../../pages/TasksManageMent/TasksManagement";
+import NewsIndex from "../../pages/NewsManagement/NewsList/NewsList";
+import NewsDetailIndex from "../../components/news/NewsDetails/NewsDetailsIndex";
+import NewsWizard from "../../components/news/NewsWizard/NewsWizard";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -106,15 +107,19 @@ const Routes = [
   },
   {
     path: "/news-list",
-    element: <NewsList />,
+    element: <NewsIndex />,
   },
   {
     path: "/news-detail/:id",
-    element: <NewsDetail />,
+    element: <NewsDetailIndex />,
   },
   {
     path: "/create-news",
-    element: <CreateNews />,
+    element: <NewsWizard />,
+  },
+  {
+    path: "/create-news/:id",
+    element: <NewsWizard />,
   },
   {
     path: "/login",

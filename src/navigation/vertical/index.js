@@ -68,30 +68,33 @@ export default [
       },
     ],
   },
+
+  {
+    id: "userManagement",
+    title: "مدیریت کاربران",
+    icon: <User size={20} />,
+    navLink: "/user-management",
+  },
   {
     id: "news",
     title: "مدیریت اخبار",
-    icon: <Circle size={12} />,
+    icon: <Archive size={12} />,
     children: [
       {
         id: "newsList",
         title: "لیست اخبار",
+        icon: <Circle size={8} />,
         permissions: ["admin", "editor"],
         navLink: "/news-list",
       },
       {
         id: "createBlog",
         title: "ساخت خبر",
+        icon: <Circle size={8} />,
         permissions: ["admin", "editor"],
         navLink: "/create-news",
       },
     ],
-  },
-  {
-    id: "userManagement",
-    title: "مدیریت کاربران",
-    icon: <User size={20} />,
-    navLink: "/user-management",
   },
 
   {
@@ -124,12 +127,6 @@ export default [
     title: " مدیریت کامنت ها",
     icon: <MessageSquare size={12} />,
     navLink: "/CommentManagement",
-  },
-  {
-    id: "userTasks",
-    title: "تسک ها",
-    icon: <CheckSquare size={12} />,
-    navLink: "/user-homeworks",
   },
   {
     id: "term",

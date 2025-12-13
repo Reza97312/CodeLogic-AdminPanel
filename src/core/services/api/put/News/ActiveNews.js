@@ -1,11 +1,8 @@
-import React from "react";
 import http from "../../../../interceptor/interceptor.js";
-
-export const editNews = async (payload) => {
+export const ActiveNews = async (payload) => {
   try {
-    const result = await http.put("/News/UpdateNews", payload);
+    const result = await http.put("/News/ActiveDeactiveNews", payload);
     console.log(result);
-
     return result;
   } catch (err) {
     throw err;

@@ -1,645 +1,199 @@
-import { useQuery } from "@tanstack/react-query";
-import getNews from '../../../core/services/api/get/News/getNews'
-import getListNewsCategory from '../../../core/services/api/get/News/getListNewsCategory'
-import { Fragment, useState, useEffect } from "react";
-import Sidebar from "./Sidebar";
-import { columns } from "./columns";
-import { getAllData, getData } from "./store";
-import { useDispatch, useSelector } from "react-redux";
-import Select from "react-select";
+// ** React Imports
+import { Fragment, useState } from "react";
+import loading from "../../../assets/images/A/loading.gif";
+// ** Invoice List Sidebar
+// ** Table Column
+
+// ** Third Party Components
 import ReactPaginate from "react-paginate";
 import DataTable from "react-data-table-component";
-import {ChevronDown} from "react-feather";
+import Select from "react-select";
+import { ChevronDown } from "react-feather";
+
+// ** Utils
 import { selectThemeColors } from "@utils";
-import {Card, CardHeader, CardTitle, CardBody, Row, Col, Input, Label, Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
+
+// ** Reactstrap Imports
+import {
+  Row,
+  Col,
+  Card,
+  Input,
+  Label,
+  Button,
+  Modal,
+  ModalBody,
+  ModalFooter,
+} from "reactstrap";
+// ** Styles
 import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
-import CustomHeader from './CustomHeader/CustomHeader'
-import {deleteNews} from '../../../core/services/api/delete/deleteNews'
-import { toast } from "react-toastify";
-import { useQueryClient } from "@tanstack/react-query";
-import { editNews } from "../../../core/services/api/put/News/editNews";
 
+import { useQuery } from "@tanstack/react-query";
+import { useDebounce } from "use-debounce";
+import getNews from "../../../core/services/api/get/News/getNews.js";
+import { NewsCol } from "./columns.js";
+import ActivateNewsModal from "../../../components/news/ActivateNews/ActivateNewsModal.jsx";
 
-const NewsList = () => {
-
-  
-  const [searchQuery, setSearchQuery] = useState()
-  const handleSearch = (searchTerm) => {
-    setSearchQuery(searchTerm)
-  }
-
-
-  const [sortingCol , setSortingCol] = useState()
-  const handleSortingCol = (value) => {
-    setSortingCol(value)
-  }
-
-
-  const [category, setCategory] = useState();
-  const handleSetCategory = (value) => {
-    setCategory(value)
-  }
-
-
-  const { data: newsData, isLoading } = useQuery({
-    queryKey: ["GETNEWS", searchQuery, sortingCol, category],
-    queryFn: () => getNews({
-      Query: searchQuery,
-      SortType: "insertDate", SortingCol: sortingCol,
-      newsCatregoryName: category
-    })
-  });
-
-  const {data: categoryData} = useQuery({
-    queryKey: ['GETLISTNEWSCATEGORY'],
-    queryFn: () => getListNewsCategory({
-
-    })
-  })
-
-
-
-
-
-  const onSubmit = (values, {resetForm}) => {
-    editNews(values.id, values.slideNumber, values.currentImgAd, values.active, values.title, values.googleTitle, values.googleDescribe,
-      values.miniDescribe, values.describe, values.keyword, values.isSlider, values.newsCategoryId, values.image 
-    )
-    resetForm()
-  }
-
-
-
-
-
-  const [openDeleteModal, setOpenDeleteModal] = useState(false)
-  const toggleDeleteModal = (value) => {
-    setOpenDeleteModal(value)
-  }
-
-
-  const [newsId, setNewsId] = useState()
-  const handleNewsId = (id) => {
-    setNewsId(id)
-  }
-
-
-  const queryClient = useQueryClient()
-  const onDeleteNews = async (fileId) => {
-    await deleteNews(fileId)
-    toast.success('خبر با موفقیت حذف شد')
-    queryClient.invalidateQueries(['GETLISTNEWSCATEGORY'])
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // ** Store Vars
-  const dispatch = useDispatch();
-  const store = useSelector((state) => state.users);
-
-  // ** States
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [sort, setSort] = useState("desc");
-  const [searchTerm, setSearchTerm] = useState("");
+const NewsTable = ({ catId, sortType }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortColumn, setSortColumn] = useState("id");
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [sortColumn, setSortColumn] = useState("");
+  const [sort, setSort] = useState("DESC");
+  const [rowsPerPage, setRowsPerPage] = useState(30);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [catFilter, setCatFilter] = useState({
-    value: "",
-    label: "دسته بندی را انتخاب کنید",
+  const [OpenDeleteModal, setOpenDeleteModal] = useState(false);
+  const [commentId, setCommentId] = useState(null);
+  const [openEditModal, setOpenEditModal] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [query] = useDebounce(searchTerm, 700);
+
+  const { data: NewsData = {}, isPending } = useQuery({
+    queryKey: ["ALLNEWS", currentPage, query, rowsPerPage, sortType, catId],
+    queryFn: () =>
+      getNews({
+        RowsOfPage: rowsPerPage,
+        PageNumber: currentPage,
+        Query: query,
+        NewsCategoryId: catId,
+        SortingCol: sortType,
+      }),
   });
-  const [currentPlan, setCurrentPlan] = useState({
-    value: "",
-    label: "مرتب سازی",
-  });
-  const [currentStatus, setCurrentStatus] = useState({
-    value: "",
-    label: "وضعیت را انتخاب کنید",
-    number: 0,
-  });
+  const AllData = NewsData?.news || [];
 
-  // ** Function to toggle sidebar
-  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
-
-  const handleOpenModal = (row) => {
-    setSelectedUser(row);
-    setOpenModal(true);
-  };
-
-
-  // ** Get data on mount
-  useEffect(() => {
-    dispatch(getAllData());
-    dispatch(
-      getData({
-        sort,
-        sortColumn,
-        q: searchTerm,
-        page: currentPage,
-        perPage: rowsPerPage,
-        role: catFilter.value,
-        status: currentStatus.value,
-        currentPlan: currentPlan.value,
-      })
-    );
-  }, [dispatch, store.data.length, sort, sortColumn, currentPage]);
-
-  // ** User filter options
-  const roleOptions = categoryData?.map(item => ({
-    value: item.id,
-    label: item.categoryName
-  })) || [];
-
-
-  const planOptions = [
-    { value: "", label: "مرتب سازی" },
-    { value: "ASC", label: "جدیدترین" },
-    { value: "DESC", label: "قدیمی ترین" },
-  ];
-
-  const statusOptions = [
-    { value: "", label: "وضعیت را انتخاب کنید", number: 0 },
-    { value: "pending", label: "فعال", number: 1 },
-    { value: "active", label: "غیرفعال", number: 2 },
-  ];
-
-  // ** Function in get data on page change
   const handlePagination = (page) => {
-    dispatch(
-      getData({
-        sort,
-        sortColumn,
-        q: searchTerm,
-        perPage: rowsPerPage,
-        page: page.selected + 1,
-        role: catFilter.value,
-        status: currentStatus.value,
-        currentPlan: currentPlan.value,
-      })
-    );
     setCurrentPage(page.selected + 1);
+    window.scrollTo(0, 0);
   };
 
-  // ** Function in get data on rows per page
   const handlePerPage = (e) => {
-    const value = parseInt(e.currentTarget.value);
-    dispatch(
-      getData({
-        sort,
-        sortColumn,
-        q: searchTerm,
-        perPage: value,
-        page: currentPage,
-        role: catFilter.value,
-        currentPlan: currentPlan.value,
-        status: currentStatus.value,
-      })
-    );
-    setRowsPerPage(value);
+    setRowsPerPage(parseInt(e.target.value));
   };
 
-  // ** Function in get data on search query change
   const handleFilter = (val) => {
     setSearchTerm(val);
-    dispatch(
-      getData({
-        sort,
-        q: val,
-        sortColumn,
-        page: currentPage,
-        perPage: rowsPerPage,
-        role: catFilter.value,
-        status: currentStatus.value,
-        currentPlan: currentPlan.value,
-      })
-    );
-  };
-
-  // ** Custom Pagination
-  const CustomPagination = () => {
-    const count = Number(Math.ceil(store.total / rowsPerPage));
-
-    return (
-      <ReactPaginate
-        previousLabel={""}
-        nextLabel={""}
-        pageCount={count || 1}
-        activeClassName="active"
-        forcePage={currentPage !== 0 ? currentPage - 1 : 0}
-        onPageChange={(page) => handlePagination(page)}
-        pageClassName={"page-item"}
-        nextLinkClassName={"page-link"}
-        nextClassName={"page-item next"}
-        previousClassName={"page-item prev"}
-        previousLinkClassName={"page-link"}
-        pageLinkClassName={"page-link"}
-        containerClassName={
-          "pagination react-paginate justify-content-end my-2 pe-1"
-        }
-      />
-    );
-  };
-
-  // ** Table data to render
-  const dataToRender = () => {
-    const filters = {
-      role: catFilter.value,
-      currentPlan: currentPlan.value,
-      status: currentStatus.value,
-      q: searchTerm,
-    };
-
-    const isFiltered = Object.keys(filters).some(function (k) {
-      return filters[k].length > 0;
-    });
-
-    if (store.data.length > 0) {
-      return store.data;
-    } else if (store.data.length === 0 && isFiltered) {
-      return [];
-    } else {
-      return store.allData.slice(0, rowsPerPage);
-    }
   };
 
   const handleSort = (column, sortDirection) => {
     setSort(sortDirection);
     setSortColumn(column.sortField);
-    dispatch(
-      getData({
-        sort,
-        sortColumn,
-        q: searchTerm,
-        page: currentPage,
-        perPage: rowsPerPage,
-        role: catFilter.value,
-        status: currentStatus.value,
-        currentPlan: currentPlan.value,
-      })
+  };
+  const [openActiveModal, setOpenActiveModal] = useState(false);
+  const [editData, setEditData] = useState(null);
+  const toggleActive = (bool) => setOpenActiveModal(bool);
+  const handleEdit = (vals) => setEditData(vals);
+  const tableColumns = NewsCol({
+    toggleActive,
+    handleEdit,
+  });
+
+  const CustomHeader = ({
+    handlePerPage,
+    rowsPerPage,
+    handleFilter,
+    searchTerm,
+  }) => {
+    return (
+      <div className="invoice-list-table-header w-100 me-1 ms-50 mt-2 mb-75">
+        <Row>
+          <Col xl="6" className="d-flex align-items-center p-0">
+            <div className="d-flex align-items-center w-100">
+              <label style={{ fontSize: "17px" }} htmlFor="rows-per-page">
+                تعداد نمایش :
+              </label>
+              <Input
+                className="mx-50"
+                type="select"
+                id="rows-per-page"
+                value={rowsPerPage}
+                onChange={handlePerPage}
+                style={{ width: "5rem" }}
+              >
+                <option value="30">30</option>
+                <option value="50">50</option>
+                <option value="80">80</option>
+              </Input>
+            </div>
+          </Col>
+
+          <Col xl="6" className="d-flex justify-content-end p-0 mt-1">
+            <div className="d-flex align-items-center me-1">
+              <label className="mb-0" style={{ fontSize: "17px" }}>
+                جستجو
+              </label>
+              <Input
+                className="ms-50"
+                type="text"
+                value={searchTerm}
+                onChange={(e) => handleFilter(e.target.value)}
+                placeholder=" جستجو کنید..."
+              />
+            </div>
+          </Col>
+        </Row>
+      </div>
     );
   };
 
-  const [selectedRoles, setSelectedRoles] = useState([]);
-  const [isActive, setIsActive] = useState(false);
+  const CustomPagination = () => {
+    const count = Math.ceil((NewsData?.totalCount || 0) / rowsPerPage);
 
-  const tableColumns = columns({ handleOpenModal, toggleDeleteModal, handleNewsId});
-
-  const allRolesOptions = [
-    { value: "employee.admin", label: "Employee.Admin" },
-    { value: "administrator", label: "Administrator" },
-    { value: "student", label: "Student" },
-    { value: "editor", label: "Editor" },
-    { value: "contributor", label: "Contributor" },
-  ];
-
-
-
+    return (
+      <ReactPaginate
+        previousLabel={""}
+        nextLabel={""}
+        pageCount={count}
+        activeClassName="active"
+        onPageChange={handlePagination}
+        containerClassName="pagination react-paginate justify-content-end mt-2"
+        pageClassName="page-item"
+        pageLinkClassName="page-link"
+        nextClassName="page-item next"
+        nextLinkClassName="page-link"
+        previousClassName="page-item prev"
+        previousLinkClassName="page-link"
+      />
+    );
+  };
 
   return (
     <Fragment>
-      <Card>
-        <CardHeader>
-          <CardTitle tag="h4">فیلترها</CardTitle>
-        </CardHeader>
-        <CardBody>
-          <Row>
-            <Col md="4">
-              <Label for="role-select">دسته بندی</Label>
-              <Select
-                isClearable={false}
-                value={catFilter}
-                options={roleOptions}
-                className="react-select"
-                classNamePrefix="select"
-                theme={selectThemeColors}
-                onChange={(data) => {
-                  setCatFilter(data);
-                  dispatch(
-                    getData({
-                      sort,
-                      sortColumn,
-                      q: searchTerm,
-                      role: data.value,
-                      page: currentPage,
-                      perPage: rowsPerPage,
-                      status: currentStatus.value,
-                      currentPlan: currentPlan.value,
-                    })
-                  );
-                  handleSetCategory(data.value)
-                }}
-              />
-            </Col>
-            <Col className="my-md-0 my-1" md="4">
-              <Label for="plan-select">تاریخ</Label>
-              <Select
-                theme={selectThemeColors}
-                isClearable={false}
-                className="react-select"
-                classNamePrefix="select"
-                options={planOptions}
-                value={currentPlan}
-                onChange={(data) => {
-                  setCurrentPlan(data);
-                  dispatch(
-                    getData({
-                      sort,
-                      sortColumn,
-                      q: searchTerm,
-                      page: currentPage,
-                      perPage: rowsPerPage,
-                      role: catFilter.value,
-                      currentPlan: data.value,
-                      status: currentStatus.value,
-                    })
-                  );  
-                  handleSortingCol(currentPlan)
-                }}
-              />
-            </Col>
-            <Col md="4">
-              <Label for="status-select">وضعیت</Label>
-              <Select
-                theme={selectThemeColors}
-                isClearable={false}
-                className="react-select"
-                classNamePrefix="select"
-                options={statusOptions}
-                value={currentStatus}
-                onChange={(data) => {
-                  setCurrentStatus(data);
-                  dispatch(
-                    getData({
-                      sort,
-                      sortColumn,
-                      q: searchTerm,
-                      page: currentPage,
-                      status: data.value,
-                      perPage: rowsPerPage,
-                      role: catFilter.value,
-                      currentPlan: currentPlan.value,
-                    })
-                  );
-                }}
-              />
-            </Col>
-          </Row>
-        </CardBody>
-      </Card>
-
-      {
-        <Card className="overflow-hidden">
+      <Card className="overflow-hidden">
+        {isPending ? (
+          <img className="mx-auto" src={loading} />
+        ) : (
           <div className="react-dataTable">
             <DataTable
-            noHeader
-            subHeader
-            sortServer
-            pagination
-            responsive
-            paginationServer
-            columns={tableColumns}
-            onSort={handleSort}
-            sortIcon={<ChevronDown />}
-            className="react-dataTable"
-            paginationComponent={CustomPagination}
-            data={newsData?.news || []}
-            subHeaderComponent={
-              <CustomHeader
-                handleSearch={handleSearch}
-                store={store}
-                searchTerm={searchTerm}
-                rowsPerPage={rowsPerPage}
-                handleFilter={handleFilter}
-                handlePerPage={handlePerPage}
-                toggleSidebar={toggleSidebar}
-              />
-            }
-            />
-          </div>
-        </Card>   
-      }
-
-      <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
-
-      <Modal
-        isOpen={openModal}
-        toggle={() => setOpenModal(false)}
-        className="modal-dialog-centered"
-        style={{ maxWidth: "600px" }}>
-        <ModalBody>
-          <p
-            className="mb-1 pt-2 text-center fw-bold fs-5"
-            style={{ letterSpacing: "0.5px" }}>
-            ویرایش نقش کاربر
-          </p>
-          <p
-            className="mb-2 text-center text-muted"
-            style={{ fontSize: "0.95rem" }}
-          >
-            برای ویرایش نقش کاربر از گزینه‌های زیر استفاده کنید.
-          </p>
-
-          {selectedUser && (
-            <div className="mt-3 pt-3 pb-3 border-top d-flex align-items-center gap-1">
-              <span className="fw-medium">نام:</span>
-              <span className="text-primary">{selectedUser.fullName}</span>
-            </div>
-          )}
-
-          <div className="mb-4">
-            <Label className="form-label fw-semibold" for="user-roles">
-              نقش‌ها
-            </Label>
-
-            <Select
-              isMulti
-              name="roles"
-              options={allRolesOptions}
-              className="react-select"
-              classNamePrefix="select"
-              value={selectedRoles}
-              onChange={setSelectedRoles}
-              theme={selectThemeColors}
-              placeholder="نقش‌ها را انتخاب کنید..."
-            />
-          </div>
-
-          <div className="mb-4">
-            <Label className="form-label mb-2 fw-semibold" for="user-status">
-              فعال سازی همه
-            </Label>
-
-            <div className="d-flex align-items-center gap-2">
-              <div className="form-switch form-check-primary">
-                <Input
-                  type="switch"
-                  id="user-status"
-                  name="user-status"
-                  checked={isActive}
-                  onChange={() => setIsActive(!isActive)}
+              noHeader
+              subHeader
+              pagination
+              paginationServer
+              sortServer
+              responsive
+              columns={tableColumns}
+              sortIcon={<ChevronDown />}
+              data={AllData}
+              paginationComponent={CustomPagination}
+              subHeaderComponent={
+                <CustomHeader
+                  rowsPerPage={rowsPerPage}
+                  handlePerPage={handlePerPage}
+                  searchTerm={searchTerm}
+                  handleFilter={handleFilter}
                 />
-              </div>
-
-              <span
-                className={`fw-medium ${
-                  isActive ? "text-success" : "text-secondary"
-                }`}
-              >
-                {isActive ? "فعال" : "غیرفعال"}
-              </span>
-            </div>
+              }
+            />
           </div>
-        </ModalBody>
-
-        <ModalFooter className="d-flex justify-content-between">
-          <Button
-            color="secondary"
-            outline
-            onClick={() => setOpenModal(false)}
-            style={{
-              padding: "0.5rem 1.2rem",
-              borderRadius: "6px",
-              transition: "all 0.2s",
-            }}
-          >
-            انصراف
-          </Button>
-
-          <Button
-            color="primary"
-            onClick={() => setOpenModal(false)}
-            style={{
-              padding: "0.5rem 1.5rem",
-              borderRadius: "6px",
-              boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-              transition: "all 0.2s",
-            }}
-          >
-            ارسال
-          </Button>
-        </ModalFooter>
-      </Modal>
-      <Modal 
-      isOpen={openDeleteModal}
-      toggle={() => setOpenDeleteModal(false)}
-      className="modal-dialog-centered"
-      style={{ maxWidth: "600px" }}>
-        <div className="d-flex flex-column align-items-center gap-4 py-2">
-          <span>آیا میخواهید این خبر را حذف کنید؟</span>
-          <div className="d-flex flex-row gap-1">
-            <Button 
-            onClick={() => {toggleDeleteModal(false)}}>
-              انصراف
-            </Button>
-            <Button 
-            onClick={() => {
-              onDeleteNews(newsId)
-              setOpenDeleteModal(false)
-            }}
-            color="primary">
-              حذف
-            </Button>
-          </div>
-        </div>
-      </Modal>
-      <Modal>
-        <ModalHeader>
-          <h3>ویرایش خبر</h3>
-        </ModalHeader>
-        <ModalBody>
-            <Form className="d-flex flex-column" onSubmit={onSubmit}>
-              <div className="d-flex gap-4">
-                <div>
-                  <label for="id">آیدی خبر را وارد کنید</label>
-                  <input name="id" type="text"/>
-                </div>
-                <div>
-                  <label for="slideNumber">شماره اسلاید را وارد کنید</label>
-                  <input name="slideNumber" type="text"/>
-                </div>
-              </div>
-              <div className="d-flex gap-4">
-                <div>
-                  <label for="currentImgAd">عکس اول را انتخاب کنید</label>
-                  <input name="currentImgAd" type="file"/>
-                </div>
-                <div>
-                  <label for="currentImgAdTumb">عکس دوم را انتخاب کنید</label>
-                  <input name="currentImgAdTumb" type="file"/>
-                </div>
-              </div>
-              <div className="d-flex gap-4">
-                <div>
-                  <label for="active">آیا فعال است؟</label>
-                  <input name="active" type="checkbox"/>
-                </div>
-                <div>
-                  <label for="title">عنوان خبر را وارد کنید</label>
-                  <input name="title" type="text"/>
-                </div>
-              </div>
-              <div className="d-flex gap-4">
-                <div>
-                  <label for="googleTitle">عنوان گوگل</label>
-                  <input name="googleTitle" type="text"/>
-                </div>
-                <div>
-                  <label for="googleDescribe">توضیحات گوگل</label>
-                  <input name="googleDescribe" type="text"/>
-                </div>
-              </div>
-              <div className="d-flex gap-4">
-                <div>
-                  <label for="miniDescribe">توضیحات کوتاه</label>
-                  <input name="miniDescribe" type="text"/>
-                </div>
-                <div>
-                  <label for="describe">توضیحات</label>
-                  <input name="describe" type="text"/>
-                </div>
-              </div>
-              <div className="d-flex gap-4">
-                <div>
-                  <label for="keyword">کلمه کلیدی را وارد کنید</label>
-                  <input name="keyword" type="text"/>
-                </div>
-                <div>
-                  <label for="isSlider">اسلایدر</label>
-                  <input name="isSlider" type="checkbox"/>
-                </div>
-              </div>
-              <div className="d-flex gap-4">
-                <div>
-                  <label for="newsCategoryId">آیدی دسته بندی خبر را وارد کنید</label>
-                  <input name="newsCategoryId" type="text"/>
-                </div>
-                <div>
-                  <label for="image">عکس</label>
-                  <input name="image" type="file"/>
-                </div>
-              </div>
-            </Form>
-        </ModalBody>
-        <ModalFooter>
-          <Button></Button>
-          <Button></Button>
-        </ModalFooter>
-      </Modal>
+        )}
+      </Card>
+      {openActiveModal && (
+        <ActivateNewsModal
+          isOpen={openActiveModal}
+          toggleActiveModal={toggleActive}
+          activeData={editData}
+        />
+      )}
     </Fragment>
   );
 };
 
-export default NewsList;
+export default NewsTable;

@@ -31,18 +31,13 @@ import "@styles/react/libs/tables/react-dataTable-component.scss";
 
 import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
-import { CourseCommentsCol } from "./CourseCommentsCol";
-import { GetCourseComments } from "../../../core/services/api/get/Courses/GetCourseComments";
-import DeleteCmModal from "./DeleteCmModal";
-import AcceptCmModal from "./AcceptCmModal";
-// import SidebarCreateGroup from "./CreateGroup";
-// // import { CourseUsersCol } from "./UsersColumns";
-// import { GetCourseGroups } from "../../../core/services/api/get/Courses/GetCourseGroups";
-
-const CourseCommentsTable = ({ id }) => {
-  const { data: cmData, isPending } = useQuery({
-    queryKey: ["GETCOURSECOMMENT"],
-    queryFn: () => GetCourseComments(id),
+import getAdminNewsComments from "../../../core/services/api/get/News/getAdminNewsComments";
+import { NewsCommentsCol } from "./NewsCommentsCol";
+import DeleteCmModal from "../../Courses/Comments/DeleteCmModal.jsx";
+const NewsCommentsTable = ({ id }) => {
+  const { data: cmData = [], isPending } = useQuery({
+    queryKey: ["GETNEWSCOMMENT"],
+    queryFn: () => getAdminNewsComments(id),
   });
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -55,7 +50,8 @@ const CourseCommentsTable = ({ id }) => {
   const [openEditModal, setOpenEditModal] = useState(null);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
-  const currentData = cmData?.comments.slice(startIndex, endIndex);
+  const currentData = cmData.slice(startIndex, endIndex);
+
   const toggleEditModal = (value) => setOpenEditModal(value);
 
   const toggleDeleteModal = (val) => setOpenDeleteModal(val);
@@ -80,7 +76,7 @@ const CourseCommentsTable = ({ id }) => {
     setSortColumn(column.sortField);
   };
 
-  const tableColumns = CourseCommentsCol({
+  const tableColumns = NewsCommentsCol({
     handleCmId,
     toggleEditModal,
     toggleDeleteModal,
@@ -88,7 +84,7 @@ const CourseCommentsTable = ({ id }) => {
   });
 
   const CustomPagination = () => {
-    const count = Math.ceil((cmData?.comments.length || 0) / rowsPerPage);
+    const count = Math.ceil((cmData?.length || 0) / rowsPerPage);
 
     return (
       <ReactPaginate
@@ -118,8 +114,6 @@ const CourseCommentsTable = ({ id }) => {
             <DataTable
               noHeader
               pagination
-              paginationServer
-              sortServer
               responsive
               columns={tableColumns}
               sortIcon={<ChevronDown />}
@@ -136,15 +130,8 @@ const CourseCommentsTable = ({ id }) => {
           commentId={commentId}
         />
       )}
-      {openEditModal && (
-        <AcceptCmModal
-          isOpen={openEditModal}
-          toggleEditModal={toggleEditModal}
-          commentId={commentId}
-        />
-      )}
     </Fragment>
   );
 };
 
-export default CourseCommentsTable;
+export default NewsCommentsTable;

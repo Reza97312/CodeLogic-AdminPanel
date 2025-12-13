@@ -59,6 +59,7 @@ export const columns = ({
         {renderCourseImage(row)}
         <div className="d-flex flex-column">
           <Link
+            style={{ color: "black", cursor: "pointer" }}
             to={`/courses/view/${row.courseId}`}
             className="text-body"
             onClick={() => store.dispatch(getUser(row.id))}

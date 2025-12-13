@@ -1,13 +1,14 @@
-import Http from '../../../../interceptor/interceptor.js'
+import Http from "../../../../interceptor/interceptor.js";
 
 const getListNewsCategory = async () => {
-    try{
-        const result = await Http.get('/News/GetListNewsCategory');
-        return result;
-    }
-    catch(error){
-        console.log(error)
-    }
-}
+  try {
+    const result = await Http.get("/News/GetListNewsCategory");
+    console.log(result);
 
-export default getListNewsCategory
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export default getListNewsCategory;

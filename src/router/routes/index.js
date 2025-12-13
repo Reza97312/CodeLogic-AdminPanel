@@ -61,6 +61,9 @@ const TeacherSchedual = lazy(() =>
 const AdminSchedual = lazy(() => import("../../pages/Schedual/AdminSchedual"));
 const Department = lazy(() => import("../../pages/Department/Department"));
 const Classes = lazy(() => import("../../pages/Classes/Classes"));
+const Notifications = lazy(() =>
+  import("../../pages/Notifications/Notifications")
+);
 
 // ** Merge Routes
 const Routes = [
@@ -68,6 +71,10 @@ const Routes = [
     path: "/",
     index: true,
     element: <Navigate replace to={DefaultRoute} />,
+  },
+  {
+    path: "/notifications",
+    element: <Notifications />,
   },
   {
     path: "/department",

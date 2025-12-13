@@ -10,6 +10,7 @@ import ReactPaginate from "react-paginate";
 import DataTable from "react-data-table-component";
 import { ChevronDown } from "react-feather";
 import { selectThemeColors } from "@utils";
+import infinity from "../../assets/images/icons/Infinity Loader.json";
 import {
   Row,
   Col,
@@ -23,6 +24,7 @@ import {
 } from "reactstrap";
 import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
+import Lottie from "lottie-react";
 
 const CustomHeader = ({
   toggleSidebar,
@@ -304,6 +306,16 @@ const UsersList = ({ users = [], isPending, roles = [] }) => {
       label: role,
     }));
   })();
+
+  if (isPending) {
+    return (
+      <div className="text-center p-5 mt-5 d-flex flex-column justify-content-center align-items-center">
+        <Lottie animationData={infinity} />
+        <h5>درحال بارگذاری اطلاعات...</h5>
+      </div>
+    );
+  }
+
   return (
     <Fragment>
       <Card className="overflow-hidden">
@@ -320,7 +332,6 @@ const UsersList = ({ users = [], isPending, roles = [] }) => {
             className="react-dataTable"
             paginationComponent={CustomPagination}
             data={dataToRender()}
-            progressPending={isPending}
             subHeaderComponent={
               <CustomHeader
                 roleOptions={roleOptions}

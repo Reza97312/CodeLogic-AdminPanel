@@ -17,6 +17,7 @@ import {
   Check,
   CheckCircle,
   Box,
+  Bell,
 } from "react-feather";
 
 export default [
@@ -151,5 +152,11 @@ export default [
     title: "کلاس ها",
     icon: <Box size={20} />,
     navLink: "/classes",
+  },
+  {
+    id: "notifications",
+    title: "اعلان ها",
+    icon: <Bell size={20} />,
+    navLink: "/notifications",
   },
 ];

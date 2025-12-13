@@ -106,7 +106,7 @@ const NewsWizard = () => {
                   Describe: firstData ? firstData.describe : "",
                   GoogleDescribe: firstData ? firstData.googleDescribe : "",
                   MiniDescribe: firstData ? firstData.miniDescribe : "",
-                  Image: firstData ? firstData.image : "",
+                  Image: firstData ? firstData.currentImageAddress : "",
                   Keyword: firstData ? firstData.keyword : "",
                   NewsCatregoryId: firstData ? firstData.newsCatregoryId : "",
                 }}
@@ -294,6 +294,7 @@ const NewsWizard = () => {
                                 </Form.Control.Feedback>
                               </Form.Group>
                             </Col>
+                            <Col></Col>
                           </Row>
                         </>
                       )}

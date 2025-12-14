@@ -103,11 +103,6 @@ export const NewsCol = ({ toggleActive, handleEdit }) => [
             <Archive size={14} className="me-50" />
             <span className="align-middle">ویرایش وضعیت</span>
           </DropdownItem>
-
-          <DropdownItem style={{ width: "100%" }}>
-            <Trash2 size={14} className="me-50" />
-            <span className="align-middle">حذف</span>
-          </DropdownItem>
           <DropdownItem
             tag={Link}
             to={`/news-detail/${row.id}`}

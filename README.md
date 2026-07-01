@@ -77,7 +77,11 @@ npm install
 npm run start
 ```
 
-The dashboard will be available at ⁠http://localhost:5173⁠
+The dashboard will be available at:
+
+```bash
+⁠http://localhost:5173⁠
+```
 
 4. Build & Deployment
 To compile the application for production deployment:
